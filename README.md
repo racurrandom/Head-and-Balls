@@ -37,9 +37,9 @@ Raúl Alfonso Pérez
 
 Este es el documento de diseño de juego de *Head and Balls*. El videojuego para PC que se basa en un partido de fútbol 2D en vista lateral entre dos jugadores en el que cada uno trata de meterle gol al contrario a base de cabezazos y patadas.
 
-| Plataforma | PC | Género | Deportes | Lanzamiento | 2025 |
+| Plataforma | Target | Género | Nº Jugadores | Lanzamiento | Ventas |
 | :---- | :---- | :---- | :---- | :---- | :---- |
-| **Target** | 10-30 | **Nº Jugadores** | 2 | **Ventas** | In game |
+| PC | 10-30 años | Deportes | 2 | 2025 | In game |
 
 # Género y Temática
 
@@ -99,9 +99,9 @@ Los controles del juego serán sencillos y permitirán la jugabilidad de 2 jugad
 
 | Controles |  |
 | ----- | :---- |
-| **Moverse horizontalmente** | P1: A y D<br>P2: Flecha izquierda y derecha |
-| **Saltar** | P1: W<br>P2: Flecha arriba |
-| **Chutar el balón** | P1: S<br>P2: Flecha abajo
+| **Moverse horizontalmente** | **P1:** A y D<br>**P2:** Flecha izquierda y derecha |
+| **Saltar** | **P1:** W<br>**P2:** Flecha arriba |
+| **Chutar el balón** | **P1:** S<br>**P2:** Flecha abajo
 
 # Audio
 
