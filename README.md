@@ -1,6 +1,6 @@
-![gdd](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/gdd.gif)
-![title](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/title.gif)
-![grupo4](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/grupo4.gif)
+![gdd](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/gdd.gif)  
+![title](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/title.gif)  
+![grupo4](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/grupo4.gif)  
 
 # Integrantes
 
