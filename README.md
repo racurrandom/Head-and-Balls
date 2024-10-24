@@ -111,3 +111,7 @@ Los controles del juego serán sencillos y permitirán la jugabilidad de 2 jugad
 * **Sonidos:**  
   * **Efectos de sonido:** Sonidos como contacto con la pelota, golpes entre personajes, comienzo/final del partido, gol marcado…  
   * **Líneas de voz de personajes:** Cada personaje tendrá una línea de voz única y divertida que se reproducirá al marcar un gol, añadiendo humor y personalidad al juego.
+
+# Licencia
+ 
+**Producto licenciado bajo la licencia Apache 2.0.**
