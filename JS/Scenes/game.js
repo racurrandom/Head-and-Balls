@@ -1,4 +1,4 @@
-class Game extends Phaser.Scene {
+class SceneGame extends Phaser.Scene {
   constructor() {
     super({ key: 'Game' });
   }
@@ -14,7 +14,7 @@ class Game extends Phaser.Scene {
    /$$$$$$| $$  | $$| $$  |  $$$$/
   |______/|__/  |__/|__/   \__*/
 
-  init() {
+  init(data) {
     this.moveSpeed = 400;
     this.gameStarted = false;
     this.score = 0;
@@ -32,40 +32,42 @@ class Game extends Phaser.Scene {
   |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
 
   preload() {
-    //Load images
-    Turbo.loadImages(this, [
-      ['player', 'Assets/Game/mon.gif'],
-    ])
+    
   }
 
 
 
-    /*$$$$$                                  /$$              
-   /$$__  $$                                | $$              
-  | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$ 
+    /*$$$$$                                  /$$
+   /$$__  $$                                | $$
+  | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$
   | $$       /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
   | $$      | $$  \__/| $$$$$$$$  /$$$$$$$  | $$    | $$$$$$$$
   | $$    $$| $$      | $$_____/ /$$__  $$  | $$ /$$| $$_____/
   |  $$$$$$/| $$      |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
-  create() {
+  create(data) {
     //Set debug mode for the physics engine (shows the bounding boxes)
     this.physics.world.createDebugGraphic();
 
     //Create player 1
-    this.player1 = this.createPlayer();
+    this.player1 = this.createPlayer(data.p1);
+
+    //Create player 2
+    this.player2 = this.createPlayer(data.p2);
 
     //Go to menu on click
-    this.input.once('pointerdown', () => {
-      this.scene.stop("Main");
-      this.scene.start("End");
-    });
+    Scene.onClick(this, () => {
+      Scene.changeScene(this, 'Main')
+    })
   }
 
-  createPlayer() {
+  createPlayer(key) {
+    //Displacement
+    const disp = 640 * (key.number - 1)
+
     //Create player
-    const player = this.add.image(400, 550, 'player');
+    const player = this.add.image(disp + 360, 550, key.skin);
 
     //Enable player physics
     this.physics.add.existing(player);
@@ -74,7 +76,7 @@ class Game extends Phaser.Scene {
     player.body.setAllowGravity(false);
 
     //Left arrow
-    Turbo.input(this, 'LEFT', () => {
+    Scene.input(this, 'LEFT', () => {
       //Button down
       player.body.setVelocityX(-this.moveSpeed);
     }, () => {
@@ -83,7 +85,7 @@ class Game extends Phaser.Scene {
     })
 
     //Right arrow
-    Turbo.input(this, 'RIGHT', () => {
+    Scene.input(this, 'RIGHT', () => {
       //Button down
       player.body.setVelocityX(this.moveSpeed);
     }, () => {

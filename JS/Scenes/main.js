@@ -1,4 +1,4 @@
-class Main extends Phaser.Scene {
+class SceneMain extends Phaser.Scene {
   constructor() {
     super({ key: 'Main' });
   }
@@ -16,16 +16,16 @@ class Main extends Phaser.Scene {
 
   preload() {
     //Load audio
-    Turbo.loadAudios(this, [
-      ['background', 'Assets/Main/music.mp3'],
+    Scene.loadAudios(this, [
+      ['background', 'assets/main/music.mp3'],
     ])
 
     //Load images
-    Turbo.loadImages(this, [
-      ['title', 'Assets/Main/title.gif'],
-      ['play', 'Assets/Main/jugar.gif'],
-      ['options', 'Assets/Main/opciones.gif'],
-      ['exit', 'Assets/Main/salir.gif'],
+    Scene.loadImages(this, [
+      ['title', 'assets/main/title.gif'],
+      ['play', 'assets/main/jugar.gif'],
+      ['options', 'assets/main/opciones.gif'],
+      ['exit', 'assets/main/salir.gif'],
     ])
   }
 
@@ -42,38 +42,34 @@ class Main extends Phaser.Scene {
   
   create(data) {
     //Add background music
-    const music = this.sound.add('background');
+    const music = this.sound.add('background')
     music.loop = true;
     music.play();
 
     //Add title
-    const title = this.add.image(640, 120, 'title');
+    const title = this.add.image(640, 120, 'title')
 
     //Play button
-    const play = this.add.image(640, 400, "play")
-    .setInteractive()
-    .on('pointerdown', () => {
-      this.scene.stop('Main');
-      this.scene.start('Game');
-    });
+    const play = this.add.image(640, 400, 'play')
+    Element.onClick(play, () => {
+      Scene.changeScene(this, 'Characters')
+    })
     
     //Options button
     const options = this.add.image(640, 500, 'options')
-    .setInteractive()
-    .on('pointerdown', () => {
+    Element.onClick(options, () => {
       console.log('options')
-    });
+    })
 
     //Exit button
     const exit = this.add.image(640, 600, 'exit')
-    .setInteractive()
-    .on('pointerdown', () => {
-      this.scene.stop('Main');
-    });
+    Element.onClick(exit, () => {
+      this.scene.stop('Main')
+    })
 
     //Add shutdown event (scene close)
-    Turbo.onShutdown(this, () => {
-      music.stop();
+    Scene.onClose(this, () => {
+      music.stop()
     })
   }
 }

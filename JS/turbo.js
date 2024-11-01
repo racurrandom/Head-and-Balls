@@ -1,4 +1,23 @@
-class Turbo {
+class Element {
+
+   /*$$$$$                                 /$$
+  |_  $$_/                                | $$
+    | $$   /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$
+    | $$  | $$__  $$ /$$__  $$| $$  | $$|_  $$_/
+    | $$  | $$  \ $$| $$  \ $$| $$  | $$  | $$
+    | $$  | $$  | $$| $$  | $$| $$  | $$  | $$ /$$
+   /$$$$$$| $$  | $$| $$$$$$$/|  $$$$$$/  |  $$$$/
+  |______/|__/  |__/| $$____/  \______/    \___/
+                    | $$
+                    | $$
+                    |_*/
+
+  static onClick(element, callback) {
+    element.setInteractive().on('pointerdown', callback);
+  }
+}
+
+class Scene {
   //Helper class because I hate JS and doing 'this.' before everything is the goofyest thing ever
 
     /*$$$$$                                 /$$
@@ -72,6 +91,7 @@ class Turbo {
   }
 
 
+
    /*$       /$$             /$$
   | $$      |__/            | $$
   | $$       /$$  /$$$$$$$ /$$$$$$    /$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$   /$$$$$$$
@@ -89,7 +109,7 @@ class Turbo {
     scene.events.once(name, callback); 
   }
 
-  static onShutdown(scene, callback) {
+  static onClose(scene, callback) {
     this.once(scene, 'shutdown', callback)
   }
 
@@ -111,5 +131,28 @@ class Turbo {
     scene.input.keyboard.on('keydown-' + name, down);
 
     scene.input.keyboard.on('keyup-' + name, up);
+  }
+
+  static onClick(scene, callback) {
+    scene.input.on('pointerdown', callback);
+  }
+
+
+
+    /*$$$$$    /$$     /$$                          
+   /$$__  $$  | $$    | $$                          
+  | $$  \ $$ /$$$$$$  | $$$$$$$   /$$$$$$   /$$$$$$ 
+  | $$  | $$|_  $$_/  | $$__  $$ /$$__  $$ /$$__  $$
+  | $$  | $$  | $$    | $$  \ $$| $$$$$$$$| $$  \__/
+  | $$  | $$  | $$ /$$| $$  | $$| $$_____/| $$
+  |  $$$$$$/  |  $$$$/| $$  | $$|  $$$$$$$| $$
+   \______/    \___/  |__/  |__/ \_______/|_*/
+
+  static changeScene(scene, name, data) {
+    scene.scene.stop(scene.scene.key)
+    if (data == undefined)
+      scene.scene.start(name)
+    else
+      scene.scene.start(name, data)
   }
 }

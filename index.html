@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <script src="JS/phaser.js"></script>
-  <script src="JS/turbo.js"></script>
-  <script src="JS/Scenes/main.js"></script>
-  <script src="JS/Scenes/game.js"></script>
-  <script src="JS/Scenes/end.js"></script>
+  <script src="js/phaser.js"></script>
+  <script src="js/turbo.js"></script>
+  <script src="js/scenes/main.js"></script>
+  <script src="js/scenes/characters.js"></script>
+  <script src="js/scenes/game.js"></script>
 </head>
 
 <style>
@@ -40,7 +40,7 @@
           gravity: { y: 9.8 }
         }
       },
-      scene: [Main, Game, End]
+      scene: [SceneMain, SceneGame, SceneCharacters]
     });
 
     //Start main scene
