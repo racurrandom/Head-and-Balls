@@ -15,9 +15,7 @@ class SceneGame extends Phaser.Scene {
   |______/|__/  |__/|__/   \__*/
 
   init(data) {
-    this.moveSpeed = 400;
-    this.gameStarted = false;
-    this.score = 0;
+    
   }
 
 
@@ -48,50 +46,23 @@ class SceneGame extends Phaser.Scene {
 
   create(data) {
     //Set debug mode for the physics engine (shows the bounding boxes)
-    this.physics.world.createDebugGraphic();
+    this.physics.world.createDebugGraphic()
 
     //Create player 1
-    this.player1 = this.createPlayer(data.p1);
+    this.player1 = new Player(this, data.p1)
 
     //Create player 2
-    this.player2 = this.createPlayer(data.p2);
+    this.player2 = new Player(this, data.p2)
 
     //Go to menu on click
     Scene.onClick(this, () => {
+      //this.player1.reset()
+      //this.player2.reset()
       Scene.changeScene(this, 'Main')
     })
   }
 
   createPlayer(key) {
-    //Displacement
-    const disp = 640 * (key.number - 1)
-
-    //Create player
-    const player = this.add.image(disp + 360, 550, key.skin);
-
-    //Enable player physics
-    this.physics.add.existing(player);
-    player.body.setImmovable(true);
-    player.body.setCollideWorldBounds(true);
-    player.body.setAllowGravity(false);
-
-    //Left arrow
-    Scene.input(this, 'LEFT', () => {
-      //Button down
-      player.body.setVelocityX(-this.moveSpeed);
-    }, () => {
-      //Button up
-      player.body.setVelocityX(0);
-    })
-
-    //Right arrow
-    Scene.input(this, 'RIGHT', () => {
-      //Button down
-      player.body.setVelocityX(this.moveSpeed);
-    }, () => {
-      //Button up
-      player.body.setVelocityX(0);
-    })
   }
   
 
@@ -109,6 +80,69 @@ class SceneGame extends Phaser.Scene {
             |_*/
   
   update(time, delta) {
+    this.player1.update()
+    this.player2.update()
+  }
+}
 
+class Player {
+  //Player data
+  data = {}
+  inputX = 0
+  moveSpeed = 200
+  jumpSpeed = 500
+  
+  constructor(scene, data) {
+    //Save data
+    this.data = data
+
+    //Create player
+    this.player = scene.add.image(0, 0, data.skin)
+
+    //Enable player physics
+    scene.physics.add.existing(this.player)
+    this.player.body.setImmovable(true)
+    this.player.body.setCollideWorldBounds(true)
+    this.player.body.setAllowGravity(true)
+
+    //Reset
+    this.reset();
+
+    //Left arrow
+    Scene.input(scene, data.number == 1 ? 'A' : 'LEFT', () => {
+      //Button down
+      this.inputX = Math.max(this.inputX - 1, -1)
+    }, () => {
+      //Button up
+      this.inputX = Math.min(this.inputX + 1, 1)
+    })
+
+    //Right arrow
+    Scene.input(scene, data.number == 1 ? 'D' : 'RIGHT', () => {
+      //Button down
+      this.inputX = Math.min(this.inputX + 1, 1)
+    }, () => {
+      //Button up
+      this.inputX = Math.max(this.inputX - 1, -1)
+    })
+
+    //Up arrow
+    Scene.input(scene, data.number == 1 ? 'W' : 'UP', () => {
+      //Button down
+      if (this.player.body.blocked.down) this.player.body.setVelocityY(-this.jumpSpeed)
+    }, () => {
+      
+    })
+  }
+
+  reset() {
+    //Reset position
+    this.player.setPosition(640 * (this.data.number - 1) + 360, 550)
+    this.player.body.setVelocityY(0)
+  }
+
+  update() {
+    //Update current velocity depending on input
+    this.player.body.setVelocityX(this.inputX * this.moveSpeed)
   }
 }

@@ -31,7 +31,7 @@ class Scene {
 
   static loadAudios(scene, audios) {
     /*
-    Turbo.loadAudios(this, [
+    Scene.loadAudios(this, [
       ['select', 'Assets/select.mp3'],
       ['background', 'Assets/8bit-music.mp3']
     ])
@@ -61,7 +61,7 @@ class Scene {
 
   static loadImages(scene, images) {
     /*
-    Turbo.loadImages(this, [
+    Scene.loadImages(this, [
       ['start_button', 'Assets/start-button.svg'],
       ['help_button', 'Assets/help-button.svg'],
       ['config_button', 'Assets/config-button.svg']
@@ -128,9 +128,15 @@ class Scene {
                     |_*/
 
   static input(scene, name, down, up) {
-    scene.input.keyboard.on('keydown-' + name, down);
+    scene.input.keyboard.on('keydown-' + name, (event) => {
+      if (event.repeat) return
+      down()
+    });
 
-    scene.input.keyboard.on('keyup-' + name, up);
+    scene.input.keyboard.on('keyup-' + name, (event) => {
+      if (event.repeat) return
+      up()
+    });
   }
 
   static onClick(scene, callback) {
