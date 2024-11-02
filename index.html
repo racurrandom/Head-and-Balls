@@ -25,26 +25,31 @@
 </style>
 
 <body>
-  <script>
-    //Create the game
-    const game = new Phaser.Game({
-      type: Phaser.AUTO,
-      width: 1280,
-      height: 720,
-      parent: 'game-canvas',
-      backgroundColor: '#000000',
-      physics: {
-        default: 'arcade',
-        arcade: {
-          debug: true,
-          gravity: { y: 9.8 }
-        }
-      },
-      scene: [SceneMain, SceneGame, SceneCharacters]
-    });
-
-    //Start main scene
-    game.scene.start('Main');
-  </script>
 </body>
+
+<script>
+  //Create the game
+  const game = new Phaser.Game({
+    type: Phaser.AUTO,
+    width: 1280,
+    height: 720,
+    parent: 'game-canvas',
+    backgroundColor: '#000000',
+    physics: {
+      default: 'arcade',
+      arcade: {
+        debug: true,
+        gravity: { y: 9.8 }
+      }
+    },
+    scene: [
+      SceneMain, 
+      SceneGame, 
+      SceneCharacters
+    ]
+  });
+
+  //Start main scene
+  game.scene.start('Main');
+</script>
 </html>

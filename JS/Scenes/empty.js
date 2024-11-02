@@ -1,4 +1,4 @@
-class Empty extends Phaser.Scene {
+class SceneEmpty extends Phaser.Scene {
   constructor() {
     super({ key: 'Empty' });
   }
