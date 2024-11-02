@@ -1,6 +1,6 @@
-![gdd](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/gdd.gif)  
-![title](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/title.gif)  
-![grupo4](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/grupo4.gif)  
+![gdd](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/gdd.gif)  
+![title](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/title.gif)  
+![grupo4](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/grupo4.gif)  
 
 # Integrantes
 
@@ -71,14 +71,14 @@ Las partidas de *Head and Balls* comienzan con cada jugador posicionado en lados
 
 *Head and Balls* tendrá un estilo cartoon 2D desenfadado que acompañe al estilo del gameplay. La paleta de color se caracterizara por colores brillantes y llamativos y los diseños tanto de los personajes como del escenario simples y estilizadas.
 
-![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/game.png)
+![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/game.png)
 
 # Interfaz
 
 El juego tomará como referencia juegos flash de hace años para diseñar sus interfaces.
 
-![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/ui_main.png)
-![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/GDD/ui_game.png)
+![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ui_main.png)
+![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ui_game.png)
 
 # Mecánicas
 
