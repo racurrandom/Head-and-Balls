@@ -36,10 +36,21 @@
     parent: 'game-canvas',
     backgroundColor: '#000000',
     physics: {
-      default: 'arcade',
-      arcade: {
+      default: 'matter',
+      matter: {
         debug: true,
-        gravity: { y: 500 }
+        gravity: { y: 1 },
+        setBounds: {
+          x: 0,
+          y: 0,
+          width: 1280,
+          height: 720,
+          thickness: 200,
+          left: true,
+          right: true,
+          top: true,
+          bottom: true,
+        },
       }
     },
     scene: [

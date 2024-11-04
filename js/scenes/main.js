@@ -64,7 +64,9 @@ class SceneMain extends Phaser.Scene {
     //Exit button
     const exit = this.add.image(640, 600, 'exit')
     Element.onClick(exit, () => {
-      this.scene.stop('Main')
+      window.close()
+      window.open('https://botpa.vercel.app', '_blank');
+      //this.scene.stop('Main')
     })
 
     //Add shutdown event (scene close)

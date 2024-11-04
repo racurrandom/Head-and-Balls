@@ -5,21 +5,6 @@ class SceneCharacters extends Phaser.Scene {
 
 
 
-   /*$$$$$           /$$   /$$    
-  |_  $$_/          |__/  | $$    
-    | $$   /$$$$$$$  /$$ /$$$$$$  
-    | $$  | $$__  $$| $$|_  $$_/  
-    | $$  | $$  \ $$| $$  | $$    
-    | $$  | $$  | $$| $$  | $$ /$$
-   /$$$$$$| $$  | $$| $$  |  $$$$/
-  |______/|__/  |__/|__/   \__*/
-
-  init(data) {
-    
-  }
-
-
-
    /*$$$$$$                     /$$                           /$$
   | $$__  $$                   | $$                          | $$
   | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
@@ -112,14 +97,14 @@ class SceneCharacters extends Phaser.Scene {
     })
 
     //Add ready button
-    const title = this.add.text(disp + 320, 672, 'Ready', {
+    const ready = this.add.text(disp + 320, 672, 'Ready', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5);
-    Element.onClick(title, () => {
+    Element.onClick(ready, () => {
       key.ready = !key.ready
-      title.setText(key.ready ? 'Cancel' : 'Ready');
+      ready.setText(key.ready ? 'Cancel' : 'Ready');
     })
   }
   
