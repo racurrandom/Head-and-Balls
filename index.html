@@ -8,13 +8,15 @@
   <script src="js/scenes/game.js"></script>
 </head>
 
+
+
 <style>
   html, body {
     margin: 0;
     padding: 0;
     width: 100%;
     height: 100%;
-    background-color: #0f0f0f;
+    background-color: #000000;
   }
 
   body {
@@ -24,17 +26,18 @@
   }
 </style>
 
-<body>
-</body>
+
 
 <script>
   //Create the game
   const game = new Phaser.Game({
+    //Generic
     type: Phaser.AUTO,
     width: 1280,
     height: 720,
-    parent: 'game-canvas',
     backgroundColor: '#000000',
+
+    //Physics options
     physics: {
       default: 'matter',
       matter: {
@@ -53,15 +56,13 @@
         },
       }
     },
+
+    //Game scenes (loads first in list on start)
     scene: [
-      //SceneMain, 
       SceneCharacters,
       SceneGame, 
+      SceneMain, 
     ]
   });
-
-  //Start main scene
-  //game.scene.start('Main')
-  //game.scene.start('Game')
 </script>
 </html>

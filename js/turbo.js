@@ -1,3 +1,12 @@
+ /*$$$$$$$ /$$                                               /$$
+| $$_____/| $$                                              | $$
+| $$      | $$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$  /$$$$$$$  /$$$$$$   /$$$$$$$
+| $$$$$   | $$ /$$__  $$| $$_  $$_  $$ /$$__  $$| $$__  $$|_  $$_/  /$$_____/
+| $$__/   | $$| $$$$$$$$| $$ \ $$ \ $$| $$$$$$$$| $$  \ $$  | $$   |  $$$$$$
+| $$      | $$| $$_____/| $$ | $$ | $$| $$_____/| $$  | $$  | $$ /$$\____  $$
+| $$$$$$$$| $$|  $$$$$$$| $$ | $$ | $$|  $$$$$$$| $$  | $$  |  $$$$//$$$$$$$/
+|________/|__/ \_______/|__/ |__/ |__/ \_______/|__/  |__/   \___/ |______*/
+
 class Element {
 
    /*$$$$$                                 /$$
@@ -16,6 +25,17 @@ class Element {
     element.setInteractive().on('pointerdown', callback);
   }
 }
+
+
+
+  /*$$$$$
+ /$$__  $$
+| $$  \__/  /$$$$$$$  /$$$$$$  /$$$$$$$   /$$$$$$
+|  $$$$$$  /$$_____/ /$$__  $$| $$__  $$ /$$__  $$
+ \____  $$| $$      | $$$$$$$$| $$  \ $$| $$$$$$$$
+ /$$  \ $$| $$      | $$_____/| $$  | $$| $$_____/
+|  $$$$$$/|  $$$$$$$|  $$$$$$$| $$  | $$|  $$$$$$$
+ \______/  \_______/ \_______/|__/  |__/ \______*/
 
 class Scene {
   //Helper class because I hate JS and doing 'this.' before everything is the goofyest thing ever
@@ -165,8 +185,85 @@ class Scene {
 }
 
 
+
+ /*$$$$$$$                     /$$
+| $$_____/                    |__/
+| $$        /$$$$$$   /$$$$$$$ /$$ /$$$$$$$   /$$$$$$ 
+| $$$$$    |____  $$ /$$_____/| $$| $$__  $$ /$$__  $$
+| $$__/     /$$$$$$$|  $$$$$$ | $$| $$  \ $$| $$  \ $$
+| $$       /$$__  $$ \____  $$| $$| $$  | $$| $$  | $$
+| $$$$$$$$|  $$$$$$$ /$$$$$$$/| $$| $$  | $$|  $$$$$$$
+|________/ \_______/|_______/ |__/|__/  |__/ \____  $$
+                                             /$$  \ $$
+                                            |  $$$$$$/
+                                             \_____*/ 
+
 class Ease {
   static cliff(x) {
     return 1 - Math.pow(2 * (x - 0.5), 2)
+  }
+}
+
+
+
+ /*$    /$$                      /$$
+| $$   | $$                     | $$
+| $$   | $$ /$$$$$$   /$$$$$$$ /$$$$$$    /$$$$$$   /$$$$$$
+|  $$ / $$//$$__  $$ /$$_____/|_  $$_/   /$$__  $$ /$$__  $$
+ \  $$ $$/| $$$$$$$$| $$        | $$    | $$  \ $$| $$  \__/
+  \  $$$/ | $$_____/| $$        | $$ /$$| $$  | $$| $$
+   \  $/  |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$/| $$
+    \_/    \_______/ \_______/   \___/   \______/ |_*/
+
+class Vec2 {
+  x = 0
+  y = 0
+
+  constructor(x, y) {
+    if (typeof x == 'object') {
+      //From a Vec2
+      if (typeof x.x == 'number') this.x = x.x
+      if (typeof x.y == 'number') this.y = x.y
+    } else {
+      //From x & y
+      if (typeof x == 'number') this.x = x
+      if (typeof y == 'number') this.y = y
+    }
+  }
+
+  equals(v) { 
+    return (this.x == v.x && this.y == v.y)
+  }
+
+  add(v) { 
+    return new Vec2(this.x + v.x, this.y + v.y) 
+  }
+
+  subtract(v) { 
+    return new Vec2(this.x - v.x, this.y - v.y) 
+  }
+
+  multiply(n) { 
+    return new Vec2(this.x * n, this.y * n) 
+  }
+
+  divide(n) { 
+    return new Vec2(this.x / n, this.y / n) 
+  }
+
+  magnitude() { 
+    return Math.sqrt(this.x * this.x + this.y * this.y) 
+  }
+
+  normalized() { 
+    return this.divide(this.magnitude()) 
+  }
+
+  moveTowards(towards, delta) {
+    let dir = towards.subtract(this)
+    if (dir.magnitude() > delta) 
+      return this.add(dir.normalized().multiply(delta))
+    else 
+      return towards
   }
 }
