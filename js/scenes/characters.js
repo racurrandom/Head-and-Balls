@@ -21,6 +21,7 @@ class SceneCharacters extends Phaser.Scene {
       ['skin2', 'assets/characters/c2.png'],
       ['skin3', 'assets/characters/c3.png'],
       ['skin4', 'assets/characters/c4.png'],
+      ['foot', 'assets/characters/foot.png'],
     ])
   }
 
@@ -47,11 +48,13 @@ class SceneCharacters extends Phaser.Scene {
     this.data = {
       p1: {
         number: 1,
+        scale: 1,
         skin: 'skin1',
         ready: false
       },
       p2: {
         number: 2,
+        scale: -1,  //flip sprite
         skin: 'skin2',
         ready: false
       }

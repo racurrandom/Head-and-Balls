@@ -133,6 +133,7 @@ class Scene {
       down()
     });
 
+    if (typeof up !== 'function') return
     scene.input.keyboard.on('keyup-' + name, (event) => {
       if (event.repeat) return
       up()
@@ -160,5 +161,12 @@ class Scene {
       scene.scene.start(name)
     else
       scene.scene.start(name, data)
+  }
+}
+
+
+class Ease {
+  static cliff(x) {
+    return 1 - Math.pow(2 * (x - 0.5), 2)
   }
 }
