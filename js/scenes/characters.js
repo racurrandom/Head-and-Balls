@@ -37,25 +37,21 @@ class SceneCharacters extends Phaser.Scene {
 
   create(data) {
     //Add title
-    const title = this.add.text(640, 120, "Choose your character", {
+    const title = this.add.text(640, 120, 'Choose your character', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5)
 
     //Data to pass to game
     this.data = {
       p1: {
-        index: 0,
         number: 1,
-        scale: 1,
         skin: 'skin1',
         ready: false
       },
       p2: {
-        index: 1,
         number: 2,
-        scale: -1,  //to flip sprite
         skin: 'skin2',
         ready: false
       }

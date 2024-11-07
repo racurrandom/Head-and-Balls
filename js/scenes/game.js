@@ -43,17 +43,18 @@ class SceneGame extends Phaser.Scene {
 
   create(data) {
     //Save game state
-    this.state = {
-      //Playing ()
+    this.data = {
+      //Playing
       isPlaying: true,
-      //Player 1 points
-      points1: 0,
-      //Player 2 points
-      points2: 0,
+      //Player 1
+      p1: data.p1,
+      //Player 2
+      p2: data.p2,
       //Timestamp when the game started
       timeStart: new Date().getTime(),
       //Timestamp when the game will end (after 3 minutes)
-      timeEnd: new Date().getTime() + 3 * 60 * 1000,
+      //timeEnd: new Date().getTime() + 3 * 60 * 1000,
+      timeEnd: new Date().getTime() + 10 * 1000,  //
     }
 
     //Add floor
@@ -77,11 +78,18 @@ class SceneGame extends Phaser.Scene {
 
     //Create player 2
     this.player2 = new Player(this, data.p2)
+
+    //Time
+    this.timer = this.add.text(640, 50, '00:00', {
+      fontSize: '64px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5, 0)
   }
 
   reset() {
     //Start playing
-    this.state.isPlaying = true
+    this.data.isPlaying = true
 
     //Reset players
     this.player1.reset()
@@ -94,23 +102,22 @@ class SceneGame extends Phaser.Scene {
 
   onGoal(number) {
     //Not playing
-    if (!this.state.isPlaying) return
+    if (!this.data.isPlaying) return
 
     //Stop playing
-    this.state.isPlaying = false
+    this.data.isPlaying = false
 
     //Add points
     switch (number) {
       case 1:
         //Scored in player 1's goal
-        this.state.points2++
+        this.player2.addPoint()
         break
       case 2:
         //Scored in player 2's goal
-        this.state.points1++
+        this.player1.addPoint()
         break
     }
-    console.log(this.state.points1 + ' - ' + this.state.points2)
     
     //Wait and reset
     setTimeout(() => {
@@ -138,17 +145,36 @@ class SceneGame extends Phaser.Scene {
     this.player2.update(delta)
 
     //Not playing
-    if (!this.state.isPlaying) return
+    if (!this.data.isPlaying) return
+
+    //Update timer
+    this.updateTimer()
 
     //Game finished
-    if (new Date().getTime() >= this.state.timeEnd) {
+    if (new Date().getTime() >= this.data.timeEnd) {
       //Stop playing
-      this.state.isPlaying = false
+      this.data.isPlaying = false
       console.log('game finished')
       setTimeout(() => {
-        Scene.changeScene(this, 'Main')
+        Scene.changeScene(this, 'Results', {
+          p1: {
+            skin: this.data.p1.skin,
+            points: this.player1.points
+          },
+          p2: {
+            skin: this.data.p2.skin,
+            points: this.player2.points
+          }
+        })
       }, 3000)
     }
+  }
+
+  updateTimer() {
+    const current = new Date(new Date().getTime() - this.data.timeStart)
+    let seconds = current.getSeconds()
+    if (seconds < 10) seconds = '0' + seconds
+    this.timer.setText('0' + current.getMinutes() + ':' + seconds)
   }
 }
 
@@ -158,6 +184,9 @@ class Player {
   //Player data
   scene
   data = {}
+  
+  //Points
+  points = 0
 
   //Movement
   isGrounded = true
@@ -176,6 +205,10 @@ class Player {
     this.scene = scene
     this.data = data
 
+    //Update data
+    this.data.index = data.number - 1
+    this.data.scale = data.number == 1 ? 1 : -1
+
     //Create goal
     this._initGoal()
 
@@ -184,6 +217,12 @@ class Player {
 
     //Add input
     this._initInput()
+
+    //Create points text
+    this.pointsText = scene.add.text(640 - data.scale * 150, 50, '0', {
+      fontSize: '64px',
+      fill: '#fff',
+    }).setOrigin(1 - data.index, 0)
   }
 
   //Init
@@ -296,14 +335,13 @@ class Player {
     })
   }
 
-  //Reset
+  //State
   reset() {
     //Reset position & velocity
     this.player.setPosition(640 + (this.data.number == 1 ? -360 : 360), 550 + this.data.number)
     this.player.setVelocity(0, 0)
   }
 
-  //Update
   update(delta) {
     //Update current velocity based on input
     this.player.setVelocityX(this.inputX * this.moveSpeed)
@@ -348,5 +386,11 @@ class Player {
     )
     const footPosition = footOrigin.add(this.footOffset)
     this.foot.setPosition(footPosition.x, footPosition.y)
+  }
+
+  //Other
+  addPoint() {
+    this.points++
+    this.pointsText.setText(this.points)
   }
 }
