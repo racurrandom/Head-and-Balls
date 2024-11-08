@@ -17,10 +17,15 @@ class SceneCharacters extends Phaser.Scene {
   preload() {
     //Load images
     Scene.loadImages(this, [
-      ['skin1', 'assets/characters/c1.png'],
-      ['skin2', 'assets/characters/c2.png'],
-      ['skin3', 'assets/characters/c3.png'],
-      ['skin4', 'assets/characters/c4.png'],
+      ['arrow_next', 'assets/characters/arrow_next.png'],
+      ['preview1', 'assets/characters/p1.png'],
+      ['preview2', 'assets/characters/p2.png'],
+      ['preview3', 'assets/characters/p3.png'],
+      ['preview4', 'assets/characters/p4.png'],
+      ['skin1', 'assets/characters/s1.png'],
+      ['skin2', 'assets/characters/s2.png'],
+      ['skin3', 'assets/characters/s3.png'],
+      ['skin4', 'assets/characters/s4.png'],
     ])
   }
 
@@ -47,12 +52,12 @@ class SceneCharacters extends Phaser.Scene {
     this.data = {
       p1: {
         number: 1,
-        skin: 'skin1',
+        skin: Math.floor(Math.random() * (4 - 1) + 1),
         ready: false
       },
       p2: {
         number: 2,
-        skin: 'skin2',
+        skin: Math.floor(Math.random() * (4 - 1) + 1),
         ready: false
       }
     }
@@ -67,37 +72,61 @@ class SceneCharacters extends Phaser.Scene {
   createCharacterSelectScreen(key) {
     //Displacement
     const disp = 640 * (key.number - 1)
+    const scale = key.number == 1 ? 1 : -1
 
     //Create player skin indicator
-    const player = this.add.image(disp + 320, 360, key.skin)
+    const player = this.add.image(disp + 320, 360, 'preview' + key.skin)
+    player.setScale(scale * 2, 2)
+
+    //Create skin swap buttons
+    const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
+    prev.setScale(-0.1, 0.1)
+    Element.onClick(prev, () => {
+      key.skin--
+      if (key.skin < 1) key.skin = 4
+      player.setTexture('preview' + key.skin)
+    })
+
+    const next = this.add.image(disp + 320 + 150, 360, 'arrow_next')
+    next.setScale(0.1, 0.1)
+    Element.onClick(next, () => {
+      key.skin++
+      if (key.skin > 4) key.skin = 1
+      player.setTexture('preview' + key.skin)
+    })
+
 
     //Create skin buttons
-    const skin1 = this.add.image(disp + 118, 572, 'skin1')
+    /*const skin1 = this.add.image(disp + 118, 525, 'skin1')
+    skin1.setScale(scale * 1, 1)
     Element.onClick(skin1, () => {
       key.skin = 'skin1'
       player.setTexture(key.skin)
     })
 
-    const skin2 = this.add.image(disp + 256, 572, 'skin2')
+    const skin2 = this.add.image(disp + 256, 525, 'skin2')
+    skin2.setScale(scale * 1, 1)
     Element.onClick(skin2, () => {
       key.skin = 'skin2'
       player.setTexture(key.skin)
     })
 
-    const skin3 = this.add.image(disp + 384, 572, 'skin3')
+    const skin3 = this.add.image(disp + 384, 525, 'skin3')
+    skin3.setScale(scale * 1, 1)
     Element.onClick(skin3, () => {
       key.skin = 'skin3'
       player.setTexture(key.skin)
     })
 
-    const skin4 = this.add.image(disp + 522, 572, 'skin4')
+    const skin4 = this.add.image(disp + 522, 525, 'skin4')
+    skin4.setScale(scale * 1, 1)
     Element.onClick(skin4, () => {
       key.skin = 'skin4'
       player.setTexture(key.skin)
-    })
+    })*/
 
     //Add ready button
-    const ready = this.add.text(disp + 320, 672, 'Ready', {
+    const ready = this.add.text(disp + 320, 600, 'Ready', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'

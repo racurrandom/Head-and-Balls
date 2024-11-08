@@ -9,6 +9,37 @@
 
 class Element {
 
+  static updateOptions(elem, options) {
+    //Priority
+    if (typeof options.circle === 'number') elem.setCircle(options.circle)
+
+    //Update scale
+    if (typeof options.scaleX !== 'number') options.scaleX = elem.scaleX
+    if (typeof options.scaleY !== 'number') options.scaleY = elem.scaleY
+    elem.setScale(options.scaleX, options.scaleY)
+
+    //Update label
+    if (typeof options.label === 'string') elem.body.label = options.label
+
+    //Update bools
+    if (typeof options.isStatic === 'boolean') elem.setStatic(options.isStatic)
+    if (typeof options.isSensor === 'boolean') elem.setSensor(options.isSensor)
+    if (typeof options.ignoreGravity === 'boolean') elem.setIgnoreGravity(options.ignoreGravity)
+
+    //Update numbers
+    if (typeof options.mass === 'number') elem.setMass(options.mass)
+    if (typeof options.bounce === 'number') elem.setBounce(options.bounce)
+    if (typeof options.friction === 'number') elem.setFriction(options.friction)
+    if (typeof options.frictionAir === 'number') elem.setFrictionAir(options.frictionAir)
+    if (typeof options.frictionStatic === 'number') elem.setFrictionStatic(options.frictionStatic)
+    if (typeof options.depth === 'number') elem.depth = options.depth
+
+    //Update other
+    if (options.fixedRotation) elem.setFixedRotation()
+  }
+
+
+
    /*$$$$$                                 /$$
   |_  $$_/                                | $$
     | $$   /$$$$$$$   /$$$$$$  /$$   /$$ /$$$$$$
@@ -181,6 +212,23 @@ class Scene {
       scene.scene.start(name)
     else
       scene.scene.start(name, data)
+  }
+
+  static imageWithPhysics(scene, image, options) {
+    //Fix arguments
+    if (typeof image !== 'string') image = ''
+    if (typeof options !== 'object') options = {}
+    if (typeof options.x !== 'number') options.x = 0
+    if (typeof options.y !== 'number') options.y = 0
+
+    //Create element
+    const elem = scene.matter.add.image(options.x, options.y, image)
+
+    //Update options
+    Element.updateOptions(elem, options)
+
+    //Return element
+    return elem
   }
 }
 

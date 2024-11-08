@@ -44,8 +44,9 @@ class SceneGame extends Phaser.Scene {
   create(data) {
     //Save game state
     this.data = {
-      //Playing
+      //State
       isPlaying: true,
+      isFinished: false,
       //Player 1
       p1: data.p1,
       //Player 2
@@ -54,24 +55,34 @@ class SceneGame extends Phaser.Scene {
       timeStart: new Date().getTime(),
       //Timestamp when the game will end (after 3 minutes)
       //timeEnd: new Date().getTime() + 3 * 60 * 1000,
-      timeEnd: new Date().getTime() + 10 * 1000,  //
+      timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
 
     //Add floor
-    this.floor = this.matter.add.image(640, 680, 'floor', { isStatic: true })
-    this.floor.body.label = 'floor'
-    this.floor.depth = 9
+    this.floor = Scene.imageWithPhysics(this, 'floor', {
+      //Position
+      x: 640,
+      y: 680,
+      //Options
+      label: 'floor',
+      isStatic: true,
+      depth: 9
+    })
     
     //Add ball
-    this.ball = this.matter.add.image(640, 200, 'ball')
-    this.ball.setCircle(25)
-    this.ball.body.label = 'ball'
-    this.ball.setBounce(0.6)
-    this.ball.setFriction(0.05)
-    this.ball.setFrictionAir(0)
-    this.ball.setFrictionStatic(0)
-    this.ball.setMass(1)
-    this.ball.depth = 8
+    this.ball = Scene.imageWithPhysics(this, 'ball', {
+      //Position
+      x: 640,
+      y: 200,
+      //Options
+      label: 'ball',
+      circle: 25,
+      bounce: 0.6,
+      friction: 0.05,
+      frictionAir: 0,
+      frictionStatic: 0,
+      depth: 8
+    })
 
     //Create player 1
     this.player1 = new Player(this, data.p1)
@@ -144,8 +155,8 @@ class SceneGame extends Phaser.Scene {
     this.player1.update(delta)
     this.player2.update(delta)
 
-    //Not playing
-    if (!this.data.isPlaying) return
+    //Still in game
+    if (this.data.isFinished) return
 
     //Update timer
     this.updateTimer()
@@ -153,6 +164,7 @@ class SceneGame extends Phaser.Scene {
     //Game finished
     if (new Date().getTime() >= this.data.timeEnd) {
       //Stop playing
+      this.data.isFinished = true
       this.data.isPlaying = false
       console.log('game finished')
       setTimeout(() => {
@@ -228,11 +240,20 @@ class Player {
   //Init
   _initGoal() {
     //Create goal
-    this.goalTrigger = this.scene.matter.add.image(this.data.index * this.scene.sys.game.canvas.width + (this.data.scale * 25), 540, 'goal', { isStatic: true })
-    this.goalTrigger.body.label = 'goal' + this.data.number
-    this.goalTrigger.setIgnoreGravity(true)
-    this.goalTrigger.setSensor(true)
-    this.goalTrigger.depth = 9
+    this.goalTrigger = Scene.imageWithPhysics(this.scene, 'goal', {
+      //Position
+      x: this.data.index * this.scene.sys.game.canvas.width + (this.data.scale * 25),
+      y: 540,
+      //Scale
+      scaleX: this.data.scale,
+      scaleY: 1,
+      //Options
+      label: 'player' + this.data.number,
+      isStatic: true,
+      isSensor: true,
+      ignoreGravity: true,
+      depth: 9
+    })
 
     //Add goal interaction
     this.goalTrigger.setOnCollide(pair => {
@@ -244,21 +265,35 @@ class Player {
     })
 
     //Create goal top (to prevent ball from entering from the top)
-    this.goalTop = this.scene.matter.add.rectangle(this.goalTrigger.x + (10 * this.data.scale), this.goalTrigger.y - this.goalTrigger.height / 2 - 10, this.goalTrigger.width + 20, 20, { isStatic: true })
-    this.goalTop.label = 'goal' + this.data.number
+    this.goalTop = this.scene.matter.add.rectangle(
+      this.goalTrigger.x + (10 * this.data.scale), 
+      this.goalTrigger.y - this.goalTrigger.height / 2 - 10, 
+      this.goalTrigger.width + 20, 
+      20, 
+      { 
+        label: 'goal' + this.data.number,
+        isStatic: true 
+      }
+    )
   }
 
   _initPlayer() {
     //Create player
-    this.player = this.scene.matter.add.image(640, 360, this.data.skin)
-    this.player.body.label = 'player' + this.data.number
-    this.player.setFixedRotation()
-    this.player.setMass(1)
-    this.player.setFriction(0)
-    this.player.setFrictionAir(0)
-    this.player.setFrictionStatic(0)
-    this.player.setScale(this.data.scale, 1)
-    this.player.depth = 4
+    this.player = Scene.imageWithPhysics(this.scene, 'skin' + this.data.skin, {
+      //Position
+      x: 0,
+      y: 0,
+      //Scale
+      scaleX: this.data.scale,
+      scaleY: 1,
+      //Options
+      label: 'player' + this.data.number,
+      friction: 0,
+      frictionAir: 0,
+      frictionStatic: 0,
+      fixedRotation: true,
+      depth: 4
+    })
 
     //Add headbutt interaction
     this.player.setOnCollide(pair => {
@@ -276,12 +311,19 @@ class Player {
     })
 
     //Create foot
-    this.foot = this.scene.matter.add.image(640, 360, 'foot')
-    this.foot.body.label = 'foot' + this.data.number
-    this.foot.setIgnoreGravity(true)
-    this.foot.setSensor(true)
-    this.foot.setScale(this.data.scale, 1)
-    this.foot.depth = 5
+    this.foot = Scene.imageWithPhysics(this.scene, 'foot', {
+      //Position
+      x: 0,
+      y: 0,
+      //Scale
+      scaleX: this.data.scale,
+      scaleY: 1,
+      //Options
+      label: 'foot' + this.data.number,
+      isSensor: true,
+      ignoreGravity: true,
+      depth: 5
+    })
 
     //Add kick ball interaction
     this.foot.setOnCollideActive(pair => {
