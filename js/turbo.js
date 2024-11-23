@@ -164,7 +164,9 @@ class Scene {
     this.once(scene, 'shutdown', callback)
   }
 
-
+  static onDestroy(scene, callback) {
+    this.once(scene, 'destroy', callback)
+  }
   
    /*$$$$$                                 /$$
   |_  $$_/                                | $$

@@ -28,6 +28,11 @@ class SceneGame extends Phaser.Scene {
       ['goal', 'assets/game/goal.png'],
       ['foot', 'assets/game/foot.png'],
     ])
+
+    //Load audios
+    Scene.loadAudios(this,[
+      ['playTheme','assets/game/gameMusic.mp3']
+    ])
   }
 
 
@@ -57,6 +62,12 @@ class SceneGame extends Phaser.Scene {
       //timeEnd: new Date().getTime() + 3 * 60 * 1000,
       timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
+
+    //Add music
+    const playMusic = this.sound.add('playTheme');
+    playMusic.loop = true;
+    playMusic.play();
+
 
     //Add floor
     this.floor = Scene.imageWithPhysics(this, 'floor', {
@@ -96,6 +107,11 @@ class SceneGame extends Phaser.Scene {
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5, 0)
+
+    //Add shutdown event (scene close)
+    Scene.onClose(this, () => {
+      playMusic.stop()
+    })
   }
 
   reset() {
@@ -134,6 +150,7 @@ class SceneGame extends Phaser.Scene {
     setTimeout(() => {
       this.reset()
     }, 1000)
+
   }
   
 

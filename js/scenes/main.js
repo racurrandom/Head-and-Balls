@@ -58,7 +58,8 @@ class SceneMain extends Phaser.Scene {
     //Options button
     const options = this.add.image(640, 500, 'options')
     Element.onClick(options, () => {
-      console.log('options')
+      this.scene.launch('Options');
+      this.scene.setVisible(false);
     })
 
     //Exit button
