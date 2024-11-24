@@ -1,21 +1,6 @@
-class SceneResults extends Phaser.Scene {
+class SceneCredits extends Phaser.Scene {
   constructor() {
-    super({ key: 'Results' });
-  }
-
-
-
-   /*$$$$$           /$$   /$$    
-  |_  $$_/          |__/  | $$    
-    | $$   /$$$$$$$  /$$ /$$$$$$  
-    | $$  | $$__  $$| $$|_  $$_/  
-    | $$  | $$  \ $$| $$  | $$    
-    | $$  | $$  | $$| $$  | $$ /$$
-   /$$$$$$| $$  | $$| $$  |  $$$$/
-  |______/|__/  |__/|__/   \__*/
-
-  init(data) {
-    
+    super({ key: 'Credits' });
   }
 
 
@@ -45,69 +30,42 @@ class SceneResults extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
-    //Title
-    const title = this.add.text(640, 120, 'Resultados', {
+    //Add background
+    const bg = this.add.rectangle(1280 / 2, 720 / 2, 1280 - 100, 720 - 100, 0xeb7434)
+
+    Element.onClick(bg, () => {}) //Prevent clickthrough
+
+    //Add title
+    const title = this.add.text(640, 120, 'Credits', {
       fontFamily: 'college',
-      fontSize: '60px',
+      fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
 
-    //Get winner string
-    const isTie = data.p1.points == data.p2.points
-    let winner_s = 'Empate'
-    
-    //Not a tie
-    if (!isTie) winner_s = 'Ganador\n' + (data.p1.points > data.p2.points ? 'Jugador 1' : 'Jugador 2')
-
-    //Winner
-    const winner = this.add.text(640, 360, winner_s, {
+    //Add text
+    const credits = this.add.text(640, 360, 'Víctor Cabello Pamukov\nGuillermo Sánchez González\nAlejandro Paniagua Moreno\nRaúl Alfonso Pérez', {
       fontFamily: 'college',
-      fontSize: '60px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    
-    //Player 1
-    const player1 = this.add.image(320, 360, 'preview' + data.p1.skin)
-    player1.setScale(2, 2)
-    const player1points = this.add.text(320, 500, data.p1.points, {
-      fontFamily: 'college',
-      fontSize: '60px',
+      fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
 
-    //Player 2
-    const player2 = this.add.image(960, 360, 'preview' + data.p2.skin)
-    player2.setScale(-2, 2)
-    const player2points = this.add.text(960, 500, data.p2.points, {
-      fontFamily: 'college',
-      fontSize: '60px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-
-    //Back button
-    const back = this.add.image(640, 600, 'button')
-    const backText = this.add.text(640, 600 - 6, 'Volver', {
+    //Add resume button
+    const resume = this.add.image(640, 600, 'button')
+    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
       fontFamily: 'college',
       fontSize: '30px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
-    Element.onHover(back, () => {
-      back.setTexture('buttonHover')
+    Element.onHover(resume, () => {
+      resume.setTexture('buttonHover')
     }, () => {
-      back.setTexture('button')
+      resume.setTexture('button')
     })
-    Element.onClick(back, () => {
-      Scene.changeScene(this, 'Main')
-    })
-
-    //Stop music on scene close
-    Scene.onClose(this, () => {
-      SceneGame.music.stop()
+    Element.onClick(resume, ()=>{
+      this.scene.stop()
     })
   }
 
