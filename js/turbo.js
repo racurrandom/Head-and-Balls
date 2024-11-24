@@ -209,11 +209,11 @@ class Scene {
    \______/    \___/  |__/  |__/ \_______/|_*/
 
   static changeScene(scene, name, data) {
-    scene.scene.stop(scene.scene.key)
     if (data == undefined)
-      scene.scene.start(name)
+      scene.scene.launch(name)
     else
-      scene.scene.start(name, data)
+      scene.scene.launch(name, data)
+    scene.scene.stop(scene.scene.key)
   }
 
   static imageWithPhysics(scene, image, options) {

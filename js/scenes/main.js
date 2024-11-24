@@ -1,4 +1,7 @@
 class SceneMain extends Phaser.Scene {
+
+  static music
+
   constructor() {
     super({ key: 'Main' });
   }
@@ -17,7 +20,7 @@ class SceneMain extends Phaser.Scene {
   preload() {
     //Load audio
     Scene.loadAudios(this, [
-      ['background', 'assets/main/music.mp3'],
+      ['menuMusic', 'assets/main/menuMusic.mp3'],
     ])
 
     //Load images
@@ -25,7 +28,7 @@ class SceneMain extends Phaser.Scene {
       ['title', 'assets/main/title.gif'],
       ['play', 'assets/main/jugar.gif'],
       ['options', 'assets/main/opciones.gif'],
-      ['exit', 'assets/main/salir.gif'],
+      ['credits', 'assets/main/creditos.gif'],
     ])
   }
 
@@ -42,12 +45,14 @@ class SceneMain extends Phaser.Scene {
   
   create(data) {
     //Add background music
-    const music = this.sound.add('background')
-    music.loop = true;
-    music.play();
+    SceneMain.music = this.sound.add('menuMusic')
+    SceneMain.music.loop = true
+    SceneMain.music.play()
 
     //Add title
-    const title = this.add.image(640, 120, 'title')
+    const title = this.add.image(640, 150, 'title')
+    title.scaleX = 1.5
+    title.scaleY = 1.5
 
     //Play button
     const play = this.add.image(640, 400, 'play')
@@ -58,21 +63,13 @@ class SceneMain extends Phaser.Scene {
     //Options button
     const options = this.add.image(640, 500, 'options')
     Element.onClick(options, () => {
-      this.scene.launch('Options');
-      this.scene.setVisible(false);
+      this.scene.launch('Options')
     })
 
-    //Exit button
-    const exit = this.add.image(640, 600, 'exit')
-    Element.onClick(exit, () => {
-      window.close()
-      window.open('https://botpa.vercel.app', '_blank');
-      //this.scene.stop('Main')
-    })
-
-    //Add shutdown event (scene close)
-    Scene.onClose(this, () => {
-      music.stop()
+    //Credits button
+    const credits = this.add.image(640, 600, 'credits')
+    Element.onClick(credits, () => {
+      //this.scene.launch('Options')
     })
   }
 }

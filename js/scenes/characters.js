@@ -67,6 +67,11 @@ class SceneCharacters extends Phaser.Scene {
     
     //Player 2
     this.createCharacterSelectScreen(this.data.p2)
+
+    //Stop music on scene close
+    Scene.onClose(this, () => {
+      SceneMain.music.stop()
+    })
   }
 
   createCharacterSelectScreen(key) {

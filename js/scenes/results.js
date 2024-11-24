@@ -77,9 +77,14 @@ class SceneResults extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
-    //Return to menu
+    //Return to menu on click
     Scene.onClick(this, () => {
       Scene.changeScene(this, 'Main')
+    })
+
+    //Stop music on scene close
+    Scene.onClose(this, () => {
+      SceneGame.music.stop()
     })
   }
 

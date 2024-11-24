@@ -5,6 +5,9 @@
 //4 - players
 
 class SceneGame extends Phaser.Scene {
+
+  static music
+
   constructor() {
     super({ key: 'Game' });
   }
@@ -21,17 +24,26 @@ class SceneGame extends Phaser.Scene {
   |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
 
   preload() {
+    //Load audios
+    Scene.loadAudios(this,[
+      ['gameMusic','assets/game/gameMusic.mp3'],
+      ['voice1.0', 'assets/game/voices/1.0.mp3'],
+      ['voice1.1', 'assets/game/voices/1.1.mp3'],
+      ['voice2.0', 'assets/game/voices/2.0.mp3'],
+      ['voice2.1', 'assets/game/voices/2.1.mp3'],
+      ['voice3.0', 'assets/game/voices/3.0.mp3'],
+      ['voice3.1', 'assets/game/voices/3.1.mp3'],
+      ['voice4.0', 'assets/game/voices/4.0.mp3'],
+      ['voice4.1', 'assets/game/voices/4.1.mp3'],
+      ['piii', 'assets/game/sfx/piii.mp3'],
+    ])
+
     //Load images
     Scene.loadImages(this, [
       ['floor', 'assets/game/floor.png'],
       ['ball', 'assets/game/ball.png'],
       ['goal', 'assets/game/goal.png'],
       ['foot', 'assets/game/foot.png'],
-    ])
-
-    //Load audios
-    Scene.loadAudios(this,[
-      ['playTheme','assets/game/gameMusic.mp3']
     ])
   }
 
@@ -63,11 +75,13 @@ class SceneGame extends Phaser.Scene {
       timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
 
-    //Add music
-    const playMusic = this.sound.add('playTheme');
-    playMusic.loop = true;
-    playMusic.play();
+    //Add background music
+    SceneGame.music = this.sound.add('gameMusic')
+    SceneGame.music.loop = true
+    SceneGame.music.play()
 
+    //Play piii
+    this.sound.add('piii').play()
 
     //Add floor
     this.floor = Scene.imageWithPhysics(this, 'floor', {
@@ -103,15 +117,11 @@ class SceneGame extends Phaser.Scene {
 
     //Time
     this.timer = this.add.text(640, 50, '00:00', {
+      fontFamily: 'digital',
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5, 0)
-
-    //Add shutdown event (scene close)
-    Scene.onClose(this, () => {
-      playMusic.stop()
-    })
   }
 
   reset() {
@@ -125,6 +135,7 @@ class SceneGame extends Phaser.Scene {
     //Reset ball
     this.ball.setPosition(640, 360)
     this.ball.setVelocity(0, 0)
+    this.ball.setAngularVelocity(0)
   }
 
   onGoal(number) {
@@ -133,6 +144,9 @@ class SceneGame extends Phaser.Scene {
 
     //Stop playing
     this.data.isPlaying = false
+    
+    //Play piii
+    this.sound.add('piii').play()
 
     //Add points
     switch (number) {
@@ -183,7 +197,11 @@ class SceneGame extends Phaser.Scene {
       //Stop playing
       this.data.isFinished = true
       this.data.isPlaying = false
-      console.log('game finished')
+    
+      //Play piii
+      this.sound.add('piii').play()
+
+      //Wait to show results scene
       setTimeout(() => {
         Scene.changeScene(this, 'Results', {
           p1: {
@@ -249,6 +267,7 @@ class Player {
 
     //Create points text
     this.pointsText = scene.add.text(640 - data.scale * 150, 50, '0', {
+      fontFamily: 'digital',
       fontSize: '64px',
       fill: '#fff',
     }).setOrigin(1 - data.index, 0)
@@ -259,13 +278,13 @@ class Player {
     //Create goal
     this.goalTrigger = Scene.imageWithPhysics(this.scene, 'goal', {
       //Position
-      x: this.data.index * this.scene.sys.game.canvas.width + (this.data.scale * 25),
-      y: 540,
+      x: this.data.index * this.scene.sys.game.canvas.width + (this.data.scale * 75),
+      y: 520,
       //Scale
       scaleX: this.data.scale,
       scaleY: 1,
       //Options
-      label: 'player' + this.data.number,
+      label: 'goal' + this.data.number,
       isStatic: true,
       isSensor: true,
       ignoreGravity: true,
@@ -281,14 +300,39 @@ class Player {
       this.scene.onGoal(this.data.number)
     })
 
-    //Create goal top (to prevent ball from entering from the top)
-    this.goalTop = this.scene.matter.add.rectangle(
+    //Add goal ceiling (to prevent ball from entering from the top)
+    this.scene.matter.add.rectangle(
       this.goalTrigger.x + (10 * this.data.scale), 
       this.goalTrigger.y - this.goalTrigger.height / 2 - 10, 
       this.goalTrigger.width + 20, 
       20, 
       { 
-        label: 'goal' + this.data.number,
+        label: 'goalCeiling' + this.data.number,
+        isStatic: true 
+      }
+    )
+
+    this.scene.matter.add.trapezoid(
+      0 + 1280 * this.data.index, 
+      this.goalTrigger.y - this.goalTrigger.height / 2 - 35, 
+      this.goalTrigger.width * 2 + 40, 
+      40,
+      1,
+      { 
+        label: 'goalCeiling' + this.data.number,
+        isStatic: true 
+      }
+    )
+
+    //Add goal back (to prevent ball from touching the wall)
+    this.scene.matter.add.trapezoid(
+      0 + 1280 * this.data.index, 
+      this.goalTrigger.y - 40, 
+      this.goalTrigger.width * 0.6, 
+      -this.goalTrigger.height,
+      1,
+      { 
+        label: 'goalWall' + this.data.number,
         isStatic: true 
       }
     )
@@ -397,7 +441,7 @@ class Player {
   //State
   reset() {
     //Reset position & velocity
-    this.player.setPosition(640 + (this.data.number == 1 ? -360 : 360), 550 + this.data.number)
+    this.player.setPosition(640 + (this.data.number == 1 ? -360 : 360), 600 + this.data.number)
     this.player.setVelocity(0, 0)
   }
 
@@ -449,7 +493,11 @@ class Player {
 
   //Other
   addPoint() {
+    //Add point to score
     this.points++
     this.pointsText.setText(this.points)
+
+    //Play voiceline
+    this.scene.sound.add('voice' + this.data.number + '.' + Math.floor(Math.random() * 2)).play()  //Play a random voiceline (0 or 1)
   }
 }

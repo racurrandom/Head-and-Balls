@@ -45,28 +45,28 @@ class SceneOptions extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
+    //Add background
+    const bg = this.add.rectangle(1280 / 2, 720 / 2, 1280 - 60, 720 - 60, 0xeb7434)
 
-    let options_s = 'OPTIONS'
-    
-    const pause = this.add.text(640, 80, options_s, {
+    Element.onClick(bg, () => {}) //Prevent clickthrough
+
+    //Add title
+    const title = this.add.text(640, 80, 'OPTIONS', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
 
-    let resume_s = 'RESUME'
-
-    const resume = this.add.text(640, 360, resume_s, {
+    //Add resume button
+    const resume = this.add.text(640, 360, 'RESUME', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
+
     Element.onClick(resume, ()=>{
-      this.scene.setVisible(true, 'Main')
       this.scene.stop()
-
     })
-    
   }
 
 

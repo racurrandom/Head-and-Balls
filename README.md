@@ -112,6 +112,11 @@ Los controles del juego serán sencillos y permitirán la jugabilidad de 2 jugad
   * **Efectos de sonido:** Sonidos como contacto con la pelota, golpes entre personajes, comienzo/final del partido, gol marcado…  
   * **Líneas de voz de personajes:** Cada personaje tendrá una línea de voz única y divertida que se reproducirá al marcar un gol, añadiendo humor y personalidad al juego.
 
+# Recursos
+
+* **Música partido:** [Bensound - Brazil Samba](https://youtu.be/4xeyMOIo3Eg)
+* **Efecto de sonido pitido:** [Action Soccer](https://www.sounds-resource.com/pc_computer/actionsoccer/)  
+
 # Licencia
  
 **Producto licenciado bajo la licencia Apache 2.0.**
