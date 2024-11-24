@@ -36,7 +36,7 @@ class SceneCredits extends Phaser.Scene {
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
     //Add title
-    const title = this.add.text(640, 120, 'Credits', {
+    const title = this.add.text(640, 120, 'Creditos', {
       fontFamily: 'college',
       fontSize: '64px',
       fill: '#fff',
