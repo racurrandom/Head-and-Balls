@@ -87,3 +87,64 @@ class SceneOptions extends Phaser.Scene {
     
   }
 }
+
+
+
+//Slider
+class Slider{
+
+  scene
+  position = new Vec2()
+
+  startPoint = new Vec2()
+
+  endPoint = new Vec2()
+
+  value = 0
+
+  image
+
+  down = false;
+
+  constructor(scene, img, startPoint, endPoint, value){
+    this.scene = scene 
+    this.startPoint = new Vec2(startPoint)
+    this.endPoint = new Vec2(endPoint)
+    this.value = value
+    this.position = this.Interpolate(startPoint, endPoint, value)
+
+    this.image = this.scene.add.image(this.position.x, this.position.y, img)
+
+    this.image.setPosition(this.position.x, this.position.y);
+
+    Element.onClick(this.image, (event)=>{
+      this.down = true;
+    })
+
+    Element.onUp(this.image, () => {
+      this.down = false;
+    })
+
+    Element.onOut(this.image, () => {
+      this.down = false;
+    })
+
+    Element.onMove(this.image, (event) =>{this.Update(event)} )
+
+  }
+
+  Update(event){
+    if(this.down){
+      this.position.x = event.position.x;
+      this.position.y = this.image.y;
+      if(this.position.x < this.startPoint.x) this.position.x = this.startPoint.x
+      if(this.position.x > this.endPoint.x) this.position.x = this.endPoint.x
+      this.image.setPosition(this.position.x, this.position.y);
+    }
+  }
+
+  Interpolate(p1, p2, value){
+    var dir = p2.subtract(p1).normalized()
+    return p1.add(dir.multiply(value * p1.subtract(p2).magnitude()))
+  }
+}

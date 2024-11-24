@@ -43,6 +43,7 @@ class SceneCharacters extends Phaser.Scene {
   create(data) {
     //Add title
     const title = this.add.text(640, 120, 'Choose your character', {
+      fontFamily: 'college',
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
@@ -52,12 +53,12 @@ class SceneCharacters extends Phaser.Scene {
     this.data = {
       p1: {
         number: 1,
-        skin: Math.floor(Math.random() * (4 - 1) + 1),
+        skin: Util.rand(1, 4),
         ready: false
       },
       p2: {
         number: 2,
-        skin: Math.floor(Math.random() * (4 - 1) + 1),
+        skin: Util.rand(1, 4),
         ready: false
       }
     }
@@ -100,45 +101,22 @@ class SceneCharacters extends Phaser.Scene {
       player.setTexture('preview' + key.skin)
     })
 
-
-    //Create skin buttons
-    /*const skin1 = this.add.image(disp + 118, 525, 'skin1')
-    skin1.setScale(scale * 1, 1)
-    Element.onClick(skin1, () => {
-      key.skin = 'skin1'
-      player.setTexture(key.skin)
-    })
-
-    const skin2 = this.add.image(disp + 256, 525, 'skin2')
-    skin2.setScale(scale * 1, 1)
-    Element.onClick(skin2, () => {
-      key.skin = 'skin2'
-      player.setTexture(key.skin)
-    })
-
-    const skin3 = this.add.image(disp + 384, 525, 'skin3')
-    skin3.setScale(scale * 1, 1)
-    Element.onClick(skin3, () => {
-      key.skin = 'skin3'
-      player.setTexture(key.skin)
-    })
-
-    const skin4 = this.add.image(disp + 522, 525, 'skin4')
-    skin4.setScale(scale * 1, 1)
-    Element.onClick(skin4, () => {
-      key.skin = 'skin4'
-      player.setTexture(key.skin)
-    })*/
-
     //Add ready button
-    const ready = this.add.text(disp + 320, 600, 'Ready', {
-      fontSize: '64px',
+    const ready = this.add.image(disp + 320, 600, 'button')
+    const readyText = this.add.text(disp + 320, 600 - 6, 'Listo', {
+      fontFamily: 'college',
+      fontSize: '30px',
       fill: '#fff',
       align: 'center'
-    }).setOrigin(0.5);
+    }).setOrigin(0.5)
+    Element.onHover(ready, () => {
+      ready.setTexture('buttonHover')
+    }, () => {
+      ready.setTexture('button')
+    })
     Element.onClick(ready, () => {
       key.ready = !key.ready
-      ready.setText(key.ready ? 'Cancel' : 'Ready');
+      readyText.setText(key.ready ? 'No listo' : 'Listo');
     })
   }
   

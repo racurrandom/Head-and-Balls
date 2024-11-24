@@ -29,6 +29,8 @@ class SceneMain extends Phaser.Scene {
       ['play', 'assets/main/jugar.gif'],
       ['options', 'assets/main/opciones.gif'],
       ['credits', 'assets/main/creditos.gif'],
+      ['button', 'assets/main/button.png'],
+      ['buttonHover', 'assets/main/buttonHover.png'],
     ])
   }
 
@@ -55,19 +57,52 @@ class SceneMain extends Phaser.Scene {
     title.scaleY = 1.5
 
     //Play button
-    const play = this.add.image(640, 400, 'play')
+    const play = this.add.image(640, 400, 'button')
+    const playText = this.add.text(640, 400 - 6, 'Jugar', {
+      fontFamily: 'college',
+      fontSize: '30px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5)
+    Element.onHover(play, () => {
+      play.setTexture('buttonHover')
+    }, () => {
+      play.setTexture('button')
+    })
     Element.onClick(play, () => {
       Scene.changeScene(this, 'Characters')
     })
     
     //Options button
-    const options = this.add.image(640, 500, 'options')
+    const options = this.add.image(640, 500, 'button')
+    const optionsText = this.add.text(640, 500 - 6, 'Opciones', {
+      fontFamily: 'college',
+      fontSize: '30px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5)
+    Element.onHover(options, () => {
+      options.setTexture('buttonHover')
+    }, () => {
+      options.setTexture('button')
+    })
     Element.onClick(options, () => {
       this.scene.launch('Options')
     })
 
     //Credits button
-    const credits = this.add.image(640, 600, 'credits')
+    const credits = this.add.image(640, 600, 'button')
+    const creditsText = this.add.text(640, 600 - 6, 'Créditos', {
+      fontFamily: 'college',
+      fontSize: '30px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5)
+    Element.onHover(credits, () => {
+      credits.setTexture('buttonHover')
+    }, () => {
+      credits.setTexture('button')
+    })
     Element.onClick(credits, () => {
       //this.scene.launch('Options')
     })

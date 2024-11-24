@@ -55,6 +55,23 @@ class Element {
   static onClick(element, callback) {
     element.setInteractive().on('pointerdown', callback);
   }
+
+  static onHover(element, over, out) {
+    if (typeof over === 'function') element.setInteractive().on('pointerover', over)
+    if (typeof out === 'function') element.setInteractive().on('pointerout', out)
+  }
+
+  static onMove(element, callback) {
+    element.setInteractive().on('pointermove', callback);
+  }
+  
+  static onUp(element, callback) {
+    element.setInteractive().on('pointerup', callback);
+  }
+
+  static onOut(element, callback){
+    element.setInteractive().on('pointerout', callback);
+  }
 }
 
 
@@ -194,7 +211,7 @@ class Scene {
   }
 
   static onClick(scene, callback) {
-    scene.input.on('pointerdown', callback);
+    scene.input.on('pointerdown', callback)
   }
 
 
@@ -236,21 +253,27 @@ class Scene {
 
 
 
- /*$$$$$$$                     /$$
-| $$_____/                    |__/
-| $$        /$$$$$$   /$$$$$$$ /$$ /$$$$$$$   /$$$$$$ 
-| $$$$$    |____  $$ /$$_____/| $$| $$__  $$ /$$__  $$
-| $$__/     /$$$$$$$|  $$$$$$ | $$| $$  \ $$| $$  \ $$
-| $$       /$$__  $$ \____  $$| $$| $$  | $$| $$  | $$
-| $$$$$$$$|  $$$$$$$ /$$$$$$$/| $$| $$  | $$|  $$$$$$$
-|________/ \_______/|_______/ |__/|__/  |__/ \____  $$
-                                             /$$  \ $$
-                                            |  $$$$$$/
-                                             \_____*/ 
+ /*$   /$$   /$$     /$$ /$$
+| $$  | $$  | $$    |__/| $$
+| $$  | $$ /$$$$$$   /$$| $$
+| $$  | $$|_  $$_/  | $$| $$
+| $$  | $$  | $$    | $$| $$
+| $$  | $$  | $$ /$$| $$| $$
+|  $$$$$$/  |  $$$$/| $$| $$
+ \______/    \___/  |__/|_*/
 
-class Ease {
+class Util {
   static cliff(x) {
     return 1 - Math.pow(2 * (x - 0.5), 2)
+  }
+
+  static clamp(x, min, max) {
+    return Math.min(Math.max(x, min), max)
+  }
+
+  static rand(min, max) {
+    //Both inclusive
+    return Math.floor(Math.random() * (max - min + 1) + min)
   }
 }
 
