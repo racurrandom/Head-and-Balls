@@ -146,6 +146,7 @@ class Slider{
       this.position.y = this.image.y;
       if(this.position.x < this.startPoint.x) this.position.x = this.startPoint.x
       if(this.position.x > this.endPoint.x) this.position.x = this.endPoint.x
+      this.value = this.position.subtract(this.startPoint).magnitude() / this.endPoint.subtract(this.startPoint).magnitude() 
       this.image.setPosition(this.position.x, this.position.y);
     }
   }
