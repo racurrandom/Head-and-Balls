@@ -30,7 +30,10 @@ class SceneOptions extends Phaser.Scene {
   |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
 
   preload() {
-    
+
+    Scene.loadImages(this, [
+      ['ball', 'assets/game/ball.png'],
+    ])
   }
 
 
@@ -56,6 +59,9 @@ class SceneOptions extends Phaser.Scene {
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
+
+    //Add volome slider
+    this.slider = new Slider(this, 'ball', new Vec2(400, 200), new Vec2(1280-400, 200), Settings.volumen)
 
     //Add resume button
     const resume = this.add.text(640, 360, 'RESUME', {
@@ -84,7 +90,8 @@ class SceneOptions extends Phaser.Scene {
             |_*/
  
   update(time, delta) {
-    
+    Settings.volumen = this.slider.Value();
+    console.log(Settings.volumen)
   }
 }
 
@@ -147,4 +154,14 @@ class Slider{
     var dir = p2.subtract(p1).normalized()
     return p1.add(dir.multiply(value * p1.subtract(p2).magnitude()))
   }
+
+  Value(){
+    return this.value;
+  }
+}
+
+class Settings{
+  static volumen = 1
+
+  
 }
