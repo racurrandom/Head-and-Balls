@@ -63,8 +63,8 @@ class SceneOptions extends Phaser.Scene {
 
     //Add volome slider
     const sliderBG = this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
-    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 300), new Vec2(640 + 400 / 2, 300), Settings.volumen)    
-    this.volumeText = this.add.text(950, 300, Math.floor(Settings.volumen * 100), {
+    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 300), new Vec2(640 + 400 / 2, 300), Settings.volume)    
+    this.volumeText = this.add.text(950, 300, Math.floor(Settings.volume * 100), {
       fontFamily: 'college',
       fontSize: '48px',
       align: 'center'
@@ -103,15 +103,16 @@ class SceneOptions extends Phaser.Scene {
             |_*/
  
   update(time, delta) {
-    Settings.volumen = this.slider.Value();
-    this.volumeText.text = Math.floor(Settings.volumen * 100) + '%'
+    Settings.volume = this.slider.Value();
+    this.volumeText.text = Math.floor(Settings.volume * 100) + '%'
+    this.sound.setVolume(Settings.volume)
   }
 }
 
 
 
 //Slider
-class Slider{
+class Slider {
 
   scene
   position = new Vec2()
@@ -147,10 +148,12 @@ class Slider{
 
     Element.onOut(this.image, () => {
       this.down = false;
+      localStorage.setItem('volume', this.value)
     })
 
-    Element.onMove(this.image, (event) =>{this.Update(event)} )
-
+    Element.onMove(this.image, (event) =>{
+      this.Update(event)
+    })
   }
 
   Update(event){
@@ -175,7 +178,5 @@ class Slider{
 }
 
 class Settings{
-  static volumen = 1
-
-  
+  static volume = 1
 }

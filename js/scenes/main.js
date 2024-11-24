@@ -26,9 +26,6 @@ class SceneMain extends Phaser.Scene {
     //Load images
     Scene.loadImages(this, [
       ['title', 'assets/main/title.gif'],
-      ['play', 'assets/main/jugar.gif'],
-      ['options', 'assets/main/opciones.gif'],
-      ['credits', 'assets/main/creditos.gif'],
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
     ])
@@ -46,6 +43,16 @@ class SceneMain extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
   
   create(data) {
+    //Update settings
+    try {
+      const t = parseFloat(localStorage.getItem('volume'))
+      if (t != NaN) Settings.volume = t
+      this.sound.setVolume(Settings.volume)
+    } catch(e) {
+      Settings.volume = 1
+      this.sound.setVolume(Settings.volume)
+    }
+
     //Add background music
     SceneMain.music = this.sound.add('menuMusic')
     SceneMain.music.loop = true
