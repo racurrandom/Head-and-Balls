@@ -49,34 +49,32 @@ class SceneOptions extends Phaser.Scene {
 
   create(data) {
     //Add background
-    const bg = this.add.rectangle(1280 / 2, 720 / 2, 1280 - 100, 720 - 100, 0xeb7434)
+    const bg = this.add.rectangle(1280 / 2, 720 / 2, 1280 - 60, 720 - 60, 0xeb7434)
 
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
     //Add title
-    const title = this.add.text(640, 120, 'Opciones', {
-      fontFamily: 'college',
+    const title = this.add.text(640, 80, 'OPTIONS', {
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
 
     //Add volome slider
-    this.slider = new Slider(this, 'ball', new Vec2(400, 200), new Vec2(1280-400, 200), Settings.volumen)
-
+    const sliderBG = this.add.rectangle(1280/2, 200, 1280 - 800, 20, 0xffffff)
+    this.slider = new Slider(this, 'ball', new Vec2(400, 200), new Vec2(1280-400, 200), Settings.volumen)    
+    this.volume_t = this.add.text(960, 200, Math.floor(Settings.volumen * 100), {
+      fontSize: '48px',
+      align: 'center'
+    }) .setOrigin(0.5)
+    
     //Add resume button
-    const resume = this.add.image(640, 600, 'button')
-    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
+    const resume = this.add.text(640, 360, 'RESUME', {
+      fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
-    Element.onHover(resume, () => {
-      resume.setTexture('buttonHover')
-    }, () => {
-      resume.setTexture('button')
-    })
+
     Element.onClick(resume, ()=>{
       this.scene.stop()
     })
@@ -98,6 +96,7 @@ class SceneOptions extends Phaser.Scene {
  
   update(time, delta) {
     Settings.volumen = this.slider.Value();
+    this.volume_t.text = Math.floor(Settings.volumen * 100)
   }
 }
 
