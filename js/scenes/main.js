@@ -104,7 +104,7 @@ class SceneMain extends Phaser.Scene {
       credits.setTexture('button')
     })
     Element.onClick(credits, () => {
-      //this.scene.launch('Options')
+      this.scene.launch('Credits')
     })
   }
 }

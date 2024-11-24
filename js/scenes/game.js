@@ -26,7 +26,9 @@ class SceneGame extends Phaser.Scene {
   preload() {
     //Load audios
     Scene.loadAudios(this,[
+      //Music
       ['gameMusic','assets/game/gameMusic.mp3'],
+      //Voices
       ['voice1.0', 'assets/game/voices/1.0.mp3'],
       ['voice1.1', 'assets/game/voices/1.1.mp3'],
       ['voice2.0', 'assets/game/voices/2.0.mp3'],
@@ -35,7 +37,9 @@ class SceneGame extends Phaser.Scene {
       ['voice3.1', 'assets/game/voices/3.1.mp3'],
       ['voice4.0', 'assets/game/voices/4.0.mp3'],
       ['voice4.1', 'assets/game/voices/4.1.mp3'],
+      //SFX
       ['piii', 'assets/game/sfx/piii.mp3'],
+      ['kick', 'assets/game/sfx/kick.mp3'],
     ])
 
     //Load images
@@ -121,14 +125,6 @@ class SceneGame extends Phaser.Scene {
 
 
 
-    //Create player 1
-    this.player1 = new Player(this, data.p1)
-
-    //Create player 2
-    this.player2 = new Player(this, data.p2)
-
-
-
     //Powers
     setTimeout(() => {
       this.power = new Power(this)
@@ -161,6 +157,14 @@ class SceneGame extends Phaser.Scene {
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
+
+
+
+    //Create player 1
+    this.player1 = new Player(this, data.p1)
+
+    //Create player 2
+    this.player2 = new Player(this, data.p2)
 
 
 
@@ -297,6 +301,9 @@ class Ball {
       depth: 8
     })
 
+    //Create sfx
+    this.sfx = this.scene.sound.add('kick')
+
     //Reset ball
     this.reset()
   }
@@ -305,6 +312,7 @@ class Ball {
   kick(direction, player) {
     this.ball.setVelocity(direction.x, direction.y)
     this.last = player
+    this.sfx.play()
   }
 
   //State
@@ -626,7 +634,7 @@ class Player {
 //Powerups
 const PowerInfo = Object.freeze({
   MAX: 4,
-  DELAY: 3000, //30000
+  DELAY: 30000, //3000, 
   //Ball
   BallBouncy: 0,
   BallBig:    1,
