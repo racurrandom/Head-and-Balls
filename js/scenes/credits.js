@@ -46,7 +46,7 @@ class SceneCredits extends Phaser.Scene {
     //Add text
     const credits = this.add.text(640, 360, 'Víctor Cabello Pamukov\nGuillermo Sánchez González\nAlejandro Paniagua Moreno\nRaúl Alfonso Pérez', {
       fontFamily: 'college',
-      fontSize: '64px',
+      fontSize: '50px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)

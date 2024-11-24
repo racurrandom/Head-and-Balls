@@ -70,7 +70,7 @@ class SceneResults extends Phaser.Scene {
     
     //Player 1
     const player1 = this.add.image(320, 360, 'preview' + data.p1.skin)
-    player1.setScale(2, 2)
+    player1.setScale(1, 1)
     const player1points = this.add.text(320, 500, data.p1.points, {
       fontFamily: 'college',
       fontSize: '60px',
@@ -80,7 +80,7 @@ class SceneResults extends Phaser.Scene {
 
     //Player 2
     const player2 = this.add.image(960, 360, 'preview' + data.p2.skin)
-    player2.setScale(-2, 2)
+    player2.setScale(-1, 1)
     const player2points = this.add.text(960, 500, data.p2.points, {
       fontFamily: 'college',
       fontSize: '60px',

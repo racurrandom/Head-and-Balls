@@ -82,7 +82,7 @@ class SceneCharacters extends Phaser.Scene {
 
     //Create player skin indicator
     const player = this.add.image(disp + 320, 360, 'preview' + key.skin)
-    player.setScale(scale * 2, 2)
+    player.setScale(scale, 1)
 
     //Create skin swap buttons
     const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
