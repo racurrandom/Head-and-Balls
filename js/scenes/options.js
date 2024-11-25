@@ -5,53 +5,38 @@ class SceneOptions extends Phaser.Scene {
 
 
 
-   /*$$$$$           /$$   /$$    
-  |_  $$_/          |__/  | $$    
-    | $$   /$$$$$$$  /$$ /$$$$$$  
-    | $$  | $$__  $$| $$|_  $$_/  
-    | $$  | $$  \ $$| $$  | $$    
-    | $$  | $$  | $$| $$  | $$ /$$
-   /$$$$$$| $$  | $$| $$  |  $$$$/
-  |______/|__/  |__/|__/   \__*/
-
-  init(data) {
-    
-  }
-
-
-
-   /*$$$$$$                     /$$                           /$$
-  | $$__  $$                   | $$                          | $$
-  | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
-  | $$$$$$$//$$__  $$ /$$__  $$| $$ /$$__  $$ |____  $$ /$$__  $$
-  | $$____/| $$  \__/| $$$$$$$$| $$| $$  \ $$  /$$$$$$$| $$  | $$
-  | $$     | $$      | $$_____/| $$| $$  | $$ /$$__  $$| $$  | $$
-  | $$     | $$      |  $$$$$$$| $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
-  |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
+  /*$$$$$$                     /$$                           /$$
+ | $$__  $$                   | $$                          | $$
+ | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
+ | $$$$$$$//$$__  $$ /$$__  $$| $$ /$$__  $$ |____  $$ /$$__  $$
+ | $$____/| $$  \__/| $$$$$$$$| $$| $$  \ $$  /$$$$$$$| $$  | $$
+ | $$     | $$      | $$_____/| $$| $$  | $$ /$$__  $$| $$  | $$
+ | $$     | $$      |  $$$$$$$| $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
+ |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
 
   preload() {
-
     Scene.loadImages(this, [
       ['ball', 'assets/game/ball.png'],
+      ['slider', 'assets/main/slider.png'],
     ])
   }
 
 
 
-    /*$$$$$                                  /$$              
-   /$$__  $$                                | $$              
-  | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$ 
-  | $$       /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
-  | $$      | $$  \__/| $$$$$$$$  /$$$$$$$  | $$    | $$$$$$$$
-  | $$    $$| $$      | $$_____/ /$$__  $$  | $$ /$$| $$_____/
-  |  $$$$$$/| $$      |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
-   \______/ |__/       \_______/ \_______/   \___/   \______*/
+  /*$$$$$                                  /$$              
+ /$$__  $$                                | $$              
+| $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$ 
+| $$       /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
+| $$      | $$  \__/| $$$$$$$$  /$$$$$$$  | $$    | $$$$$$$$
+| $$    $$| $$      | $$_____/ /$$__  $$  | $$ /$$| $$_____/
+|  $$$$$$/| $$      |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
+ \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
     //Add background
-    const bg = this.add.rectangle(1280 / 2, 720 / 2, 1280 - 100, 720 - 100, 0xeb7434)
+    const bg = this.add.image(1280 / 2, 720 / 2, 'window')
 
-    Element.onClick(bg, () => {}) //Prevent clickthrough
+    Element.onClick(bg, () => { }) //Prevent clickthrough
 
     //Add title
     const title = this.add.text(640, 120, 'Opciones', {
@@ -62,14 +47,14 @@ class SceneOptions extends Phaser.Scene {
     }).setOrigin(0.5)
 
     //Add volome slider
-    const sliderBG = this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
-    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 300), new Vec2(640 + 400 / 2, 300), Settings.volume)    
-    this.volumeText = this.add.text(950, 300, Math.floor(Settings.volume * 100), {
+    const sliderBG = this.add.image(1280 / 2, 280, 'slider')//this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
+    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 280), new Vec2(640 + 400 / 2, 280), Settings.volume)
+    this.volumeText = this.add.text(1280 / 2, 230, Math.floor(Settings.volume * 100), {
       fontFamily: 'college',
-      fontSize: '48px',
+      fontSize: '34px',
       align: 'center'
     }).setOrigin(0.5)
-    
+
     //Add resume button
     const resume = this.add.image(640, 600, 'button')
     const resumeText = this.add.text(640, 600 - 6, 'Volver', {
@@ -83,28 +68,28 @@ class SceneOptions extends Phaser.Scene {
     }, () => {
       resume.setTexture('button')
     })
-    Element.onClick(resume, ()=>{
+    Element.onClick(resume, () => {
       this.scene.stop()
     })
   }
 
 
-  
-   /*$   /$$                 /$$             /$$
-  | $$  | $$                | $$            | $$
-  | $$  | $$  /$$$$$$   /$$$$$$$  /$$$$$$  /$$$$$$    /$$$$$$ 
-  | $$  | $$ /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
-  | $$  | $$| $$  \ $$| $$  | $$  /$$$$$$$  | $$    | $$$$$$$$
-  | $$  | $$| $$  | $$| $$  | $$ /$$__  $$  | $$ /$$| $$_____/
-  |  $$$$$$/| $$$$$$$/|  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
-   \______/ | $$____/  \_______/ \_______/   \___/   \_______/
-            | $$
-            | $$
-            |_*/
- 
+
+  /*$   /$$                 /$$             /$$
+ | $$  | $$                | $$            | $$
+ | $$  | $$  /$$$$$$   /$$$$$$$  /$$$$$$  /$$$$$$    /$$$$$$ 
+ | $$  | $$ /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
+ | $$  | $$| $$  \ $$| $$  | $$  /$$$$$$$  | $$    | $$$$$$$$
+ | $$  | $$| $$  | $$| $$  | $$ /$$__  $$  | $$ /$$| $$_____/
+ |  $$$$$$/| $$$$$$$/|  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
+  \______/ | $$____/  \_______/ \_______/   \___/   \_______/
+           | $$
+           | $$
+           |_*/
+
   update(time, delta) {
     Settings.volume = this.slider.Value();
-    this.volumeText.text = Math.floor(Settings.volume * 100) + '%'
+    this.volumeText.text = 'Volumen (' + Math.floor(Settings.volume * 100) + '%)'
     this.sound.setVolume(Settings.volume)
   }
 }
@@ -127,8 +112,8 @@ class Slider {
 
   down = false;
 
-  constructor(scene, img, startPoint, endPoint, value){
-    this.scene = scene 
+  constructor(scene, img, startPoint, endPoint, value) {
+    this.scene = scene
     this.startPoint = new Vec2(startPoint)
     this.endPoint = new Vec2(endPoint)
     this.value = value
@@ -138,7 +123,7 @@ class Slider {
 
     this.image.setPosition(this.position.x, this.position.y);
 
-    Element.onClick(this.image, (event)=>{
+    Element.onClick(this.image, (event) => {
       this.down = true;
     })
 
@@ -151,32 +136,32 @@ class Slider {
       localStorage.setItem('volume', this.value)
     })
 
-    Element.onMove(this.image, (event) =>{
+    Element.onMove(this.image, (event) => {
       this.Update(event)
     })
   }
 
-  Update(event){
-    if(this.down){
+  Update(event) {
+    if (this.down) {
       this.position.x = event.position.x;
       this.position.y = this.image.y;
-      if(this.position.x < this.startPoint.x) this.position.x = this.startPoint.x
-      if(this.position.x > this.endPoint.x) this.position.x = this.endPoint.x
-      this.value = this.position.subtract(this.startPoint).magnitude() / this.endPoint.subtract(this.startPoint).magnitude() 
+      if (this.position.x < this.startPoint.x) this.position.x = this.startPoint.x
+      if (this.position.x > this.endPoint.x) this.position.x = this.endPoint.x
+      this.value = this.position.subtract(this.startPoint).magnitude() / this.endPoint.subtract(this.startPoint).magnitude()
       this.image.setPosition(this.position.x, this.position.y);
     }
   }
 
-  Interpolate(p1, p2, value){
+  Interpolate(p1, p2, value) {
     var dir = p2.subtract(p1).normalized()
     return p1.add(dir.multiply(value * p1.subtract(p2).magnitude()))
   }
 
-  Value(){
+  Value() {
     return this.value;
   }
 }
 
-class Settings{
+class Settings {
   static volume = 1
 }

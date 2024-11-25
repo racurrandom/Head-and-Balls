@@ -637,7 +637,7 @@ class Player {
 //Powerups
 const PowerInfo = Object.freeze({
   MAX: 4,
-  DELAY: 0, //10000, 
+  DELAY: 10000, 
   //Ball
   BallBouncy: 0,
   BallBig:    1,
@@ -664,20 +664,18 @@ class Power {
     this.scene = scene
 
     //Save type
-    this.type = Util.rand(0, PowerInfo.MAX)
+    this.type = PowerInfo.StunEnemy//Util.rand(0, PowerInfo.MAX)
 
     //Create power image
     this.power = Scene.imageWithPhysics(this.scene, PowerSprite[this.type], {
       //Position
-      x: game.config.width * 0.2 + Util.rand(0, game.config.width * 0.8),
+      x: game.config.width * 0.1 + Util.rand(0, game.config.width * 0.8),
       y: 250 + Util.rand(-50, 50),
       //Options
       ignoreGravity: true,
       isStatic: true,
       isSensor: true
     })
-    //this.power.scaleX = 50 / this.power.width
-    //this.power.scaleY = 50 / this.power.height
 
     //Add on trigger
     this.power.setOnCollideActive(pair => {

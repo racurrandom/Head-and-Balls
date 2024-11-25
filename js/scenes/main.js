@@ -28,6 +28,7 @@ class SceneMain extends Phaser.Scene {
       ['title', 'assets/main/title.gif'],
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
+      ['window', 'assets/main/window.png'],
     ])
   }
 
