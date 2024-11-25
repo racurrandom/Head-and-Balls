@@ -50,8 +50,11 @@ class SceneGame extends Phaser.Scene {
       ['ball', 'assets/game/ball.png'],
       ['foot', 'assets/game/zapato.png'],
       //Powers
-      ['powerGood', 'assets/game/powerGood.png'],
-      ['powerBad', 'assets/game/powerBad.png'],
+      ['powerBigBall', 'assets/game/powerBigBall.png'],
+      ['powerBouncyBall', 'assets/game/powerBouncyBall.png'],
+      ['powerIce', 'assets/game/powerIce.png'],
+      ['powerIceBad', 'assets/game/powerIceBad.png'],
+      ['powerSmallBall', 'assets/game/powerSmallBall.png'],
       //UI
       ['marcador', 'assets/game/marcador.png'],
     ])
@@ -80,7 +83,7 @@ class SceneGame extends Phaser.Scene {
       //Timestamp when the game started
       timeStart: new Date().getTime(),
       //Timestamp when the game will end (after 3 minutes)
-      timeEnd: new Date().getTime() + 3 * 60 * 1000,  //3 minutes
+      timeEnd: new Date().getTime() + 2 * 60 * 1000,  //2 minutes
       //timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
 
@@ -634,7 +637,7 @@ class Player {
 //Powerups
 const PowerInfo = Object.freeze({
   MAX: 4,
-  DELAY: 30000, //3000, 
+  DELAY: 0, //10000, 
   //Ball
   BallBouncy: 0,
   BallBig:    1,
@@ -646,12 +649,12 @@ const PowerInfo = Object.freeze({
   BallerSmall:  5,*/
 })
 
-const PowerBall = Object.freeze([
-  'powerGood',
-  'powerGood',
-  'powerGood',
-  'powerBad',
-  'powerGood',
+const PowerSprite = Object.freeze([
+  'powerBouncyBall',
+  'powerBigBall',
+  'powerSmallBall',
+  'powerIceBad',
+  'powerIce',
 ])
 
 class Power {
@@ -664,13 +667,17 @@ class Power {
     this.type = Util.rand(0, PowerInfo.MAX)
 
     //Create power image
-    this.power = Scene.imageWithPhysics(this.scene, PowerBall[this.type], {
-      x: 100 + Util.rand(0, 1080),
-      y: 200,
+    this.power = Scene.imageWithPhysics(this.scene, PowerSprite[this.type], {
+      //Position
+      x: game.config.width * 0.2 + Util.rand(0, game.config.width * 0.8),
+      y: 250 + Util.rand(-50, 50),
+      //Options
       ignoreGravity: true,
       isStatic: true,
       isSensor: true
     })
+    //this.power.scaleX = 50 / this.power.width
+    //this.power.scaleY = 50 / this.power.height
 
     //Add on trigger
     this.power.setOnCollideActive(pair => {
