@@ -40,7 +40,9 @@ Nuestro equipo está formado por:
 
 # 1. Introducción
 
-Este es el documento de diseño de juego de **Head and Balls**. El videojuego para PC y navegador que se basa en un partido de fútbol 2D en vista lateral entre dos jugadores en el que cada uno trata de meterle gol al contrario a base de cabezazos y patadas.
+Este es el documento de diseño de juego de **Head and Balls**, un videojuego de fútbol 2D en vista lateral, desarrollado para PC y navegadores. En este título, dos jugadores compiten uno contra uno para marcar goles en la portería contraria utilizando cabezazos y patadas en un entorno rápido y cómico.
+
+El juego está dirigido a un público joven y competitivo, con edades comprendidas entre los 12 y los 30 años. Diseñado para ofrecer diversión inmediata y accesible, se inspira en clásicos del género arcade deportivo.
 
 | Plataforma | Target | Género | Nº Jugadores | Lanzamiento | Ventas | Pegi |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
@@ -48,46 +50,121 @@ Este es el documento de diseño de juego de **Head and Balls**. El videojuego pa
 
 # 2. Género y Temática
 
-**Head and Balls** es un videojuego deportivo de fútbol uno contra uno, perteneciente al género de arcade deportivo. Este tipo de juegos prioriza la acción rápida y mecánicas simples sobre el realismo, ofreciendo una experiencia accesible y dinámica.
+**Head and Balls** pertenece al género de arcade deportivo, centrándose en partidos de fútbol uno contra uno. Este tipo de juegos priorizan la acción trepidante, las mecánicas accesibles y rápidas, y un enfoque más ligero y divertido frente al realismo.
+
+La temática del juego combina el espíritu competitivo del fútbol con un estilo cómico y desenfadado. Los personajes, con sus cabezas desproporcionadamente grandes, y las físicas exageradas aportan un toque humorístico, garantizando que cada partida sea caótica y divertida.
+
+Inspirado en títulos como *Head Soccer* y *Soccer Physics*, **Head and Balls** busca destacar en el género ofreciendo una experiencia perfecta para partidas casuales y competitivas entre amigos.
 
 # 3. Concepto de juego
 
-**Head and Balls** es un videojuego en el que controlamos a dos personajes muy cabezones.
+En **Head and Balls**, los jugadores controlan a personajes cabezones en partidos de fútbol uno contra uno en un escenario 2D. El objetivo principal es marcar más goles que el oponente, utilizando cabezazos, patadas y movimientos estratégicos para controlar el balón y superar al rival.
 
-El objetivo es ganar al otro jugador marcando el mayor número de goles en la portería enemiga, ya sea chutando el balón o dándole un cabezazo.
-
-Consiste en un juego tipo **Head Soccer** de fútbol, en el cuál los jugadores serán los 4 desarrolladores del juego jugando un partido amistoso.
+El gameplay se centra en la simplicidad y el dinamismo, haciendo que sea fácil de aprender pero desafiante de dominar. Además, los personajes están inspirados en los propios desarrolladores del juego, añadiendo un toque personal y único al diseño. Cada partido está diseñado para generar situaciones hilarantes debido a las físicas exageradas y los movimientos caricaturescos.
 
 # 4. Características Generales
 
-* **Planteamiento:** El juego tendrá un estilo cómico tanto en el apartado artístico como en el gameplay.  
-* **Estrategia:** Utilizarás los cabezazos y patadas para impulsar la pelota y meterla en la portería del contrincante. De la misma manera evitarás que la pelota entre en tu portería bloqueándola con tu personaje.
+* **Planteamiento:** El juego adopta un tono cómico, tanto en su apartado artístico como en el gameplay. Las animaciones exageradas, los efectos visuales llamativos y los movimientos humorísticos son clave para transmitir este estilo.  
+* **Estrategia:** Los jugadores deben utilizar cabezazos, patadas y el posicionamiento táctico para controlar el balón, marcar goles y defender su portería. La simplicidad de las mecánicas garantiza que cualquiera pueda aprender a jugar rápidamente, mientras que la velocidad y la precisión necesarias para ganar introducen un nivel competitivo.
+
+* **Duración y Rejugabilidad:** Las partidas están diseñadas para ser cortas, ideales para sesiones rápidas y repetidas. La simplicidad del juego, combinada con su enfoque en el humor y la competencia, asegura una alta rejugabilidad, especialmente en un entorno multijugador local o en línea.
 
 # 5. Narrativa
 
-Un grupo de cuatro amigos estaba dando una vuelta por Madrid cuando una bola calló del cielo y les golpeó. Era de Cristiano Ronaldo.  
+Un grupo de cuatro amigos paseaba por las calles de Madrid cuando, de repente, una bola cayó del cielo y los golpeó. Para su sorpresa, la bola pertenecía a Cristiano Ronaldo.
 
-Cristiano, muy majo por su parte, les pidió perdon y se ofreció a dejarles jugar en un estadio profesional un partidito entre ellos.  
+Cristiano, demostrando su simpatía, se disculpó por el incidente y les ofreció una oportunidad única: jugar un partido en un estadio profesional. Los amigos, emocionados por la propuesta, no pudieron rechazarla y decidieron organizar unas pachangas amistosas el siguiente sábado.
 
-Era una oportunidad única, no lo podrían hacer en ningun otro momento, así que estos cuatro amigos aceptaron y quedaron un sabado para unas pachangas amistosas.
+Este encuentro casual dio inicio a una experiencia inolvidable, donde la diversión, la amistad y las risas serían las auténticas protagonistas.
 
 # 6. Jugabilidad
 
-En **Head and Balls**, las partidas comenzarán con cada jugador posicionado en lados opuestos de la pantalla frente a su portería.   
+En **Head and Balls**, las partidas se desarrollan en un escenario 2D con dos jugadores posicionados en lados opuestos de la pantalla, cada uno defendiendo su portería.
 
-* **Partida:** Para jugar contra otro jugador hará falta empezar una partida. Estas partidas durarán una cantidad de tiempo preestablecida de 3 minutos y el jugador con mayor puntuación cuando acabe el tiempo gana.  
-* **Puntos (Goles):** Las partidas se dividen en puntos. Cada partida durará un minuto exacto y, cuando termine, dará los resultados en base a los puntos. En el caso de que ambos jugadores hayan marcado los mismos goles durante el partido se nombrará un empate, de lo contrario ganará el que más tenga.  
-* **Habilidades especiales:** Durante la partida aparecerán habilidades especiales que se activan cuando la pelota las golpee. Estas habilidades podrán tener efectos adversos para el contrincante, beneficiosos para el jugador que la active o simplemente modificar el estado de la partida.
+**Inicio de Partida**
 
-# 7. Estilo visual
+Para comenzar, los jugadores deberán iniciar una partida, donde se enfrentarán en un partido amistoso uno contra uno. Cada partida tiene una duración preestablecida de 3 minutos, y el objetivo es marcar el mayor número de goles posible antes de que termine el tiempo.
 
-**Head and Balls** tendrá un estilo cartoon 2D desenfadado que acompañe al estilo del gameplay. La paleta de color se caracterizara por colores brillantes y llamativos y los diseños tanto de los personajes como del escenario simples y estilizadas.
+**Sistema de Puntos y Reglas**
+
+* **Duración del Juego:** Cada partido consta de un único periodo de 3 minutos.
+
+* **Marcador y Resultado:** Los jugadores sumarán puntos marcando goles en la portería rival. Al finalizar el tiempo, el jugador con más puntos será declarado ganador.
+
+* **Empates:** Si ambos jugadores tienen el mismo número de goles al terminar la partida, el partido se considerará empatado.
+
+**Habilidades Especiales**
+
+Durante el desarrollo de la partida en Head and Balls, aparecerán habilidades especiales que pueden ser activadas al golpear la pelota contra ellas. Estas habilidades introducen un elemento estratégico y caótico al juego, proporcionando una variedad dinámica de efectos durante cada partida.
+
+**Las Habilidades:**
+
+* **Bouncy Ball**
+
+* **Small Ball**
+
+* **Big Ball**
+
+* **Freeze Player**
+
+* **Freeze Enemy**
+
+Estas habilidades, explicadas posteriormente en el documento, introducen variedad y dinamismo, haciendo que cada partida sea impredecible y única.
+
+
+# 7. Arte y estilo visual
+
+Como se he mencionado previamente, **Head and Balls** tendrá un estilo cartoon 2D desenfadado que acompañe al estilo del gameplay. La paleta de color se caracterizara por colores brillantes y llamativos y los diseños tanto de los personajes como del escenario simples y estilizadas.
+
+**Assets:**
+
+Balón:
+
+![ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ball.png)
+
+Marcador:
+
+![board](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Marcador.png)
+
+Portería:
+
+![goal](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/goal.png)
+
+Botas:
+
+![cleats](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/zapato.png)
+
+* Habilidades especiales:
+
+Bouncy Ball:
+
+![Bouncy Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBouncyBall.png)
+
+Small Ball:
+
+![Small Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerSmallBall.png)
+
+Big Ball:
+
+![Big Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBigBall.png)
+
+Freeze Player:
+
+![Freeze Player](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIce.png)
+
+Freeze Enemy:
+
+![Freeze Enemy](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIceBad.png)
+
+**In-game:**
 
 ![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)
 
-# 8. Interfaz
+# 8. Interfaces
 
 El juego tomará como referencia para el estilo y diseño de sus interfaces juegos flash de hace años. Para los menus, el flujo que se seguirá es el siguiente:
+
+**Diagrama de flujo**
 
 ![flow](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Blank%20diagram.png)  
 
@@ -121,16 +198,21 @@ El juego tomará como referencia para el estilo y diseño de sus interfaces jueg
 Las mecánicas en **Head and Balls** son sencillas y están diseñadas para brindar una experiencia rápida, accesible y cómica. A continuación, se detallan las acciones básicas que los jugadores podrán realizar y las reglas que rigen el desarrollo del juego:
 
 * **Chutar y dar cabezazos:** Los jugadores serán capaces de chutar o dar un cabezazo a la bola para propulsarla en dirección de la portería enemiga.  
+
 * **Variaciones del mapa:** El mapa tendrá formas geométricas colocadas por el cielo que interferirán con la dirección de la bola. Además, cada vez que se marque un gol cambiarán de posición y rotación para que no se note repetitivo.  
-* **Habilidades especiales:** Habilidades en forma de pompa colocadas por lugares aleatorios de la pantalla que los jugadores pueden obtener si chutan la bola y esta los toca. Algunas de ellas serán buenas y otras malas para el jugador:  
+
+* **Habilidades especiales:** Habilidades en forma de pompa colocadas por lugares aleatorios de la pantalla que los jugadores pueden obtener si chutan la bola y esta los toca. 
+
+Algunas de ellas serán buenas y otras malas para el jugador:  
   * **Big ball (buena):** Hace crecer la bola durante un tiempo determinado.  
   * **Small ball (buena):** Hace decrecer la bola durante un tiempo determinado.  
   * **Bouncy ball (buena):** Incrementa la intensidad de rebote a la bola durante un tiempo determinado.  
   * **Freeze enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
   * **Freeze player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
 
+
 ![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_powerup_small.png)  
-~ Imagen de la habilidad **Small ball**
+*Imagen de la habilidad **Small ball***
 
 # 10. Controles
 
@@ -161,6 +243,7 @@ Recursos externos utilizados para el desarrollo del videojuego:
 
 * **Música partido:** [Bensound - Brazil Samba](https://youtu.be/4xeyMOIo3Eg)
 * **Efecto de sonido pitido:** [Action Soccer](https://www.sounds-resource.com/pc_computer/actionsoccer/)  
+* **Butacas del fondo in-game:** [Butacas in-game](https://www.freepik.com/free-vector/realistic-stadium-tribune-composition-with-isolated-front-back-views-rows-with-red-plastic-seats-vector-illustration_43869155.htm)
 
 # 13. Licencia
  
