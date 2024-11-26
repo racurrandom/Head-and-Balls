@@ -103,7 +103,7 @@ class SceneCharacters extends Phaser.Scene {
 
     //Add ready button
     const ready = this.add.image(disp + 320, 600, 'button')
-    const readyText = this.add.text(disp + 320, 600 - 6, 'Listo', {
+    const readyText = this.add.text(disp + 320, 600 - 6, 'No listo', {
       fontFamily: 'college',
       fontSize: '30px',
       fill: '#fff',
@@ -116,7 +116,7 @@ class SceneCharacters extends Phaser.Scene {
     })
     Element.onClick(ready, () => {
       key.ready = !key.ready
-      readyText.setText(key.ready ? 'No listo' : 'Listo');
+      readyText.setText(key.ready ? 'Listo' : 'No listo');
     })
   }
   

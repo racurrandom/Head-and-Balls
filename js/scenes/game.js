@@ -118,7 +118,7 @@ class SceneGame extends Phaser.Scene {
       ignoreGravity: true,
       isSensor: true,
       isStatic: true,
-      //depth: 0,
+      depth: -10,
     })
     
 
@@ -151,7 +151,7 @@ class SceneGame extends Phaser.Scene {
       ignoreGravity: true,
       isSensor: true,
       isStatic: true,
-      //depth: 0,
+      depth: -10,
     })
     
     this.timer = this.add.text(640, 93, '00:00', {
@@ -301,7 +301,7 @@ class Ball {
       friction: 0.05,
       frictionAir: 0,
       frictionStatic: 0,
-      depth: 8
+      depth: -7
     })
 
     //Create sfx
@@ -401,7 +401,7 @@ class Player {
       isStatic: true,
       isSensor: true,
       ignoreGravity: true,
-      depth: 9
+      depth: -1
     })
 
     //Add goal interaction
@@ -466,7 +466,7 @@ class Player {
       frictionAir: 0,
       frictionStatic: 0,
       fixedRotation: true,
-      depth: 4
+      depth: -3
     })
 
     //Add headbutt interaction
@@ -496,7 +496,7 @@ class Player {
       label: 'foot' + this.data.number,
       isSensor: true,
       ignoreGravity: true,
-      depth: 5
+      depth: -4
     })
 
     //Add kick ball interaction
