@@ -44,7 +44,7 @@ Este es el documento de diseño de juego de **Head and Balls**. El videojuego pa
 
 | Plataforma | Target | Género | Nº Jugadores | Lanzamiento | Ventas | Pegi |
 | :---- | :---- | :---- | :---- | :---- | :---- | :---- |
-| PC | 10-30 años | Deportes | 2 | 2025 | In game | Pegi 12 |
+| PC y navegador | 12-30 años | Deportes | 2 | 2025 | In game | Pegi 12 |
 
 # 2. Género y Temática
 
@@ -65,7 +65,11 @@ Consiste en un juego tipo **Head Soccer** de fútbol, en el cuál los jugadores 
 
 # 5. Narrativa
 
+Un grupo de cuatro amigos estaba dando una vuelta por Madrid cuando una bola calló del cielo y les golpeó. Era de Cristiano Ronaldo.  
 
+Cristiano, muy majo por su parte, les pidió perdon y se ofreció a dejarles jugar en un estadio profesional un partidito entre ellos.  
+
+Era una oportunidad única, no lo podrían hacer en ningun otro momento, así que estos cuatro amigos aceptaron y quedaron un sabado para unas pachangas amistosas.
 
 # 6. Jugabilidad
 
@@ -87,15 +91,15 @@ El juego tomará como referencia para el estilo y diseño de sus interfaces jueg
 
 ![flow](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Blank%20diagram.png)  
 
-* **Menú principal:** desde el menú principal se podrá navegar a las pantallas de selección de personaje, de ajustes y de créditos.
+* **Menú principal:** desde el menú principal se podrá navegar a las pantallas de selección de personaje, de ajustes y de créditos mediante los botones de jugar, opciones y creditos respectivamente.
 
 ![main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_main.png)  
 
-* **Selección de personajes:** desde la pantalla de selección de personajes existirá la opcion de continuar a la pantalla de juego.
+* **Selección de personajes:** desde la pantalla de selección de personajes se continuará a la pantalla de juego una vez seleccionen ambos jugadores que están listos.
 
 ![characters](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_characters.png)  
 
-* **Juego:** desde la pantalla de juego se podrá volver al menú principal, al menú de opciones y a la pantalla de resultados.
+* **Juego:** desde la pantalla de juego se podrá volver al menú principal mediante el botón de atras (esquina superior izquierda), al menú de opciones con el botón de tuerca (esquina superior derecha) y a la pantalla de resultados tras acabar el tiempo.
 
 ![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
 
