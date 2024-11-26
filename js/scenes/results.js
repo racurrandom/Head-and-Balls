@@ -32,8 +32,14 @@ class SceneResults extends Phaser.Scene {
     let winner_s = 'Empate'
     
     //Not a tie
-    if (!isTie) winner_s = 'Ganador\n' + (data.p1.points > data.p2.points ? 'Jugador 1' : 'Jugador 2')
-
+    if (!isTie) {
+      winner_s = 'Ganador\n' + (data.p1.points > data.p2.points ? 'Jugador 1' : 'Jugador 2')
+      
+      //Add trophy
+      const trophy = this.add.image(1280 / 2 + (data.p1.points > data.p2.points ? -420 : 420), 430, 'trophy')
+      trophy.angle = (data.p1.points > data.p2.points ? -35 : 35)
+    }
+    
     //Winner
     const winner = this.add.text(640, 360, winner_s, {
       fontFamily: 'college',
