@@ -57,7 +57,8 @@ class SceneGame extends Phaser.Scene {
       ['powerSmallBall', 'assets/game/powerSmallBall.png'],
       //UI
       ['marcador', 'assets/game/marcador.png'],
-      //['settings', '']
+      ['setting_button', 'assets/game/settings_button.png'],
+      ['back_button', 'assets/game/back_button.png'],
     ])
   }
 
@@ -97,11 +98,19 @@ class SceneGame extends Phaser.Scene {
     this.sound.add('piii').play()
 
     //Add pause button
-    const pause_button = this.add.image(1280/2, 720/2, 'ball')
+    const pause_button = this.add.image(1280-60, 55, 'setting_button')
     Element.onClick(pause_button, ()=>{
       this.scene.pause()
-      this.scene.launch('Options')
+      this.scene.launch('Options', 'Game')
       console.log(data)
+    })
+
+
+    //Add back button
+    const back_button = this.add.image(60, 55, 'back_button')
+    Element.onClick(back_button, ()=>{
+      this.scene.stop()
+      this.scene.start('Main')
     })
 
 

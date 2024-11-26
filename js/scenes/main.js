@@ -29,6 +29,7 @@ class SceneMain extends Phaser.Scene {
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
       ['window', 'assets/main/window.png'],
+      ['BG', 'assets/main/BG.png']
     ])
   }
 
@@ -53,6 +54,9 @@ class SceneMain extends Phaser.Scene {
       Settings.volume = 1
       this.sound.setVolume(Settings.volume)
     }
+
+    //Add background
+    const bg = this.add.image(1280 / 2, 720 / 2, 'BG')
 
     //Add background music
     SceneMain.music = this.sound.add('menuMusic')
@@ -95,7 +99,7 @@ class SceneMain extends Phaser.Scene {
       options.setTexture('button')
     })
     Element.onClick(options, () => {
-      this.scene.launch('Options')
+      this.scene.launch('Options', 'Main')
     })
 
     //Credits button
