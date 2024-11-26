@@ -1,10 +1,10 @@
-![gdd](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/gdd.gif)  
-![title](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/title.gif)  
-![grupo4](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/grupo4.gif)  
+<p style="font-size: 2rem; font-weight: bold;">GDD · Grupo 4</p>
+
+<p style="font-size: 4rem; font-weight: bold;">Head and Balls</p>
 
 # Equipo
 
-Nuestro equipo está formado por:
+El equipo de **Head and Balls** está formado por:
 
 - Víctor Cabello Pamukov
   - Correo: v.cabello.2022@alumnos.urjc.es
@@ -118,47 +118,25 @@ Como se he mencionado previamente, **Head and Balls** tendrá un estilo cartoon 
 
 **Assets:**
 
-Balón:
+* **Balón:**  
+  ![ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ball.png)
 
-![ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ball.png)
+* **Botas:**  
+  ![cleats](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/zapato.png)
 
-Marcador:
+* **Marcador:**  
+  ![board](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Marcador.png)
 
-![board](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Marcador.png)
+* **Portería:**  
+  ![goal](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/goal.png)
 
-Portería:
+* **Habilidades especiales:**  
+  | Bouncy Ball | Small Ball | Big Ball | Freeze Player | Freeze Enemy |
+  | :---- | :---- | :---- | :---- | :---- |
+  | ![Bouncy Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBouncyBall.png) | ![Small Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerSmallBall.png) | ![Big Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBigBall.png) | ![Freeze Player](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIce.png) | ![Freeze Enemy](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIceBad.png) | 
 
-![goal](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/goal.png)
-
-Botas:
-
-![cleats](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/zapato.png)
-
-* Habilidades especiales:
-
-Bouncy Ball:
-
-![Bouncy Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBouncyBall.png)
-
-Small Ball:
-
-![Small Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerSmallBall.png)
-
-Big Ball:
-
-![Big Ball](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerBigBall.png)
-
-Freeze Player:
-
-![Freeze Player](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIce.png)
-
-Freeze Enemy:
-
-![Freeze Enemy](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/powerIceBad.png)
-
-**In-game:**
-
-![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)
+* **In-game:**  
+  ![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)
 
 # 8. Interfaces
 
@@ -204,12 +182,15 @@ Las mecánicas en **Head and Balls** son sencillas y están diseñadas para brin
 * **Habilidades especiales:** Habilidades en forma de pompa colocadas por lugares aleatorios de la pantalla que los jugadores pueden obtener si chutan la bola y esta los toca. 
 
 Algunas de ellas serán buenas y otras malas para el jugador:  
-  * **Big ball (buena):** Hace crecer la bola durante un tiempo determinado.  
-  * **Small ball (buena):** Hace decrecer la bola durante un tiempo determinado.  
-  * **Bouncy ball (buena):** Incrementa la intensidad de rebote a la bola durante un tiempo determinado.  
-  * **Freeze enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
-  * **Freeze player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
+  * **Big ball (buena):** Hace crecer la bola durante un tiempo determinado. 
 
+  * **Small ball (buena):** Hace decrecer la bola durante un tiempo determinado.  
+
+  * **Bouncy ball (buena):** Incrementa la intensidad de rebote a la bola durante un tiempo determinado.  
+
+  * **Freeze enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
+
+  * **Freeze player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
 
 ![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_powerup_small.png)  
 *Imagen de la habilidad **Small ball***
