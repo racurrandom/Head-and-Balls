@@ -47,6 +47,8 @@ class SceneMain extends Phaser.Scene {
       ['window', 'assets/main/window.png'],
       //Options
       ['slider', 'assets/main/slider.png'],
+      ['controls1', 'assets/main/controls1.png'],
+      ['controls2', 'assets/main/controls2.png'],
       //Characters
       ['arrow_next', 'assets/characters/arrow_next.png'],
       ['preview1', 'assets/characters/p1.png'],

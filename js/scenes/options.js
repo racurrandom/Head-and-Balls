@@ -29,13 +29,17 @@ class SceneOptions extends Phaser.Scene {
     }).setOrigin(0.5)
 
     //Add volome slider
-    const sliderBG = this.add.image(1280 / 2, 280, 'slider')//this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
-    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 280), new Vec2(640 + 400 / 2, 280), Settings.volume)
-    this.volumeText = this.add.text(1280 / 2, 230, Math.floor(Settings.volume * 100), {
+    const sliderBG = this.add.image(1280 / 2, 260, 'slider')//this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
+    this.slider = new Slider(this, 'ball', new Vec2(640 - 400 / 2, 260), new Vec2(640 + 400 / 2, 260), Settings.volume)
+    this.volumeText = this.add.text(1280 / 2, 210, Math.floor(Settings.volume * 100), {
       fontFamily: 'college',
       fontSize: '34px',
       align: 'center'
     }).setOrigin(0.5)
+
+    //Add controls
+    const controls1 = this.add.image(1280 / 2 - 200, 440, 'controls1')
+    const controls2 = this.add.image(1280 / 2 + 200, 440, 'controls2')
 
     //Add resume button
     const resume = this.add.image(640, 600, 'button')
