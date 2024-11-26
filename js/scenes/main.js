@@ -41,7 +41,7 @@ class SceneMain extends Phaser.Scene {
     Scene.loadImages(this, [
       //Main menu
       ['bg_menu', 'assets/main/bg_menu.png'],
-      ['title', 'assets/main/title.gif'],
+      ['title', 'assets/main/title.png'],
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
       ['window', 'assets/main/window.png'],
@@ -108,8 +108,6 @@ class SceneMain extends Phaser.Scene {
 
     //Add title
     const title = this.add.image(640, 150, 'title')
-    title.scaleX = 1.5
-    title.scaleY = 1.5
 
     //Play button
     const play = this.add.image(640, 400, 'button')

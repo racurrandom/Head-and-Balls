@@ -79,14 +79,17 @@ En **Head and Balls**, las partidas comenzarán con cada jugador posicionado en 
 
 **Head and Balls** tendrá un estilo cartoon 2D desenfadado que acompañe al estilo del gameplay. La paleta de color se caracterizara por colores brillantes y llamativos y los diseños tanto de los personajes como del escenario simples y estilizadas.
 
-![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/game.png)
+![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)
 
 # 8. Interfaz
 
 El juego tomará como referencia juegos flash de hace años para diseñar sus interfaces.
 
-![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ui_main.png)
-![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ui_game.png)
+![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_main.png)  
+![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_options.png)  
+![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_credits.png)  
+![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_characters.png)  
+![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
 
 # 9. Mecánicas
 
@@ -100,6 +103,9 @@ Las mecánicas en **Head and Balls** son sencillas y están diseñadas para brin
   * **Bouncy ball (buena):** Incrementa la intensidad de rebote a la bola durante un tiempo determinado.  
   * **Stun enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
   * **Stun player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
+
+![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
+~ Imagen de la habilidad **Small ball**
 
 # 10. Controles
 
