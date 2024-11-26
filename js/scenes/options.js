@@ -61,7 +61,7 @@ class SceneOptions extends Phaser.Scene {
       fontFamily: 'college',
       fontSize: '30px',
       fill: '#fff',
-      align: 'center'
+      align: 'center',
     }).setOrigin(0.5)
     Element.onHover(resume, () => {
       resume.setTexture('buttonHover')
@@ -70,6 +70,7 @@ class SceneOptions extends Phaser.Scene {
     })
     Element.onClick(resume, () => {
       this.scene.stop()
+      this.scene.resume('Game')
     })
   }
 

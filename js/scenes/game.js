@@ -57,6 +57,7 @@ class SceneGame extends Phaser.Scene {
       ['powerSmallBall', 'assets/game/powerSmallBall.png'],
       //UI
       ['marcador', 'assets/game/marcador.png'],
+      //['settings', '']
     ])
   }
 
@@ -95,6 +96,13 @@ class SceneGame extends Phaser.Scene {
     //Play piii
     this.sound.add('piii').play()
 
+    //Add pause button
+    const pause_button = this.add.image(1280/2, 720/2, 'ball')
+    Element.onClick(pause_button, ()=>{
+      this.scene.pause()
+      this.scene.launch('Options')
+      console.log(data)
+    })
 
 
     //Add floor
