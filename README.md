@@ -1,6 +1,5 @@
-<p style="font-size: 2rem; font-weight: bold;">GDD · Grupo 4</p>
-
-<p style="font-size: 4rem; font-weight: bold;">Head and Balls</p>
+# Head and Balls
+GDD · Grupo 4
 
 # Equipo
 
