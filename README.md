@@ -76,7 +76,7 @@ Era una oportunidad única, no lo podrían hacer en ningun otro momento, así qu
 En **Head and Balls**, las partidas comenzarán con cada jugador posicionado en lados opuestos de la pantalla frente a su portería.   
 
 * **Partida:** Para jugar contra otro jugador hará falta empezar una partida. Estas partidas durarán una cantidad de tiempo preestablecida de 3 minutos y el jugador con mayor puntuación cuando acabe el tiempo gana.  
-* **Puntos (Goles):** Las partidas se dividen en puntos. Cada punto durará una cantidad de tiempo indeterminada puesto que depende de cuanto tarden los jugadores en marcar dicho punto. En el caso de que ningún jugador haya marcado punto durante.  
+* **Puntos (Goles):** Las partidas se dividen en puntos. Cada partida durará un minuto exacto y, cuando termine, dará los resultados en base a los puntos. En el caso de que ambos jugadores hayan marcado los mismos goles durante el partido se nombrará un empate, de lo contrario ganará el que más tenga.  
 * **Habilidades especiales:** Durante la partida aparecerán habilidades especiales que se activan cuando la pelota las golpee. Estas habilidades podrán tener efectos adversos para el contrincante, beneficiosos para el jugador que la active o simplemente modificar el estado de la partida.
 
 # 7. Estilo visual
