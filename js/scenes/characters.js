@@ -5,32 +5,6 @@ class SceneCharacters extends Phaser.Scene {
 
 
 
-   /*$$$$$$                     /$$                           /$$
-  | $$__  $$                   | $$                          | $$
-  | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
-  | $$$$$$$//$$__  $$ /$$__  $$| $$ /$$__  $$ |____  $$ /$$__  $$
-  | $$____/| $$  \__/| $$$$$$$$| $$| $$  \ $$  /$$$$$$$| $$  | $$
-  | $$     | $$      | $$_____/| $$| $$  | $$ /$$__  $$| $$  | $$
-  | $$     | $$      |  $$$$$$$| $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
-  |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
-
-  preload() {
-    //Load images
-    Scene.loadImages(this, [
-      ['arrow_next', 'assets/characters/arrow_next.png'],
-      ['preview1', 'assets/characters/p1.png'],
-      ['preview2', 'assets/characters/p2.png'],
-      ['preview3', 'assets/characters/p3.png'],
-      ['preview4', 'assets/characters/p4.png'],
-      ['skin1', 'assets/characters/s1.png'],
-      ['skin2', 'assets/characters/s2.png'],
-      ['skin3', 'assets/characters/s3.png'],
-      ['skin4', 'assets/characters/s4.png'],
-    ])
-  }
-
-
-
     /*$$$$$                                  /$$              
    /$$__  $$                                | $$              
   | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$ 
@@ -42,10 +16,10 @@ class SceneCharacters extends Phaser.Scene {
 
   create(data) {
     //Add background
-    const bg = this.add.image(1280 / 2, 720 / 2, 'BG')
+    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
 
     //Add title
-    const title = this.add.text(640, 120, 'Choose your character', {
+    const title = this.add.text(640, 120, 'Elije tu personaje', {  //120
       fontFamily: 'college',
       fontSize: '64px',
       fill: '#fff',
