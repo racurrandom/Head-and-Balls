@@ -41,6 +41,9 @@ class SceneCharacters extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
+    //Add background
+    const bg = this.add.image(1280 / 2, 720 / 2, 'BG')
+
     //Add title
     const title = this.add.text(640, 120, 'Choose your character', {
       fontFamily: 'college',

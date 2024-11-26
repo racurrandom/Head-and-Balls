@@ -70,7 +70,7 @@ class SceneOptions extends Phaser.Scene {
     })
     Element.onClick(resume, () => {
       this.scene.stop()
-      this.scene.resume('Game')
+      this.scene.resume(data)
     })
   }
 
