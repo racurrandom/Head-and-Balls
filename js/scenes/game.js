@@ -1,65 +1,9 @@
-//Layer index:
-//9 - floor & goal
-//8 - ball
-//5 - feet
-//4 - players
-
 class SceneGame extends Phaser.Scene {
 
   static music
 
   constructor() {
     super({ key: 'Game' });
-  }
-
-
-
-   /*$$$$$$                     /$$                           /$$
-  | $$__  $$                   | $$                          | $$
-  | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
-  | $$$$$$$//$$__  $$ /$$__  $$| $$ /$$__  $$ |____  $$ /$$__  $$
-  | $$____/| $$  \__/| $$$$$$$$| $$| $$  \ $$  /$$$$$$$| $$  | $$
-  | $$     | $$      | $$_____/| $$| $$  | $$ /$$__  $$| $$  | $$
-  | $$     | $$      |  $$$$$$$| $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
-  |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
-
-  preload() {
-    //Load audios
-    Scene.loadAudios(this,[
-      //Music
-      ['gameMusic','assets/game/gameMusic.mp3'],
-      //Voices
-      ['voice1.0', 'assets/game/voices/1.0.mp3'],
-      ['voice1.1', 'assets/game/voices/1.1.mp3'],
-      ['voice2.0', 'assets/game/voices/2.0.mp3'],
-      ['voice2.1', 'assets/game/voices/2.1.mp3'],
-      ['voice3.0', 'assets/game/voices/3.0.mp3'],
-      ['voice3.1', 'assets/game/voices/3.1.mp3'],
-      ['voice4.0', 'assets/game/voices/4.0.mp3'],
-      ['voice4.1', 'assets/game/voices/4.1.mp3'],
-      //SFX
-      ['piii', 'assets/game/sfx/piii.mp3'],
-      ['kick', 'assets/game/sfx/kick.mp3'],
-    ])
-
-    //Load images
-    Scene.loadImages(this, [
-      //Map
-      ['campo', 'assets/game/campo.png'],
-      ['goal', 'assets/game/goal.png'],
-      ['ball', 'assets/game/ball.png'],
-      ['foot', 'assets/game/zapato.png'],
-      //Powers
-      ['powerBigBall', 'assets/game/powerBigBall.png'],
-      ['powerBouncyBall', 'assets/game/powerBouncyBall.png'],
-      ['powerIce', 'assets/game/powerIce.png'],
-      ['powerIceBad', 'assets/game/powerIceBad.png'],
-      ['powerSmallBall', 'assets/game/powerSmallBall.png'],
-      //UI
-      ['marcador', 'assets/game/marcador.png'],
-      ['setting_button', 'assets/game/settings_button.png'],
-      ['back_button', 'assets/game/back_button.png'],
-    ])
   }
 
 
@@ -74,6 +18,10 @@ class SceneGame extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
+    //Add background
+    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_game')
+    bg.depth = -10
+
     //Save game state
     this.data = {
       //State
@@ -90,7 +38,7 @@ class SceneGame extends Phaser.Scene {
     }
 
     //Add background music
-    SceneGame.music = this.sound.add('gameMusic')
+    SceneGame.music = this.sound.add('music_game')
     SceneGame.music.loop = true
     SceneGame.music.play()
 
@@ -100,15 +48,19 @@ class SceneGame extends Phaser.Scene {
     //Add pause button
     const pause_button = this.add.image(1280-60, 55, 'setting_button')
     Element.onClick(pause_button, ()=>{
+      //Stop power spawn timer
+      clearTimeout(this.powerTimer)
+
+      ///Open options
       this.scene.pause()
       this.scene.launch('Options', 'Game')
-      console.log(data)
     })
 
 
     //Add back button
     const back_button = this.add.image(60, 55, 'back_button')
-    Element.onClick(back_button, ()=>{
+    Element.onClick(back_button, ()=> {
+      SceneGame.music.stop()
       this.scene.stop()
       this.scene.start('Main')
     })
@@ -146,14 +98,12 @@ class SceneGame extends Phaser.Scene {
 
 
     //Powers
-    setTimeout(() => {
-      this.power = new Power(this)
-    }, PowerInfo.DELAY)
+    this.spawnPower()
 
 
 
     //Map
-    this.mapVariant = this.add.rectangle(0, 0, 200, 40, 0xffffff)
+    this.mapVariant = this.add.rectangle(0, 0, 200, 40, 0x3e383d)
     this.matter.add.gameObject(this.mapVariant)
     this.mapVariant.setStatic(true)
 
@@ -236,6 +186,12 @@ class SceneGame extends Phaser.Scene {
       this.reset()
     }, 2000)
   }
+
+  spawnPower() {
+    this.powerTimer = setTimeout(() => {
+      this.power = new Power(this)
+    }, PowerInfo.DELAY)
+  }
   
 
 
@@ -273,6 +229,10 @@ class SceneGame extends Phaser.Scene {
 
       //Wait to show results scene
       setTimeout(() => {
+        //Stop power spawn timer
+        clearTimeout(this.powerTimer)
+
+        ///Go to results
         Scene.changeScene(this, 'Results', {
           p1: {
             skin: this.data.p1.skin,
@@ -645,7 +605,7 @@ class Player {
     this.pointsText.setText(this.points)
 
     //Play voiceline
-    this.scene.sound.add('voice' + this.data.number + '.' + Util.rand(0, 1)).play()  //Play a random voiceline (0 or 1)
+    this.scene.sound.add('voice' + this.data.skin + '.' + Util.rand(0, 1)).play()  //Play a random voiceline (0 or 1)
   }
 }
 
@@ -662,8 +622,6 @@ const PowerInfo = Object.freeze({
   //Players
   StunPlayer: 3,
   StunEnemy:  4,
-  /*BallerBig:  4,
-  BallerSmall:  5,*/
 })
 
 const PowerSprite = Object.freeze([
@@ -681,12 +639,12 @@ class Power {
     this.scene = scene
 
     //Save type
-    this.type = PowerInfo.StunEnemy//Util.rand(0, PowerInfo.MAX)
+    this.type = Util.rand(0, PowerInfo.MAX)
 
     //Create power image
     this.power = Scene.imageWithPhysics(this.scene, PowerSprite[this.type], {
       //Position
-      x: game.config.width * 0.1 + Util.rand(0, game.config.width * 0.8),
+      x: 1280 * 0.2 + Util.rand(0, 1280 * 0.6),
       y: 250 + Util.rand(-50, 50),
       //Options
       ignoreGravity: true,
@@ -757,9 +715,6 @@ class Power {
     }
 
     //Wait to spawn another
-    setTimeout(() => {
-      if (!this.scene) return
-      this.scene.power = new Power(this.scene)
-    }, PowerInfo.DELAY)
+    this.scene.spawnPower()
   }
 }

@@ -20,16 +20,59 @@ class SceneMain extends Phaser.Scene {
   preload() {
     //Load audio
     Scene.loadAudios(this, [
-      ['menuMusic', 'assets/main/menuMusic.mp3'],
+      //Music
+      ['music_menu', 'assets/main/music_menu.mp3'],
+      ['music_game','assets/game/music_game.mp3'],
+      //Voices
+      ['voice1.0', 'assets/game/voices/1.0.mp3'],
+      ['voice1.1', 'assets/game/voices/1.1.mp3'],
+      ['voice2.0', 'assets/game/voices/2.0.mp3'],
+      ['voice2.1', 'assets/game/voices/2.1.mp3'],
+      ['voice3.0', 'assets/game/voices/3.0.mp3'],
+      ['voice3.1', 'assets/game/voices/3.1.mp3'],
+      ['voice4.0', 'assets/game/voices/4.0.mp3'],
+      ['voice4.1', 'assets/game/voices/4.1.mp3'],
+      //SFX
+      ['piii', 'assets/game/sfx/piii.mp3'],
+      ['kick', 'assets/game/sfx/kick.mp3'],
     ])
 
     //Load images
     Scene.loadImages(this, [
-      ['title', 'assets/main/title.gif'],
+      //Main menu
+      ['bg_menu', 'assets/main/bg_menu.png'],
+      ['title', 'assets/main/title.png'],
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
       ['window', 'assets/main/window.png'],
-      ['BG', 'assets/main/BG.png']
+      //Options
+      ['slider', 'assets/main/slider.png'],
+      //Characters
+      ['arrow_next', 'assets/characters/arrow_next.png'],
+      ['preview1', 'assets/characters/p1.png'],
+      ['preview2', 'assets/characters/p2.png'],
+      ['preview3', 'assets/characters/p3.png'],
+      ['preview4', 'assets/characters/p4.png'],
+      ['skin1', 'assets/characters/s1.png'],
+      ['skin2', 'assets/characters/s2.png'],
+      ['skin3', 'assets/characters/s3.png'],
+      ['skin4', 'assets/characters/s4.png'],
+      //Game (map)
+      ['bg_game', 'assets/game/bg_game.png'],
+      ['campo', 'assets/game/campo.png'],
+      ['goal', 'assets/game/goal.png'],
+      ['ball', 'assets/game/ball.png'],
+      ['foot', 'assets/game/zapato.png'],
+      //Game (powers)
+      ['powerBigBall', 'assets/game/powerBigBall.png'],
+      ['powerBouncyBall', 'assets/game/powerBouncyBall.png'],
+      ['powerIce', 'assets/game/powerIce.png'],
+      ['powerIceBad', 'assets/game/powerIceBad.png'],
+      ['powerSmallBall', 'assets/game/powerSmallBall.png'],
+      //Game (UI)
+      ['marcador', 'assets/game/marcador.png'],
+      ['setting_button', 'assets/game/settings_button.png'],
+      ['back_button', 'assets/game/back_button.png'],
     ])
   }
 
@@ -56,17 +99,15 @@ class SceneMain extends Phaser.Scene {
     }
 
     //Add background
-    const bg = this.add.image(1280 / 2, 720 / 2, 'BG')
+    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
 
     //Add background music
-    SceneMain.music = this.sound.add('menuMusic')
+    SceneMain.music = this.sound.add('music_menu')
     SceneMain.music.loop = true
     SceneMain.music.play()
 
     //Add title
     const title = this.add.image(640, 150, 'title')
-    title.scaleX = 1.5
-    title.scaleY = 1.5
 
     //Play button
     const play = this.add.image(640, 400, 'button')
