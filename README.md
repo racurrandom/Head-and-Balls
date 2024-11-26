@@ -82,11 +82,11 @@ En **Head and Balls**, las partidas se desarrollan en un escenario 2D con dos ju
 
 **Inicio de Partida**
 
-Para comenzar, los jugadores deberán iniciar una partida, donde se enfrentarán en un partido amistoso uno contra uno. Cada partida tiene una duración preestablecida de 3 minutos, y el objetivo es marcar el mayor número de goles posible antes de que termine el tiempo.
+Para comenzar, los jugadores deberán iniciar una partida, donde se enfrentarán en un partido amistoso uno contra uno. Cada partida tiene una duración preestablecida de 1 minutos, y el objetivo es marcar el mayor número de goles posible antes de que termine el tiempo.
 
 **Sistema de Puntos y Reglas**
 
-* **Duración del Juego:** Cada partido consta de un único periodo de 3 minutos.
+* **Duración del Juego:** Cada partido consta de un único periodo de 1 minutos.
 
 * **Marcador y Resultado:** Los jugadores sumarán puntos marcando goles en la portería rival. Al finalizar el tiempo, el jugador con más puntos será declarado ganador.
 
