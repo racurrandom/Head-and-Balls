@@ -17,6 +17,7 @@ class SceneCharacters extends Phaser.Scene {
   create(data) {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
+    const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
 
     //Add title
     const title = this.add.text(640, 120, 'Elije tu personaje', {  //120

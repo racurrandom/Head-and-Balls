@@ -33,8 +33,8 @@ class SceneGame extends Phaser.Scene {
       //Timestamp when the game started
       timeStart: new Date().getTime(),
       //Timestamp when the game will end (after 3 minutes)
-      timeEnd: new Date().getTime() + 2 * 60 * 1000,  //2 minutes
-      //timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
+      //timeEnd: new Date().getTime() + 1 * 60 * 1000,  //1 minute
+      timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
 
     //Add background music

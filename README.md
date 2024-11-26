@@ -83,13 +83,34 @@ En **Head and Balls**, las partidas comenzarán con cada jugador posicionado en 
 
 # 8. Interfaz
 
-El juego tomará como referencia juegos flash de hace años para diseñar sus interfaces.
+El juego tomará como referencia para el estilo y diseño de sus interfaces juegos flash de hace años. Para los menus, el flujo que se seguirá es el siguiente:
 
-![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_main.png)  
-![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_options.png)  
-![ui main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_credits.png)  
-![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_characters.png)  
-![ui game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
+![flow](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Blank%20diagram.png)  
+
+* **Menú principal:** desde el menú principal se podrá navegar a las pantallas de selección de personaje, de ajustes y de créditos.
+
+![main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_main.png)  
+
+* **Selección de personajes:** desde la pantalla de selección de personajes existirá la opcion de continuar a la pantalla de juego.
+
+![characters](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_characters.png)  
+
+* **Juego:** desde la pantalla de juego se podrá volver al menú principal, al menú de opciones y a la pantalla de resultados.
+
+![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
+
+* **Resultados:** desde la pantalla de resultados se podrá volver al menú principal.
+
+![results](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_results.png)  
+
+* **Ajustes:** desde la pantalla de ajustes se podrá volver al menú principal o a la pantalla de juego, dependiendo de donde se abrieron.
+
+![options](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_options.png)  
+
+* **Creditos:** desde la pantalla de creditos se podrá volver al menú principal.
+
+![credits](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_credits.png)  
+
 
 # 9. Mecánicas
 
@@ -101,10 +122,10 @@ Las mecánicas en **Head and Balls** son sencillas y están diseñadas para brin
   * **Big ball (buena):** Hace crecer la bola durante un tiempo determinado.  
   * **Small ball (buena):** Hace decrecer la bola durante un tiempo determinado.  
   * **Bouncy ball (buena):** Incrementa la intensidad de rebote a la bola durante un tiempo determinado.  
-  * **Stun enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
-  * **Stun player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
+  * **Freeze enemy (buena):** Paraliza al contrincante del último jugador que tocó la bola durante un tiempo determinado.  
+  * **Freeze player (mala):** Paraliza al último jugador que tocó la bola durante un tiempo determinado.  
 
-![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_game.png)  
+![game](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_powerup_small.png)  
 ~ Imagen de la habilidad **Small ball**
 
 # 10. Controles
