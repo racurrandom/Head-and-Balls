@@ -45,6 +45,8 @@ class SceneMain extends Phaser.Scene {
       ['button', 'assets/main/button.png'],
       ['buttonHover', 'assets/main/buttonHover.png'],
       ['window', 'assets/main/window.png'],
+      ['userOn', 'assets/main/userOn.png'],
+      ['userOff', 'assets/main/userOff.png'],
       //Options
       ['slider', 'assets/main/slider.png'],
       ['controls1', 'assets/main/controls1.png'],
@@ -102,6 +104,9 @@ class SceneMain extends Phaser.Scene {
       this.sound.setVolume(Settings.volume)
     }
 
+    //Init online manager
+    OnlineManager.init()
+
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
 
@@ -127,7 +132,7 @@ class SceneMain extends Phaser.Scene {
       play.setTexture('button')
     })
     Element.onClick(play, () => {
-      Scene.changeScene(this, 'Characters')
+      this.scene.launch('Modes', this)
     })
     
     //Options button
@@ -162,6 +167,16 @@ class SceneMain extends Phaser.Scene {
     })
     Element.onClick(credits, () => {
       this.scene.launch('Credits')
+    })
+    
+    //Connect button
+    const connect = this.add.image(1180, 600, 'userOff')
+    Element.onClick(connect, () => {
+      this.scene.launch('Connect', this)
+    })
+    OnlineManager.check((connected) => {
+      console.log(connected)
+      connect.texture = connected ? 'userOn' : 'userOff'
     })
   }
 }
