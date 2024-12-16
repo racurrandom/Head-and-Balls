@@ -17,8 +17,8 @@ class SceneOptions extends Phaser.Scene {
   create(data) {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'window')
+    Element.onClick(bg, () => {}) //Prevent clickthrough
 
-    Element.onClick(bg, () => { }) //Prevent clickthrough
 
     //Add title
     const title = this.add.text(640, 120, 'Opciones', {
@@ -27,6 +27,7 @@ class SceneOptions extends Phaser.Scene {
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
+
 
     //Add volome slider
     const sliderBG = this.add.image(1280 / 2, 260, 'slider')//this.add.rectangle(1280 / 2, 300, 400, 20, 0xffffff)
@@ -37,24 +38,15 @@ class SceneOptions extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
+
     //Add controls
     const controls1 = this.add.image(1280 / 2 - 200, 440, 'controls1')
     const controls2 = this.add.image(1280 / 2 + 200, 440, 'controls2')
 
-    //Add resume button
-    const resume = this.add.image(640, 600, 'button')
-    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center',
-    }).setOrigin(0.5)
-    Element.onHover(resume, () => {
-      resume.setTexture('buttonHover')
-    }, () => {
-      resume.setTexture('button')
-    })
-    Element.onClick(resume, () => {
+
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver')
+    Element.onClick(back.image, () => {
       this.scene.stop()
       this.scene.resume(data)
     })

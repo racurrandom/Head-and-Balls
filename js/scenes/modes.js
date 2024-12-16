@@ -43,7 +43,7 @@ class SceneModes extends Phaser.Scene {
     })
     Element.onClick(online, () => {
       this.scene.stop()
-      this.scene.launch('Connect', this)
+      this.scene.launch('Account', this)
     })
 
     //Add local button

@@ -96,8 +96,8 @@ class SceneMain extends Phaser.Scene {
   create(data) {
     //Update settings
     try {
-      const t = parseFloat(localStorage.getItem('volume'))
-      if (t != NaN) Settings.volume = t
+      const temp = parseFloat(localStorage.getItem('volume'))
+      if (temp != NaN) Settings.volume = temp
       this.sound.setVolume(Settings.volume)
     } catch(e) {
       Settings.volume = 1
@@ -107,76 +107,48 @@ class SceneMain extends Phaser.Scene {
     //Init online manager
     OnlineManager.init()
 
-    //Add background
-    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
-
+    
     //Add background music
     SceneMain.music = this.sound.add('music_menu')
     SceneMain.music.loop = true
     SceneMain.music.play()
 
+
+    //Add background
+    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
+
     //Add title
     const title = this.add.image(640, 150, 'title')
 
-    //Play button
-    const play = this.add.image(640, 400, 'button')
-    const playText = this.add.text(640, 400 - 6, 'Jugar', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(play, () => {
-      play.setTexture('buttonHover')
-    }, () => {
-      play.setTexture('button')
-    })
-    Element.onClick(play, () => {
+
+    //Play, options & credits buttons
+    const play = new Button(this, 640, 400, 'Jugar')
+    Element.onClick(play.image, () => {
       this.scene.launch('Modes', this)
     })
     
-    //Options button
-    const options = this.add.image(640, 500, 'button')
-    const optionsText = this.add.text(640, 500 - 6, 'Opciones', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(options, () => {
-      options.setTexture('buttonHover')
-    }, () => {
-      options.setTexture('button')
-    })
-    Element.onClick(options, () => {
+    const options = new Button(this, 640, 500, 'Opciones')
+    Element.onClick(options.image, () => {
       this.scene.launch('Options', 'Main')
     })
 
-    //Credits button
-    const credits = this.add.image(640, 600, 'button')
-    const creditsText = this.add.text(640, 600 - 6, 'Créditos', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(credits, () => {
-      credits.setTexture('buttonHover')
-    }, () => {
-      credits.setTexture('button')
-    })
-    Element.onClick(credits, () => {
+    const credits = new Button(this, 640, 600, 'Créditos')
+    Element.onClick(credits.image, () => {
       this.scene.launch('Credits')
     })
     
-    //Connect button
-    const connect = this.add.image(1180, 600, 'userOff')
-    Element.onClick(connect, () => {
-      this.scene.launch('Connect', this)
+
+    //Account button
+    this.account = this.add.image(1180, 600, 'userOff')
+    Element.onClick(this.account, () => {
+      this.scene.launch('Account', this)
     })
-    OnlineManager.check((connected) => {
-      console.log(connected)
-      connect.texture = connected ? 'userOn' : 'userOff'
+    this.checkLogged()
+  }
+
+  checkLogged() {
+    OnlineManager.checkLogged((isLogged) => {
+      this.account.setTexture(isLogged ? 'userOn' : 'userOff')
     })
   }
 }

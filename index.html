@@ -4,6 +4,7 @@
   <!-- Scripts -->
   <script src="js/phaser.js"></script>
   <script src="js/turbo.js"></script>
+  <script src="js/Button.js"></script>
   <script src="js/InputField.js"></script>
   <script src="js/OnlineManager.js"></script>
 
@@ -11,7 +12,7 @@
 
   <!-- Scenes -->
   <script src="js/scenes/main.js"></script>
-  <script src="js/scenes/connect.js"></script>
+  <script src="js/scenes/account.js"></script>
   <script src="js/scenes/options.js"></script>
   <script src="js/scenes/credits.js"></script>
   <script src="js/scenes/modes.js"></script>
@@ -98,10 +99,10 @@
       }
     },
 
-    //Game scenes (loads first in list on start)
+    //Game scenes (loads them in order)
     scene: [
       SceneMain,
-      SceneConnect,
+      SceneAccount,
       SceneCredits,
       SceneModes,
       SceneCharacters,

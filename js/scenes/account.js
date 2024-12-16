@@ -1,6 +1,6 @@
-class SceneConnect extends Phaser.Scene {
+class SceneAccount extends Phaser.Scene {
   constructor() {
-    super({ key: 'Connect' });
+    super({ key: 'Account' });
   }
 
 
@@ -14,19 +14,20 @@ class SceneConnect extends Phaser.Scene {
   |  $$$$$$/| $$      |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
-  create() {
+  create(mainScene) {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'window')
-
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
+
     //Add title
-    const title = this.add.text(640, 120, 'Usuario', {
+    const title = this.add.text(640, 120, 'Server & Cuenta', {
       fontFamily: 'college',
       fontSize: '64px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
+
 
     //IP input
     const IPInput = new InputField(this.add.text(640, 250, OnlineManager.IP, {
@@ -42,6 +43,7 @@ class SceneConnect extends Phaser.Scene {
       }
     })
 
+
     //Username input
     const usernameInput = new InputField(this.add.text(640, 300, '', {
       fontFamily: 'college',
@@ -53,6 +55,7 @@ class SceneConnect extends Phaser.Scene {
       max: 15
     })
 
+
     //Password input 
     const passwordInput = new InputField(this.add.text(640, 350, '', {
       fontFamily: 'college',
@@ -63,66 +66,43 @@ class SceneConnect extends Phaser.Scene {
       placeholder: 'Contraseña',
       max: 15
     })
-
     
-    
-    const register = this.add.image(480, 450, 'button')
-    const registerText = this.add.text(480, 450 - 6, 'Crear', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(register, () => {
-      register.setTexture('buttonHover')
-    }, () => {
-      register.setTexture('button')
+
+    //Register & login buttons
+    const register = new Button(this, 480, 450, 'Crear')
+    Element.onClick(register.image, () => {
+      
     })
 
-    const login = this.add.image(800, 450, 'button')
-    const loginText = this.add.text(800, 450 - 6, 'Iniciar', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(login, () => {
-      login.setTexture('buttonHover')
-    }, () => {
-      login.setTexture('button')
+    const login = new Button(this, 800, 450, 'Login')
+    Element.onClick(login.image, () => {
+      OnlineManager.login(usernameInput.text, passwordInput.text, (isLogged) => {
+        //Not logged in -> Return
+        if (!isLogged) return
+
+        //Disable input fields
+        if (InputField.current) InputField.current.disable()
+        
+        //Stop scene
+        this.scene.stop()
+        
+        //Check if logged in changed
+        mainScene.checkLogged()
+      })
     })
 
-    /*const logout = this.add.image(640, 450, 'button')
-    const logoutText = this.add.text(640, 450 - 6, 'Cerrar', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(logout, () => {
-      logout.setTexture('buttonHover')
-    }, () => {
-      logout.setTexture('button')
-    })*/
 
-
-
-    //Add resume button
-    const resume = this.add.image(640, 600, 'button')
-    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(resume, () => {
-      resume.setTexture('buttonHover')
-    }, () => {
-      resume.setTexture('button')
-    })
-    Element.onClick(resume, () => {
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver')
+    Element.onClick(back.image, () => {
+      //Disable input fields
       if (InputField.current) InputField.current.disable()
+      
+      //Stop scene
       this.scene.stop()
+
+      //Check if logged in changed
+      mainScene.checkLogged()
     })
   }
 }

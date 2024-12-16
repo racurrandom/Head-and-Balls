@@ -82,6 +82,8 @@ class InputField {
       //Check key
       switch (event.key.toLowerCase()) {
         //Special
+        case 'contextmenu':
+        case 'tab':
         case 'alt':
         case 'altgraph':
         case 'control':

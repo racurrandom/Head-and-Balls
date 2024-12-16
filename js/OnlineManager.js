@@ -1,6 +1,7 @@
 class OnlineManager {
 
   static IP = ''
+  static isLogged = false
 
   static init() {
     OnlineManager.IP = localStorage.getItem('ip')
@@ -12,27 +13,103 @@ class OnlineManager {
     localStorage.setItem('ip', OnlineManager.IP)
   }
 
-  static check(onCheck) {
-    //No ip
-    if (OnlineManager.IP == '') {
-      onCheck(false)
-      return
-    }
-
+  //Checks
+  static checkOnline(onCheck) {
     //Create request
-    const request = new Request('http://' + OnlineManager.IP + '/api/auth/check', {
-      method: 'GET',
-      //body: '',
+    const request = new Request('http://' + OnlineManager.IP + '/api/test')
+
+    //Send request
+    fetch(request)
+      .then((response) => {
+        if (response.ok)
+          onCheck(true)
+        else
+          throw new Error("Error checking if server is online")
+      })
+      .catch((error) => {
+        console.log(error)
+        onCheck(false)
+      })
+  }
+
+  static checkLogged(onCheck) {
+    //Create request
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth/check')
+
+    //Send request
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          console.log(response)
+          OnlineManager.isLogged = true
+          onCheck(OnlineManager.isLogged)
+        } else {
+          throw new Error("Error checking if user is online")
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        OnlineManager.isLogged = false
+        onCheck(OnlineManager.isLogged)
+      })
+  }
+
+  //Loggin
+  static login(username, password, onLogged) {
+    //Create request
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
     })
 
     //Send request
     fetch(request)
-      .then((response) => response.blob())
-      .then((blob) => {
-        onCheck(blob)
+      .then((response) => {
+        if (response.ok) {
+          OnlineManager.isLogged = true
+          onLogged(OnlineManager.isLogged)
+        } else {
+          throw new Error("Error logging in")
+        }
       })
       .catch((error) => {
-        onCheck(false)
+        console.log(error)
+        onLogged(OnlineManager.isLogged)
+      })
+  }
+
+  static logout(onLogged) {
+    //Create request
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth/logout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+
+    //Send request
+    fetch(request)
+      .then((response) => {
+        if (response.ok) {
+          OnlineManager.isLogged = false
+          onCheck(OnlineManager.isLogged)
+        } else {
+          throw new Error("Error logging out")
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        onCheck(OnlineManager.isLogged)
       })
   }
 }

@@ -17,8 +17,8 @@ class SceneCredits extends Phaser.Scene {
   create(data) {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'window')
-
     Element.onClick(bg, () => {}) //Prevent clickthrough
+
 
     //Add title
     const title = this.add.text(640, 120, 'Créditos', {
@@ -28,6 +28,7 @@ class SceneCredits extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
+
     //Add text
     const credits = this.add.text(640, 360, 'Víctor Cabello Pamukov\nGuillermo Sánchez González\nAlejandro Paniagua Moreno\nRaúl Alfonso Pérez', {
       fontFamily: 'college',
@@ -36,20 +37,10 @@ class SceneCredits extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
-    //Add resume button
-    const resume = this.add.image(640, 600, 'button')
-    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(resume, () => {
-      resume.setTexture('buttonHover')
-    }, () => {
-      resume.setTexture('button')
-    })
-    Element.onClick(resume, ()=>{
+    
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver')
+    Element.onClick(back.image, () => {
       this.scene.stop()
     })
   }
