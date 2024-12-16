@@ -53,6 +53,36 @@ class OnlineManager {
       })
   }
 
+  //Register
+  static register(username, password, onRegister){
+    //Create request
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password
+      })
+    })
+
+    //Send request
+    fetch(request)
+      .then((response) => {
+        if(response.ok) {
+          login(this.username, this.password, this.onRegister)
+        }else {
+          throw new Error("Error registering")
+        }
+      })
+      .catch((error) => {
+        console.log(error)
+        onRegister(false)
+      })
+
+  }
+
   //Loggin
   static login(username, password, onLogged) {
     //Create request
