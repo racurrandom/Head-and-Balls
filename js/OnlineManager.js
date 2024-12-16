@@ -34,17 +34,16 @@ class OnlineManager {
 
   static checkLogged(onCheck) {
     //Create request
-    const request = new Request('http://' + OnlineManager.IP + '/api/auth/check')
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth')
 
     //Send request
     fetch(request)
       .then((response) => {
         if (response.ok) {
-          console.log(response)
           OnlineManager.isLogged = true
           onCheck(OnlineManager.isLogged)
         } else {
-          throw new Error("Error checking if user is online")
+          throw new Error("User is not online")
         }
       })
       .catch((error) => {
