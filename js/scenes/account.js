@@ -71,7 +71,19 @@ class SceneAccount extends Phaser.Scene {
     //Register & login buttons
     const register = new Button(this, 480, 450, 'Crear')
     Element.onClick(register.image, () => {
-      
+      OnlineManager.register(usernameInput.text, passwordInput.text, (isLogged) => {
+        //Not logged in -> Return
+        if (!isLogged) return
+
+        //Disable input fields
+        if (InputField.current) InputField.current.disable()
+        
+        //Stop scene
+        this.scene.stop()
+        
+        //Check if logged in changed
+        mainScene.checkLogged()
+      })
     })
 
     const login = new Button(this, 800, 450, 'Login')

@@ -80,7 +80,6 @@ class OnlineManager {
         console.log(error)
         onRegister(false)
       })
-
   }
 
   //Loggin
