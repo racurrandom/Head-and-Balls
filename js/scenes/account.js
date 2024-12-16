@@ -104,5 +104,13 @@ class SceneAccount extends Phaser.Scene {
       //Check if logged in changed
       mainScene.checkLogged()
     })
+
+
+    //Add delete account button
+    const deleteButton = new Button(this,195 , 600, 'Borrar')
+    Element.onClick(deleteButton.image, () =>{ 
+      // borrar cuenta aqui
+    })
+
   }
 }

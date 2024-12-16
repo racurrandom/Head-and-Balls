@@ -34,7 +34,7 @@ class OnlineManager {
 
   static checkLogged(onCheck) {
     //Create request
-    const request = new Request('http://' + OnlineManager.IP + '/api/auth/check')
+    const request = new Request('http://' + OnlineManager.IP + '/api/auth')
 
     //Send request
     fetch(request)
