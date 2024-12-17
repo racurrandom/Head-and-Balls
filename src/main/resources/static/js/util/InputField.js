@@ -15,6 +15,7 @@ class InputField {
   max = Infinity
   min = 0
   onInput = undefined
+  onEnter = undefined
 
   constructor(element, options) {
     //Save element
@@ -31,6 +32,7 @@ class InputField {
       if (typeof options.max === 'number') this.max = options.max
       if (typeof options.min === 'number') this.min = options.min
       if (typeof options.onInput === 'function') this.onInput = options.onInput
+      if (typeof options.onEnter === 'function') this.onEnter = options.onEnter
     }
 
     //Update text
@@ -124,10 +126,17 @@ class InputField {
           this.updateText()
           break
 
-        //Finish
-        case 'enter':
+        //Next input (not implemented so disable instead)
         case 'tab':
           this.disable()
+          break
+
+        //Enter
+        case 'enter':
+          if (typeof this.onEnter === 'function') 
+            this.onEnter(this.text)
+          else
+            this.disable()
           break
 
         //Normal key

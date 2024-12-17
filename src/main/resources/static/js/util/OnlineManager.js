@@ -26,11 +26,11 @@ class OnlineManager {
       type: 'GET',
       success: (data) => {
         OnlineManager.isLogged = true
-        onCheck(OnlineManager.isLogged)
+        onCheck(data)
       },
       error: (error) => {
         OnlineManager.isLogged = false
-        onCheck(OnlineManager.isLogged, error)
+        onCheck(undefined, error)
       },
     })
   }
@@ -99,6 +99,33 @@ class OnlineManager {
       },
       error: (error) => {
         onLogout(OnlineManager.isLogged, error)
+      },
+    })
+  }
+
+  //Chat
+  static chatRead(onRead, after=0) {
+    $.ajax({
+      url: OnlineManager.IP + '/api/chat?after=' + after,
+      type: 'GET',
+      success: (data) => {
+        onRead(data)
+      },
+      error: (error) => {
+        onRead(undefined, error)
+      },
+    })
+  }
+
+  static chatSend(message, onSend) {
+    $.ajax({
+      url: OnlineManager.IP + '/api/chat?message=' + message,
+      type: 'POST',
+      success: (data) => {
+        onSend()
+      },
+      error: (error) => {
+        onSend(error)
       },
     })
   }

@@ -3,7 +3,7 @@ class SceneAccount extends Phaser.Scene {
     super({ key: 'Account' });
   }
 
-  deleteButton
+  delete
   register
   login
   logout
@@ -37,29 +37,25 @@ class SceneAccount extends Phaser.Scene {
 
     //Username input
     this.usernameInput = new InputField(this.add.text(640, 250, '', {
-      fontSize: '40px',
+      fontFamily: 'poppins',
+      fontSize: '35px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5), {
       placeholder: 'Usuario',
-      max: 15,
-      onInput: (text) => {
-        OnlineManager.username = text
-      }
+      max: 15
     })
 
 
     //Password input 
     this.passwordInput = new InputField(this.add.text(640, 300, '', {
-      fontSize: '40px',
+      fontFamily: 'poppins',
+      fontSize: '35px',
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5), {
       placeholder: 'Contraseña',
-      max: 15,
-      onInput: (text) => {
-        OnlineManager.password = text
-      }
+      max: 15
     })
 
 
@@ -80,6 +76,10 @@ class SceneAccount extends Phaser.Scene {
 
         //Not logged in -> Return
         if (!isLogged) return
+        
+        //Save user & password
+        OnlineManager.username = this.usernameInput.text
+        OnlineManager.password = this.passwordInput.text
 
         //Reset input fields
         InputField.reset()
@@ -101,6 +101,10 @@ class SceneAccount extends Phaser.Scene {
 
         //Not logged in -> Return
         if (!isLogged) return
+        
+        //Save user & password
+        OnlineManager.username = this.usernameInput.text
+        OnlineManager.password = this.passwordInput.text
 
         //Reset input fields
         InputField.reset()
@@ -122,6 +126,10 @@ class SceneAccount extends Phaser.Scene {
 
         //Still logged in -> Return
         if (isLogged) return
+        
+        //Save user & password
+        OnlineManager.username = ''
+        OnlineManager.password = ''
 
         //Reset input fields
         InputField.reset()
@@ -136,14 +144,18 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Add delete account button
-    this.deleteButton = new Button(this, 480, 450, 'Borrar')
-    Element.onClick(this.deleteButton.image, () =>{ 
+    this.delete = new Button(this, 480, 450, 'Borrar')
+    Element.onClick(this.delete.image, () =>{ 
       OnlineManager.deleteAccount((isLogged, error)=>{
         //Update error text
         errorText.text = error ? error.responseText : ''
 
         //Still logged in -> Return
         if (isLogged) return
+        
+        //Save user & password
+        OnlineManager.username = ''
+        OnlineManager.password = ''
 
         //Reset input fields
         InputField.reset()
@@ -180,10 +192,10 @@ class SceneAccount extends Phaser.Scene {
       //Already logged
 
       //Move buttons
-      this.deleteButton.Move(480, 450)
-      this.logout.Move(800, 450)
       this.register.Move(-200, -200)
       this.login.Move(-200, -200)
+      this.delete.Move(480, 450)
+      this.logout.Move(800, 450)
 
       //Change text
       this.usernameInput.setText(OnlineManager.username)
@@ -193,10 +205,10 @@ class SceneAccount extends Phaser.Scene {
       //Not logged yet
       
       //Move buttons
-      this.deleteButton.Move(-200, -200)
-      this.logout.Move(-200, -200)
       this.register.Move(480, 450)
       this.login.Move(800, 450)
+      this.delete.Move(-200, -200)
+      this.logout.Move(-200, -200)
 
       //Change text
       this.usernameInput.setText('')

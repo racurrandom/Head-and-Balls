@@ -144,8 +144,12 @@ class SceneMain extends Phaser.Scene {
   }
 
   checkLogged() {
-    OnlineManager.checkLogged((isLogged) => {
-      this.account.setTexture(isLogged ? 'userOn' : 'userOff')
+    OnlineManager.checkLogged((user) => {
+      //Update icon
+      this.account.setTexture(user ? 'userOn' : 'userOff')
+
+      //Update username
+      if (user) OnlineManager.username = user.username
     })
   }
 }
