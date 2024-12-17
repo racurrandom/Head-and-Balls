@@ -152,6 +152,7 @@ El juego tomará como referencia para el estilo y diseño de sus interfaces jueg
 * **Menú cuenta:** desde el menú de cuenta el usuario podrá iniciar sesión o, en caso de no tener una cuenta, crearla. Una vez este su sesión iniciada, este podrá borrar su cuenta, actualizar sus datos o cerrar sesión desde 3 botones especiales.
 
 ![account1](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_account1.png)  
+
 ![account2](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_account2.png)  
 
 * **Chat:** si se trata de jugar y se elege el modo online, se abrira un chat donde el jugador podrá chatear con otros jugadores conectados a la vez.
