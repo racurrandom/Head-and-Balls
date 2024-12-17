@@ -105,6 +105,7 @@ class InputField {
         case 'f10':
         case 'f11':
         case 'f12':
+        case 'meta':
         case 'contextmenu':
         case 'alt':
         case 'altgraph':

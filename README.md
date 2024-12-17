@@ -145,9 +145,18 @@ El juego tomará como referencia para el estilo y diseño de sus interfaces jueg
 
 ![flow](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/Blank%20diagram.png)  
 
-* **Menú principal:** desde el menú principal se podrá navegar a las pantallas de selección de personaje, de ajustes y de créditos mediante los botones de jugar, opciones y creditos respectivamente.
+* **Menú principal:** desde el menú principal se podrá navegar a las pantallas de selección de personaje, de ajustes, de créditos y de cuenta mediante los botones de jugar, opciones, creditos e icono de cuenta respectivamente.
 
 ![main](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_main.png)  
+
+* **Menú cuenta:** desde el menú de cuenta el usuario podrá iniciar sesión o, en caso de no tener una cuenta, crearla. Una vez este su sesión iniciada, este podrá borrar su cuenta, actualizar sus datos o cerrar sesión desde 3 botones especiales.
+
+![account1](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_account1.png)  
+![account2](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_account2.png)  
+
+* **Chat:** si se trata de jugar y se elege el modo online, se abrira un chat donde el jugador podrá chatear con otros jugadores conectados a la vez.
+
+![chat](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/sc_chat.png)  
 
 * **Selección de personajes:** desde la pantalla de selección de personajes se continuará a la pantalla de juego una vez seleccionen ambos jugadores que están listos.
 
