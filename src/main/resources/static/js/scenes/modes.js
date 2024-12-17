@@ -17,7 +17,6 @@ class SceneModes extends Phaser.Scene {
   create(mainScene) {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'window')
-
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
     //Add title

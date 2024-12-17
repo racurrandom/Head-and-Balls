@@ -59,10 +59,9 @@ class SceneGame extends Phaser.Scene {
 
     //Add back button
     const back_button = this.add.image(60, 55, 'back_button')
-    Element.onClick(back_button, ()=> {
+    Element.onClick(back_button, () => {
       SceneGame.music.stop()
-      this.scene.stop()
-      this.scene.start('Main')
+      Scene.changeScene(this, 'Main')
     })
 
 
