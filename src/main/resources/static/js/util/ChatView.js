@@ -1,30 +1,57 @@
 class ChatView {
   
-  x = 0
-  y = 0
+  //Position & size
+  _x = 0
+  _y = 0
+  _w = 0
+  _h = 0
+  _scroll = 0
+  _maxScroll = 0
 
-  w = 0
-  h = 0
+  //Gap between messages
+  gap = 15
 
-  spacing = 15
+  //Mask
+  maskRect = undefined
+  mask = undefined
 
+  //Other
   scene = undefined
   messages = []
 
 
   constructor(scene, x, y, w, h) {
     this.scene = scene
-    this.x = x
-    this.y = y
+    this._x = x
+    this._y = y
+    this._w = w
+    this._h = h
+    this.updateMask()
+  }
+
+  updateMask() {
+    //Delete previous mask
+    if (this.maskRect) this.maskRect.destroy()
+
+    //Create mask
+    this.maskRect = this.scene.add.rectangle(this._x + this._w/2, this._y - this._h/2, this._w, this._h, 0x000000).setVisible(false)
+    this.mask = this.maskRect.createGeometryMask()
+
+    //Update messages mask
+    for (let i = 0; i < this.messages.length; i++) {
+      const message = this.messages[i]
+      message.view.setMask(this.mask)
+    }
   }
 
   addMessage(id, username, text) {
     //Create message view
-    const view = this.scene.add.text(this.x, this.y, (username + ':\n' + text).split('\n'), {
+    const view = this.scene.add.text(this._x, this._y, (username + ':\n' + text).split('\n'), {
       fontFamily: 'poppins',
       fontSize: '24px',
       fill: '#fff'
     }).setOrigin(0, 1)
+    view.setMask(this.mask)
 
     //Add message to list
     this.messages.push(new ChatMessage(id, username, text, view))
@@ -38,13 +65,30 @@ class ChatView {
   }
 
   reorder() {
-    let y = this.y
+    //Starting height
+    let y = this._y - this._scroll
+
     //Reposition messages
     for (let i = this.messages.length - 1; i >= 0; i--) {
       const message = this.messages[i]
       message.view.y = y
-      y -= message.view.height + this.spacing
+      y -= message.view.height + this.gap
     }
+
+    //Save next y as max scroll
+    this._maxScroll = y + this._scroll - this.gap
+  }
+
+  scroll(amount) {
+    //Update scroll by amount
+    this._scroll += amount
+
+    //Clamp scroll between maxScroll and 0
+    if (this._scroll > 0) this._scroll = 0
+    if (this._scroll < this._maxScroll) this._scroll = this._maxScroll
+
+    //Reorder list with scroll
+    this.reorder()
   }
 }
 
