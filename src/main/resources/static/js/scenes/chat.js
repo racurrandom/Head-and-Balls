@@ -23,6 +23,7 @@ class SceneChat extends Phaser.Scene {
     //Add back button
     const back = this.add.image(1170, 110, 'back_button')
     Element.onClick(back, () => {
+      InputField.reset()
       Scene.changeScene(this, 'Main')
     })
 
