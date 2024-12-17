@@ -7,6 +7,7 @@ class SceneAccount extends Phaser.Scene {
   register
   login
   logout
+  updateButton
 
   usernameInput
   passwordInput
@@ -118,7 +119,7 @@ class SceneAccount extends Phaser.Scene {
     })
 
     //Logout button
-    this.logout = new Button(this, 800, 450, 'Cerrar')
+    this.logout = new Button(this, 940, 450, 'Cerrar')
     Element.onClick(this.logout.image, () => {
       OnlineManager.logout((isLogged, error) => {
         //Update error text
@@ -144,7 +145,7 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Add delete account button
-    this.delete = new Button(this, 480, 450, 'Borrar')
+    this.delete = new Button(this, 390, 450, 'Borrar')
     Element.onClick(this.delete.image, () =>{ 
       OnlineManager.deleteAccount((isLogged, error)=>{
         //Update error text
@@ -168,6 +169,31 @@ class SceneAccount extends Phaser.Scene {
       })
     })
 
+    //Add an update button
+    this.updateButon = new Button(this, 640, 450, 'Update')
+    Element.onClick(this.updateButon.image, () =>{ 
+      OnlineManager.updateAccount(this.usernameInput.text, this.passwordInput.text, (isLogged, error)=>{
+        //Update error text
+        errorText.text = error ? error.responseText : ''
+
+        //Still logged in -> Return
+        if (!isLogged) return
+        
+        //Save user & password
+        OnlineManager.username = this.usernameInput.text
+        OnlineManager.password = this.passwordInput.text
+
+        //Reset input fields
+        InputField.reset()
+        
+        //Update buttons
+        this.toggleLogged()
+
+        //Check if logged in changed
+        mainScene.checkLogged()
+      })
+    })
+
 
     //Add back button
     const back = new Button(this, 640, 600, 'Volver')
@@ -182,6 +208,7 @@ class SceneAccount extends Phaser.Scene {
       mainScene.checkLogged()
     })
 
+    
 
     //Show the corresponding buttons
     this.toggleLogged()
@@ -194,8 +221,9 @@ class SceneAccount extends Phaser.Scene {
       //Move buttons
       this.register.Move(-200, -200)
       this.login.Move(-200, -200)
-      this.delete.Move(480, 450)
-      this.logout.Move(800, 450)
+      this.delete.Move(340, 450)
+      this.logout.Move(940, 450)
+      this.updateButon.Move(640, 450)
 
       //Change text
       this.usernameInput.setText(OnlineManager.username)
@@ -209,6 +237,7 @@ class SceneAccount extends Phaser.Scene {
       this.login.Move(800, 450)
       this.delete.Move(-200, -200)
       this.logout.Move(-200, -200)
+      this.updateButon.Move(-200, -200)
 
       //Change text
       this.usernameInput.setText('')

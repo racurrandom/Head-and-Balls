@@ -35,6 +35,26 @@ class OnlineManager {
     })
   }
 
+  //Update account
+  static updateAccount(username, password, onUpdate) {
+    $.ajax({
+      url: OnlineManager.IP + '/api/auth/update',
+      type: 'PUT',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        username: username,
+        password: password
+      }),
+      success: (data) => {
+        OnlineManager.isLogged = true
+        onUpdate(OnlineManager.isLogged)
+      },
+      error: (error) => {
+        onUpdate(OnlineManager.isLogged, error)
+      },
+    })
+  }
+
   //Register/delete
   static register(username, password, onRegister) {
     $.ajax({
