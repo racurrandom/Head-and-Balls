@@ -72,7 +72,7 @@ class SceneAccount extends Phaser.Scene {
     
 
     //Register button
-    this.register = new Button(this, 480, 450, 'Crear')
+    this.register = new Button(this, 480, 450, 'Registrar')
     Element.onClick(this.register.image, () => {
       OnlineManager.register(this.usernameInput.text, this.passwordInput.text, (isLogged, error) => {
         //Update error text
@@ -93,7 +93,7 @@ class SceneAccount extends Phaser.Scene {
     })
 
     //Login button
-    this.login = new Button(this, 800, 450, 'Login')
+    this.login = new Button(this, 800, 450, 'Entrar')
     Element.onClick(this.login.image, () => {
       OnlineManager.login(this.usernameInput.text, this.passwordInput.text, (isLogged, error) => {
         //Update error text
@@ -114,7 +114,7 @@ class SceneAccount extends Phaser.Scene {
     })
 
     //Logout button
-    this.logout = new Button(this, 800, 450, 'Logout')
+    this.logout = new Button(this, 800, 450, 'Cerrar')
     Element.onClick(this.logout.image, () => {
       OnlineManager.logout((isLogged, error) => {
         //Update error text
