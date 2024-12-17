@@ -27,7 +27,7 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Add title
-    const title = this.add.text(640, 120, 'Server & Cuenta', {
+    const title = this.add.text(640, 120, 'Cuenta', {
       fontFamily: 'college',
       fontSize: '64px',
       fill: '#fff',
