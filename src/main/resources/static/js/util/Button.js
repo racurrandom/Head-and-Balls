@@ -25,6 +25,6 @@ class Button {
     this.image.x = x
     this.image.y = y
     this.text.x = x
-    this.text.y = y
+    this.text.y = y - 6
   }
 }
