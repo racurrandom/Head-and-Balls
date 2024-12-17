@@ -103,6 +103,49 @@ public class AuthController {
   }
 
 
+  @PutMapping("/update")
+  public ResponseEntity<String> update(HttpSession session, @Valid @RequestBody User user) {
+    //Check if user is valid
+    user.checkValid();
+
+    //Check if exists
+    if (users.containsKey(user.getUsername()))
+      throw new InvalidCredentialsException("User already exists");
+
+    //Get encoded password
+    String encodedPassword = encode(user.getPassword());
+    if (encodedPassword == user.getPassword())
+      throw new RuntimeException("Error while encoding password");
+    
+    //Save encoded password
+    user.setPassword(encodedPassword);
+
+    //Get username
+    String oldUsername = getUsername(session);
+
+    //Check if old user exists
+    if (!users.containsKey(oldUsername))
+      throw new InvalidCredentialsException("User does not exists");
+
+    //Get old user
+    User oldUser = users.get(oldUsername);
+
+    //Delete old user
+    users.remove(oldUser.getUsername());
+    saveUsers();
+
+    //Save new user
+    users.put(user.getUsername(), user);
+    saveUsers();
+
+    //Login (save session)
+    saveSession(session, user);
+
+    //All good
+    return ResponseEntity.ok("User registered successfully");
+  }
+
+
 
     /*$$$$$                                  /$$     /$$                    
    /$$__  $$                                | $$    |__/                    
