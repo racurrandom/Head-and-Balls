@@ -97,34 +97,12 @@ class InputField {
     this.element.setBackgroundColor(this.selectColor)
 
     //Create & add listener
-    this.onKey = (event) => {
+    this.onKey = async (event) => {
       //Should call onInput
       let callOnInput = true
 
       //Check key
       switch (event.key.toLowerCase()) {
-        //Special
-        case 'f1':
-        case 'f2':
-        case 'f3':
-        case 'f4':
-        case 'f5':
-        case 'f6':
-        case 'f7':
-        case 'f8':
-        case 'f9':
-        case 'f10':
-        case 'f11':
-        case 'f12':
-        case 'meta':
-        case 'contextmenu':
-        case 'alt':
-        case 'altgraph':
-        case 'control':
-        case 'shift':
-          callOnInput = false
-          break
-
         //Remove key
         case 'backspace':
           //Minimum length reached
@@ -153,11 +131,29 @@ class InputField {
 
         //Normal key
         default:
-          //Maximum length reached
-          if (this.text.length >= this.max) break
+          //Get key
+          let key = event.key
+
+          //Not a normal character
+          if (key.length > 1) {
+            callOnInput = false
+            break
+          }
+
+          //Control is pressed
+          if (event.ctrlKey) switch (key.toLowerCase()) {
+            //Paste
+            case 'v':
+              key = await navigator.clipboard.readText()
+              console.log('read clipboard')
+              break
+          }
+          
+          //Exceeds maximum length
+          if (this.text.length + key.length > this.max) break
 
           //Add character
-          this.text += event.key
+          this.text += key
           this.updateText()
           break
       }

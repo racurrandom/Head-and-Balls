@@ -37,7 +37,7 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Username input
-    const textBox1 = this.add.image(1280 / 2, 240, 'textBox')
+    const usernameBox = this.add.image(640, 240, 'textBox')
     this.usernameInput = new InputField(this.add.text(640, 240, '', {
       fontFamily: 'poppins',
       fontSize: '32px',
@@ -47,10 +47,13 @@ class SceneAccount extends Phaser.Scene {
       placeholder: 'Usuario',
       max: 15
     })
+    Element.onClick(usernameBox, () => {
+      this.usernameInput.toggle()
+    })
 
 
     //Password input 
-    const textBox2 = this.add.image(1280 / 2, 310, 'textBox')
+    const passwordBox = this.add.image(640, 310, 'textBox')
     this.passwordInput = new InputField(this.add.text(640, 310, '', {
       fontFamily: 'poppins',
       fontSize: '32px',
@@ -59,6 +62,9 @@ class SceneAccount extends Phaser.Scene {
     }).setOrigin(0.5), {
       placeholder: 'Contraseña',
       max: 15
+    })
+    Element.onClick(passwordBox, () => {
+      this.passwordInput.toggle()
     })
 
 
