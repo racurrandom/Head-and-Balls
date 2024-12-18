@@ -38,6 +38,10 @@ El equipo de **Head and Balls** está formado por:
 [**13. Recursos**](#13-recursos)  
 [**14. Licencia**](#14-licencia)
 
+# 0. Inicio
+
+Para iniciar el servidor, se puede hacer uso del archivo ```run.bat``` o del comando ```java -jar "head-and-balls-1.0.jar"``` mediante el terminal.
+
 # 1. Introducción
 
 Este es el documento de diseño de juego de **Head and Balls**, un videojuego de fútbol 2D en vista lateral, desarrollado para PC y navegadores. En este título, dos jugadores compiten uno contra uno para marcar goles en la portería contraria utilizando cabezazos y patadas en un entorno rápido y cómico.
