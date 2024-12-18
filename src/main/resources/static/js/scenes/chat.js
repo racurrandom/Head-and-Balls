@@ -18,7 +18,7 @@ class SceneChat extends Phaser.Scene {
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
     const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
-
+    
 
     //Add back button
     const back = this.add.image(1170, 110, 'back_button')
@@ -31,7 +31,7 @@ class SceneChat extends Phaser.Scene {
     //Error text
     const errorText = this.add.text(640, 75, '', {
       fontSize: '24px',
-      fill: '#fff',
+      fill: '#000',
       align: 'right'
     }).setOrigin(0.5)
 
@@ -69,10 +69,11 @@ class SceneChat extends Phaser.Scene {
 
 
     //Create message input
+    const chatBox = this.add.image(1260 / 2, 620, 'textBox2')
     const messageInput = new InputField(this.add.text(100, 620, '', {
       fontFamily: 'poppins',
       fontSize: '30px',
-      fill: '#fff'
+      fill: '#000'
     }).setOrigin(0, 0.5), {
       placeholder: 'Mensaje',
       max: 40,
@@ -88,7 +89,9 @@ class SceneChat extends Phaser.Scene {
         })
       }
     })
-
+    Element.onClick(chatBox, () => {
+      this.messageInput.toggle()
+    })
 
     //Add scroll to chat
     this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
