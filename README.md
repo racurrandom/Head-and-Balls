@@ -34,8 +34,9 @@ El equipo de **Head and Balls** está formado por:
 [**9. Mecánicas**](#9-mecánicas)  
 [**10. Controles**](#10-controles)  
 [**11. Audio**](#11-audio)  
-[**12. Recursos**](#12-recursos)  
-[**13. Licencia**](#13-licencia)
+[**12. Diagrama de Clases**](#12-diagrama-de-clases)  
+[**13. Recursos**](#13-recursos)  
+[**14. Licencia**](#14-licencia)
 
 # 1. Introducción
 
@@ -227,7 +228,17 @@ Una cosa que separa **Head and Balls** de otros juegos es que los personajes ten
   * **Efectos de sonido:** Sonidos como contacto con la pelota, golpes entre personajes, comienzo/final del partido, gol marcado…  
   * **Líneas de voz de personajes:** Cada personaje tendrá líneas de voz únicas y divertidas que se reproducirán al marcar un gol, añadiendo humor y personalidad al juego.
 
-# 12. Recursos
+# 12. Diagrama de clases
+
+![Class Diagram](https://raw.githubusercontent.com/racurrandom/Head-and-Balls/main/gdd/ClassDiagram.png)
+
+El diagrama muestra la estructura y las relaciones entre las clases principales de la aplicación desarrollada con **Spring Boot**. La clase central *App* (en rojo), anotada con *@SpringBootApplication*, actúa como **punto de entrada** del sistema, inicializando y gestionando componentes clave como los **controladores** (*AuthController, ChatController, TestController*), las configuraciones (SecurityConfig y CustomSessionListener) y el manejador global de excepciones (*GlobalExceptionHandler*).
+
+Los **controladores** (en azul), anotados con *@RestController*, tienen una relación de asociación (líneas sólidas) con la entidad *User* (en amarillo, modelo de datos) porque utilizan esta clase para manejar información de usuario. *AuthController* también lanza excepciones específicas (*InvalidCredentialsException* y *UserNotFoundException*, en rosa), lo que se refleja con líneas etiquetadas como **"Lanza"**. Estas excepciones son manejadas por *GlobalExceptionHandler* (en verde, *@RestControllerAdvice*), que tiene una relación de **asociación** con dichas excepciones, etiquetada como **"Maneja"**.
+
+Además, **existen relaciones** de dependencia (líneas discontinuas con flechas) entre *App* y las configuraciones (*SecurityConfig y CustomSessionListener, anotadas con @Configuration y @WebListener*), porque son cargadas en el contexto de Spring. *ChatController* tiene una **dependencia** con *AuthController* para verificar sesiones de usuario, reflejando una colaboración entre controladores. En conjunto, estas relaciones muestran una arquitectura organizada en capas, donde los controladores gestionan la lógica HTTP, las configuraciones definen el comportamiento global de la aplicación, y el manejo de excepciones garantiza un funcionamiento robusto y consistente.
+
+# 13. Recursos
 
 Recursos externos utilizados para el desarrollo del videojuego:
 
@@ -235,6 +246,6 @@ Recursos externos utilizados para el desarrollo del videojuego:
 * **Efecto de sonido pitido:** [Action Soccer](https://www.sounds-resource.com/pc_computer/actionsoccer/)  
 * **Butacas del fondo in-game:** [Butacas in-game](https://www.freepik.com/free-vector/realistic-stadium-tribune-composition-with-isolated-front-back-views-rows-with-red-plastic-seats-vector-illustration_43869155.htm)
 
-# 13. Licencia
+# 14. Licencia
  
 Producto licenciado bajo la licencia **Apache 2.0**.
