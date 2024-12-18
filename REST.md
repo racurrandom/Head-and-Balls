@@ -7,7 +7,7 @@ Este documento describe las funcionalidades implementadas mediante API REST en l
 
 ## **1. Autenticación y Gestión de Usuarios**
 
-El módulo de autenticación permite registrar, autenticar y gestionar usuarios. La información de los usuarios se almacena de forma persistente, asegurando la seguridad mediante el cifrado de contraseñas.
+El módulo de autenticación permite registrar, autenticar, gestionar y actualizar usuarios. La información de los usuarios se almacena de forma persistente, asegurando la seguridad mediante el cifrado de contraseñas.
 
 ### **Ruta Base:** `/api/auth`
 
@@ -18,6 +18,7 @@ El módulo de autenticación permite registrar, autenticar y gestionar usuarios.
 | Cerrar sesión               | POST             | `/api/auth/logout`    | Cierra la sesión actual del usuario y elimina los datos de sesión para garantizar la seguridad. |
 | Eliminar cuenta              | DELETE           | `/api/auth/delete`    | Elimina la cuenta del usuario actualmente autenticado y actualiza el almacenamiento persistente.  |
 | Verificar sesión activa     | GET              | `/api/auth/check`     | Verifica si el usuario está autenticado y devuelve su información si está logueado.              |
+| **Actualizar usuario**       | PUT              | `/api/auth/update`    | Permite actualizar la contraseña del usuario actual. Se valida que el nuevo usuario no exista previamente. |
 
 Los datos de usuario se guardan en un archivo local `users.sav` utilizando serialización. Esto permite mantener la persistencia de los usuarios registrados incluso después de reiniciar el servidor.
 
@@ -57,6 +58,8 @@ Esta funcionalidad es útil durante las pruebas iniciales de la aplicación o pa
   - Ejemplo: `GET /api/chat?after=0` retorna mensajes nuevos desde el ID 0.
 - **POST**: Crear nuevos recursos o ejecutar acciones.
   - Ejemplo: `POST /api/auth/login` inicia sesión con credenciales.
+- **PUT**: Actualizar recursos existentes.
+  - Ejemplo: `PUT /api/auth/update` permite actualizar la contraseña del usuario actual.
 - **DELETE**: Eliminar recursos existentes.
   - Ejemplo: `DELETE /api/auth/delete` elimina la cuenta del usuario autenticado.
 
