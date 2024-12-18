@@ -108,10 +108,6 @@ public class AuthController {
     //Check if user is valid
     user.checkValid();
 
-    //Check if exists
-    if (users.containsKey(user.getUsername()))
-      throw new InvalidCredentialsException("User already exists");
-
     //Get encoded password
     String encodedPassword = encode(user.getPassword());
     if (encodedPassword == user.getPassword())
@@ -120,7 +116,7 @@ public class AuthController {
     //Save encoded password
     user.setPassword(encodedPassword);
 
-    //Get username
+    //Get old username
     String oldUsername = getUsername(session);
 
     //Check if old user exists
@@ -135,7 +131,7 @@ public class AuthController {
     saveUsers();
 
     //Save new user
-    users.put(user.getUsername(), user);
+    users.put(getUsername(session), user);
     saveUsers();
 
     //Login (save session)
