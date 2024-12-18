@@ -1,36 +1,6 @@
-class SceneEmpty extends Phaser.Scene {
+class SceneError extends Phaser.Scene {
   constructor() {
-    super({ key: 'Empty' });
-  }
-
-
-
-   /*$$$$$           /$$   /$$    
-  |_  $$_/          |__/  | $$    
-    | $$   /$$$$$$$  /$$ /$$$$$$  
-    | $$  | $$__  $$| $$|_  $$_/  
-    | $$  | $$  \ $$| $$  | $$    
-    | $$  | $$  | $$| $$  | $$ /$$
-   /$$$$$$| $$  | $$| $$  |  $$$$/
-  |______/|__/  |__/|__/   \__*/
-
-  init(data) {
-    
-  }
-
-
-
-   /*$$$$$$                     /$$                           /$$
-  | $$__  $$                   | $$                          | $$
-  | $$  \ $$ /$$$$$$   /$$$$$$ | $$  /$$$$$$   /$$$$$$   /$$$$$$$
-  | $$$$$$$//$$__  $$ /$$__  $$| $$ /$$__  $$ |____  $$ /$$__  $$
-  | $$____/| $$  \__/| $$$$$$$$| $$| $$  \ $$  /$$$$$$$| $$  | $$
-  | $$     | $$      | $$_____/| $$| $$  | $$ /$$__  $$| $$  | $$
-  | $$     | $$      |  $$$$$$$| $$|  $$$$$$/|  $$$$$$$|  $$$$$$$
-  |__/     |__/       \_______/|__/ \______/  \_______/ \______*/
-
-  preload() {
-    
+    super({ key: 'Error' });
   }
 
 
@@ -44,25 +14,35 @@ class SceneEmpty extends Phaser.Scene {
   |  $$$$$$/| $$      |  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
-  create(data) {
-    
-  }
+  create(launchScene) {
+    //Add background
+    const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
+    const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
 
 
-  
-   /*$   /$$                 /$$             /$$
-  | $$  | $$                | $$            | $$
-  | $$  | $$  /$$$$$$   /$$$$$$$  /$$$$$$  /$$$$$$    /$$$$$$ 
-  | $$  | $$ /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
-  | $$  | $$| $$  \ $$| $$  | $$  /$$$$$$$  | $$    | $$$$$$$$
-  | $$  | $$| $$  | $$| $$  | $$ /$$__  $$  | $$ /$$| $$_____/
-  |  $$$$$$/| $$$$$$$/|  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
-   \______/ | $$____/  \_______/ \_______/   \___/   \_______/
-            | $$
-            | $$
-            |_*/
- 
-  update(time, delta) {
-    
+    //Add title
+    const title = this.add.text(640, 120, 'Error', {
+      fontFamily: 'college',
+      fontSize: '64px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5)
+
+
+    //Add error text
+    const error = this.add.text(640, 360, ['Puede que el servidor esté desconectado.', 'Se ha cerrado sesión.'], {
+      fontFamily: 'college',
+      fontSize: '30px',
+      fill: '#fff',
+      align: 'center'
+    }).setOrigin(0.5)
+
+
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver')
+    Element.onClick(back.image, () => {
+      OnlineManager.isLogged = false
+      Scene.changeScene(this, 'Main')
+    })
   }
 }

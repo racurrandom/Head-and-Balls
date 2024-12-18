@@ -145,10 +145,9 @@ class InputField {
             //Paste
             case 'v':
               key = await navigator.clipboard.readText()
-              console.log('read clipboard')
               break
           }
-          
+
           //Exceeds maximum length
           if (this.text.length + key.length > this.max) break
 

@@ -29,7 +29,7 @@ class SceneModes extends Phaser.Scene {
 
     //Add online button
     const online = this.add.image(420, 360, 'button')
-    const onlineText = this.add.text(420, 360 - 6, 'Online', {
+    const onlineText = this.add.text(420, 360 - 6, 'Chat', {
       fontFamily: 'college',
       fontSize: '30px',
       fill: '#fff',

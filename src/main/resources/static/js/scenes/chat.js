@@ -1,4 +1,7 @@
 class SceneChat extends Phaser.Scene {
+
+  static openTime = 0
+
   constructor() {
     super({ key: 'Chat' });
   }
@@ -15,6 +18,11 @@ class SceneChat extends Phaser.Scene {
    \______/ |__/       \_______/ \_______/   \___/   \______*/
 
   create(data) {
+    //Save open time
+    this.openTime = Date.now()
+    SceneChat.openTime = this.openTime
+
+
     //Add background
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
     const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
@@ -23,25 +31,17 @@ class SceneChat extends Phaser.Scene {
     //Add back button
     const back = this.add.image(1170, 110, 'back_button')
     Element.onClick(back, () => {
+      clearInterval(this.readChatLoop);
       InputField.reset()
       Scene.changeScene(this, 'Main')
     })
 
 
-    //Error text
-    const errorText = this.add.text(640, 75, '', {
-      fontSize: '24px',
-      fill: '#000',
-      align: 'right'
-    }).setOrigin(0.5)
-
-
     //Create chat view
     const chat = new ChatView(this, 100, 570, 1080, 470)
     const onMessages = (data, error) => {
-      //Update error text
-      if (error) console.log(error.responseText)
-      errorText.text = error ? 'Error... Puede que el servidor este offline' : ''
+      //Show error message
+      if (error) this.onError(error)
 
       //Get data
       if (typeof data !== 'object') return
@@ -60,12 +60,9 @@ class SceneChat extends Phaser.Scene {
     
     //Read chat & create read loop
     OnlineManager.chatRead(onMessages)
-    const readChatLoop = setInterval(() => {
+    this.readChatLoop = setInterval(() => {
       OnlineManager.chatRead(onMessages, chat.getLastID())
     }, 250)
-    Scene.onClose(this, () => {
-      clearInterval(readChatLoop);
-    })
 
 
     //Create message input
@@ -83,19 +80,33 @@ class SceneChat extends Phaser.Scene {
 
         //Send message
         OnlineManager.chatSend(text, (error) => {
-          //Update error text
-          if (error) console.log(error.responseText)
-          errorText.text = error ? 'Error... Puede que el servidor este offline' : ''
+          //Show error message
+          if (error) this.onError(error)
         })
       }
     })
     Element.onClick(chatBox, () => {
-      this.messageInput.toggle()
+      messageInput.toggle()
     })
 
     //Add scroll to chat
     this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       chat.scroll(deltaY)
     })
+  }
+
+  onError(error) {
+    //Not the same chat scene
+    if (SceneChat.openTime != this.openTime) return
+
+    //Already closed scene
+    if (this.exited) return
+    this.exited = true
+
+    //Do stuff
+    console.log(error.responseText)
+    clearInterval(this.readChatLoop);
+    InputField.reset()
+    Scene.changeScene(this, 'Error')
   }
 }
