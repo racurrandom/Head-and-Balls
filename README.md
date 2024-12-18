@@ -23,6 +23,7 @@ El equipo de **Head and Balls** está formado por:
 
 # Índice
 
+[**0. Instrucciones**](#0-instrucciones)  
 [**1. Introducción**](#1-introducción)  
 [**2. Género y Temática**](#2-género-y-temática)  
 [**3. Concepto de juego**](#3-concepto-de-juego)  
@@ -38,7 +39,7 @@ El equipo de **Head and Balls** está formado por:
 [**13. Recursos**](#13-recursos)  
 [**14. Licencia**](#14-licencia)
 
-# 0. Inicio
+# 0. Instrucciones
 
 Para iniciar el servidor, se puede hacer uso del archivo ```run.bat``` o del comando ```java -jar "head-and-balls-1.0.jar"``` mediante el terminal.
 
