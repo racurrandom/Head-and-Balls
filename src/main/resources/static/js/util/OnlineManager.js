@@ -36,13 +36,13 @@ class OnlineManager {
   }
 
   //Update account
-  static updateAccount(username, password, onUpdate) {
+  static updateAccount(password, onUpdate) {
     $.ajax({
       url: OnlineManager.IP + '/api/auth/update',
       type: 'PUT',
       contentType: 'application/json',
       data: JSON.stringify({
-        username: username,
+        username: this.username,
         password: password
       }),
       success: (data) => {

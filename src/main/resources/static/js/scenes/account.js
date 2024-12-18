@@ -175,15 +175,14 @@ class SceneAccount extends Phaser.Scene {
     //Add an update button
     this.updateButon = new Button(this, 640, 450, 'Actualizar')
     Element.onClick(this.updateButon.image, () =>{ 
-      OnlineManager.updateAccount(this.usernameInput.text, this.passwordInput.text, (isLogged, error)=>{
+      OnlineManager.updateAccount(this.passwordInput.text, (isLogged, error)=>{
         //Update error text
         errorText.text = error ? error.responseText : ''
 
         //Still logged in -> Return
         if (!isLogged) return
         
-        //Save user & password
-        OnlineManager.username = this.usernameInput.text
+        //Save password
         OnlineManager.password = this.passwordInput.text
 
         //Reset input fields
