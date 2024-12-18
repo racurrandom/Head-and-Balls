@@ -5,6 +5,7 @@ class InputField {
 
   //Input info
   enabled = false
+  canType = true
   onKey = undefined
   element = undefined
   text = ''
@@ -48,6 +49,10 @@ class InputField {
     if (typeof this.onInput === 'function') this.onInput(this.text)
   }
 
+  setCanType(canType) {
+    this.canType = canType
+  }
+
   updateText() {
     if (this.text.length <= 0) {
       //Placeholder
@@ -67,23 +72,29 @@ class InputField {
 
     //Deselect input
     InputField.current = undefined
-    //this.element.setBackgroundColor('transparent')
+    this.element.setBackgroundColor('transparent')
     
     //Remove listener
     window.removeEventListener('keydown', this.onKey)
   }
 
   enable() {
+    //Disable other if cant type
+    if (!this.canType) {
+      InputField.reset()
+      return
+    }
+
     //Enable
     if (this.enabled) return
     this.enabled = true
 
     //Another enabled -> Disable it
-    if (InputField.current) InputField.current.disable()   
+    InputField.reset()
 
     //Select input (change background)
     InputField.current = this
-    // this.element.setBackgroundColor(this.selectColor)
+    this.element.setBackgroundColor(this.selectColor)
 
     //Create & add listener
     this.onKey = (event) => {

@@ -6,7 +6,7 @@ class ChatView {
   _w = 0
   _h = 0
   _scroll = 0
-  _maxScroll = 0
+  _scrollMax = 0
 
   //Gap between messages
   gap = 15
@@ -76,16 +76,19 @@ class ChatView {
     }
 
     //Save next y as max scroll
-    this._maxScroll = y + this._scroll - this.gap
+    this._scrollMax = Math.min(y - this._y + this._scroll + this._h + this.gap, 0)
   }
 
   scroll(amount) {
+    //Scroll only if
+    if (this._scrollMax >= 0) return
+
     //Update scroll by amount
     this._scroll += amount
 
-    //Clamp scroll between maxScroll and 0
+    //Clamp scroll between scrollMax and 0
     if (this._scroll > 0) this._scroll = 0
-    if (this._scroll < this._maxScroll) this._scroll = this._maxScroll
+    if (this._scroll < this._scrollMax) this._scroll = this._scrollMax
 
     //Reorder list with scroll
     this.reorder()

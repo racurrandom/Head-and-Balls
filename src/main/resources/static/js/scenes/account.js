@@ -173,7 +173,7 @@ class SceneAccount extends Phaser.Scene {
     })
 
     //Add an update button
-    this.updateButon = new Button(this, 640, 450, 'Update')
+    this.updateButon = new Button(this, 640, 450, 'Actualizar')
     Element.onClick(this.updateButon.image, () =>{ 
       OnlineManager.updateAccount(this.usernameInput.text, this.passwordInput.text, (isLogged, error)=>{
         //Update error text
@@ -232,6 +232,9 @@ class SceneAccount extends Phaser.Scene {
       this.usernameInput.setText(OnlineManager.username)
       this.passwordInput.setText(OnlineManager.password)
 
+      //Disable typing in user
+      this.usernameInput.setCanType(false)
+
     } else {  
       //Not logged yet
       
@@ -245,6 +248,9 @@ class SceneAccount extends Phaser.Scene {
       //Change text
       this.usernameInput.setText('')
       this.passwordInput.setText('')
+
+      //Enable typing in user
+      this.usernameInput.setCanType(true)
     }
   }
 }
