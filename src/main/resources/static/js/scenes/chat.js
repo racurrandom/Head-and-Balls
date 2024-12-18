@@ -62,7 +62,7 @@ class SceneChat extends Phaser.Scene {
     OnlineManager.chatRead(onMessages)
     const readChatLoop = setInterval(() => {
       OnlineManager.chatRead(onMessages, chat.getLastID())
-    }, 500)
+    }, 250)
     Scene.onClose(this, () => {
       clearInterval(readChatLoop);
     })

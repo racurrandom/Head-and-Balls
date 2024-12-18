@@ -12,7 +12,7 @@ class InputField {
 
   //Customizable info
   placeholder = 'Input'
-  selectColor = 'green'
+  selectColor = '#02b33f'
   max = Infinity
   min = 0
   onInput = undefined

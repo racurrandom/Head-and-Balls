@@ -40,7 +40,7 @@ class SceneAccount extends Phaser.Scene {
     const textBox1 = this.add.image(1280 / 2, 240, 'textBox')
     this.usernameInput = new InputField(this.add.text(640, 240, '', {
       fontFamily: 'poppins',
-      fontSize: '35px',
+      fontSize: '32px',
       fill: '#000',
       align: 'center'
     }).setOrigin(0.5), {
@@ -53,7 +53,7 @@ class SceneAccount extends Phaser.Scene {
     const textBox2 = this.add.image(1280 / 2, 310, 'textBox')
     this.passwordInput = new InputField(this.add.text(640, 310, '', {
       fontFamily: 'poppins',
-      fontSize: '35px',
+      fontSize: '32px',
       fill: '#000',
       align: 'center'
     }).setOrigin(0.5), {
