@@ -27,6 +27,9 @@ class SceneAccount extends Phaser.Scene {
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
 
+    const textBox1 = this.add.image(1280 / 2, 250, 'textBox')
+    const textBox2 = this.add.image(1280 / 2, 325, 'textBox')
+
     //Add title
     const title = this.add.text(640, 120, 'Cuenta', {
       fontFamily: 'college',
@@ -40,7 +43,7 @@ class SceneAccount extends Phaser.Scene {
     this.usernameInput = new InputField(this.add.text(640, 250, '', {
       fontFamily: 'poppins',
       fontSize: '35px',
-      fill: '#fff',
+      fill: '#000',
       align: 'center'
     }).setOrigin(0.5), {
       placeholder: 'Usuario',
@@ -49,10 +52,10 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Password input 
-    this.passwordInput = new InputField(this.add.text(640, 300, '', {
+    this.passwordInput = new InputField(this.add.text(640, 325, '', {
       fontFamily: 'poppins',
       fontSize: '35px',
-      fill: '#fff',
+      fill: '#000',
       align: 'center'
     }).setOrigin(0.5), {
       placeholder: 'Contraseña',

@@ -67,7 +67,7 @@ class InputField {
 
     //Deselect input
     InputField.current = undefined
-    this.element.setBackgroundColor('transparent')
+    //this.element.setBackgroundColor('transparent')
     
     //Remove listener
     window.removeEventListener('keydown', this.onKey)
@@ -83,7 +83,7 @@ class InputField {
 
     //Select input (change background)
     InputField.current = this
-    this.element.setBackgroundColor(this.selectColor)
+    // this.element.setBackgroundColor(this.selectColor)
 
     //Create & add listener
     this.onKey = (event) => {

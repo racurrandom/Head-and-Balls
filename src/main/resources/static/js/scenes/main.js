@@ -77,6 +77,7 @@ class SceneMain extends Phaser.Scene {
       ['marcador', 'assets/game/marcador.png'],
       ['setting_button', 'assets/game/settings_button.png'],
       ['back_button', 'assets/game/back_button.png'],
+      ['textBox', 'assets/game/CajaTexto.png'],
       //Results
       ['trophy', 'assets/game/trophy.png'],
     ])
