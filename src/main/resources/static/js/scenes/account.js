@@ -66,6 +66,7 @@ class SceneAccount extends Phaser.Scene {
     Element.onClick(passwordBox, () => {
       this.passwordInput.toggle()
     })
+    this.usernameInput.setNext(this.passwordInput)
 
 
     //Info text

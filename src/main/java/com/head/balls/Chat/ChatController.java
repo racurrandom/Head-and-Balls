@@ -35,8 +35,8 @@ public class ChatController {
     //Example to send the message "bomba":
     //http://localhost:8080/api/chat?after=0
 
-    //Not logged in
-    if (!AuthController.isLogged(session)) throw new RuntimeException("Not logged in");
+    //Check logged
+    AuthController.checkIfLogged(session);
 
     //Contents for chat response
     int lastID = after;
@@ -62,8 +62,8 @@ public class ChatController {
     //Example to send the message "bomba":
     //http://localhost:8080/api/chat?message=bomba
 
-    //Not logged in
-    if (!AuthController.isLogged(session)) throw new RuntimeException("Not logged in");
+    //Check logged
+    AuthController.checkIfLogged(session);
 
     synchronized (messages) {
       //Increase last id for next message

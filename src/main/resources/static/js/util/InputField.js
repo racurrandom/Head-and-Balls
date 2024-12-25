@@ -8,6 +8,7 @@ class InputField {
   canType = true
   onKey = undefined
   element = undefined
+  next = undefined
   text = ''
 
   //Customizable info
@@ -40,6 +41,7 @@ class InputField {
     this.updateText()
   }
 
+  //Setters
   setText(text) {
     //Change text
     this.text = text
@@ -53,6 +55,12 @@ class InputField {
     this.canType = canType
   }
 
+  setNext(next) {
+    if (typeof next !== 'object') return
+    this.next = next
+  }
+
+  //Other
   updateText() {
     if (this.text.length <= 0) {
       //Placeholder
@@ -103,6 +111,24 @@ class InputField {
 
       //Check key
       switch (event.key.toLowerCase()) {
+        //Next input
+        case 'tab':
+          callOnInput = false
+          if (typeof this.next !== 'object')
+            this.disable()
+          else
+            this.next.enable()
+          break
+
+        //Enter
+        case 'enter':
+          callOnInput = false
+          if (typeof this.onEnter === 'function') 
+            this.onEnter(this.text)
+          else
+            this.disable()
+          break
+
         //Remove key
         case 'backspace':
           //Minimum length reached
@@ -114,19 +140,6 @@ class InputField {
           //Remove character
           this.text = this.text.slice(0, -1)
           this.updateText()
-          break
-
-        //Next input (not implemented so disable instead)
-        case 'tab':
-          this.disable()
-          break
-
-        //Enter
-        case 'enter':
-          if (typeof this.onEnter === 'function') 
-            this.onEnter(this.text)
-          else
-            this.disable()
           break
 
         //Normal key
@@ -158,7 +171,10 @@ class InputField {
       }
 
       //Call onInput
-      if (callOnInput && typeof this.onInput === 'function') this.onInput(this.text)
+      if (callOnInput && typeof this.onInput === 'function') 
+        this.onInput(this.text)
+      else if (!callOnInput)
+        event.preventDefault()
     }
     window.addEventListener('keydown', this.onKey)
   }

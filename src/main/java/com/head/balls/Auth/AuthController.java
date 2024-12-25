@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -22,7 +23,7 @@ import jakarta.validation.Valid;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-  //private static Map<String, String> connected = new HashMap<String, String>();
+  private static ArrayList<String> online = new ArrayList<>();
   private static Map<String, User> users = new HashMap<String, User>();
 
 
@@ -63,7 +64,7 @@ public class AuthController {
       return hexString.toString();
     } catch (NoSuchAlgorithmException e) {
       //Error
-      return input;
+      throw new RuntimeException("Error while encoding password");
     }
   }
 
@@ -76,10 +77,89 @@ public class AuthController {
     return (String) session.getAttribute("username");
   }
 
+  public static User getUser(String username) {
+    //Check if user exists
+    if (!users.containsKey(username)) throw new InvalidCredentialsException("User does not exists");
+    
+    //Return user
+    return users.get(username);
+  }
+
+  public static User getUser(HttpSession session) {
+    //Return user
+    return getUser(getUsername(session));
+  }
 
 
-    /*$$$$$  /$$                           /$$      
-   /$$__  $$| $$                          | $$      
+
+    /*$$$$$            /$$ /$$
+   /$$__  $$          | $$|__/
+  | $$  \ $$ /$$$$$$$ | $$ /$$ /$$$$$$$   /$$$$$$ 
+  | $$  | $$| $$__  $$| $$| $$| $$__  $$ /$$__  $$
+  | $$  | $$| $$  \ $$| $$| $$| $$  \ $$| $$$$$$$$
+  | $$  | $$| $$  | $$| $$| $$| $$  | $$| $$_____/
+  |  $$$$$$/| $$  | $$| $$| $$| $$  | $$|  $$$$$$$
+   \______/ |__/  |__/|__/|__/|__/  |__/ \______*/
+
+  @PostMapping("/notify")
+  public ResponseEntity<String> notify(HttpSession session) {
+    //Check logged
+    checkIfLogged(session);
+
+    //Get user
+    User user = getUser(session);
+
+    //Notify user is still online
+    user.notifyOnline();
+    notifyOnline(user.getUsername());
+
+    //Print online users
+    printOnlineUsers();
+
+    //All good
+    return ResponseEntity.ok("User still online");
+  }
+
+  private void notifyOnline(String username) {
+    //User was already online -> Remove it from list
+    if (online.contains(username)) online.remove(username);
+    
+    //Add user to online list (at first position)
+    online.add(0, username);
+  }
+
+  private void removeInactiveUsers() {
+    //Loop users
+    for (int i = online.size() - 1; i >= 0; i--) {
+      //Get user
+      User user = users.get(online.get(i));
+      
+      //Online -> Stop since users following notified online after him
+      if (user.isOnline()) return;
+    }
+  }
+
+  private void printOnlineUsers() {
+    //Remove inactive users
+    removeInactiveUsers();
+
+    //Print divider
+    System.out.println("_______________");
+
+    //Print users
+    for (int i = 0; i < online.size(); i++) {
+      //Get user
+      User user = users.get(online.get(i));
+
+      //Print it
+      System.out.println(user.getUsername() + " · " + user.idleTime() + "/" + User.timeoutDuration);
+    }
+  }
+
+
+
+    /*$$$$$  /$$                           /$$
+   /$$__  $$| $$                          | $$
   | $$  \__/| $$$$$$$   /$$$$$$   /$$$$$$$| $$   /$$
   | $$      | $$__  $$ /$$__  $$ /$$_____/| $$  /$$/
   | $$      | $$  \ $$| $$$$$$$$| $$      | $$$$$$/ 
@@ -87,55 +167,48 @@ public class AuthController {
   |  $$$$$$/| $$  | $$|  $$$$$$$|  $$$$$$$| $$ \  $$
    \______/ |__/  |__/ \_______/ \_______/|__/  \_*/
   
-  @GetMapping("/check")
-  public User check(HttpSession session) {
+  public static void checkIfLogged(HttpSession session) {
+    //Throws an error if not logged in
+
     //Not logged in
-    if (!AuthController.isLogged(session)) throw new RuntimeException("Not logged in");
-
-    //Get username
-    String username = getUsername(session);
-
-    //Check if user exists
-    if (!users.containsKey(username)) throw new UserNotFoundException("User does not exists");
-
-    //Get user
-    return users.get(username);
+    if (!isLogged(session)) throw new InvalidCredentialsException("Not logged in");
   }
 
+  @GetMapping("/check")
+  public String check(HttpSession session) {
+    //Check logged
+    checkIfLogged(session);
+
+    //Get user
+    User user = getUser(session);
+
+    //Notify user is still online
+    notifyOnline(user.getUsername());
+
+    //Return username
+    return user.getUsername();
+  }
 
   @PutMapping("/update")
-  public ResponseEntity<String> update(HttpSession session, @Valid @RequestBody User user) {
+  public ResponseEntity<String> update(HttpSession session, @Valid @RequestBody UserCredentials credentials) {
+    //Check logged
+    checkIfLogged(session);
+
     //Check if user is valid
-    user.checkValid();
+    credentials.checkValid();
 
-    //Get encoded password
-    String encodedPassword = encode(user.getPassword());
-    if (encodedPassword == user.getPassword())
-      throw new RuntimeException("Error while encoding password");
-    
-    //Save encoded password
+    //Get user
+    User user = getUser(session);
+
+    //Encode password
+    String encodedPassword = encode(credentials.getPassword());
+
+    //Update user
     user.setPassword(encodedPassword);
-
-    //Get old username
-    String oldUsername = getUsername(session);
-
-    //Check if old user exists
-    if (!users.containsKey(oldUsername))
-      throw new InvalidCredentialsException("User does not exists");
-
-    //Get old user
-    User oldUser = users.get(oldUsername);
-
-    //Delete old user
-    users.remove(oldUser.getUsername());
-    saveUsers();
-
-    //Save new user
-    users.put(getUsername(session), user);
     saveUsers();
 
     //Login (save session)
-    saveSession(session, user);
+    saveSession(session, user.getUsername());
 
     //All good
     return ResponseEntity.ok("User registered successfully");
@@ -153,28 +226,26 @@ public class AuthController {
    \______/ |__/       \_______/ \_______/   \___/  |__/ \______/ |__/  |_*/
 
   @PostMapping("/register")
-  public ResponseEntity<String> register(HttpSession session, @Valid @RequestBody User user) {
+  public ResponseEntity<String> register(HttpSession session, @Valid @RequestBody UserCredentials credentials) {
     //Check if user is valid
-    user.checkValid();
+    credentials.checkValid();
 
     //Check if exists
-    if (users.containsKey(user.getUsername()))
+    if (users.containsKey(credentials.getUsername()))
       throw new InvalidCredentialsException("User already exists");
 
     //Get encoded password
-    String encodedPassword = encode(user.getPassword());
-    if (encodedPassword == user.getPassword())
-      throw new RuntimeException("Error while encoding password");
+    String encodedPassword = encode(credentials.getPassword());
     
     //Save encoded password
-    user.setPassword(encodedPassword);
+    credentials.setPassword(encodedPassword);
 
     //Save user
-    users.put(user.getUsername(), user);
+    users.put(credentials.getUsername(), new User(credentials));
     saveUsers();
 
     //Login (save session)
-    saveSession(session, user);
+    saveSession(session, credentials.getUsername());
 
     //All good
     return ResponseEntity.ok("User registered successfully");
@@ -182,18 +253,11 @@ public class AuthController {
 
   @DeleteMapping("/delete")
   public ResponseEntity<String> delete(HttpSession session) {
-    //Not logged in
-    if (!AuthController.isLogged(session)) throw new RuntimeException("Not logged in");
-
-    //Get username
-    String username = getUsername(session);
-
-    //Check if exists
-    if (!users.containsKey(username))
-      throw new InvalidCredentialsException("User does not exists");
+    //Check logged
+    checkIfLogged(session);
 
     //Get user
-    User user = users.get(username);
+    User user = getUser(session);
 
     //Delete user
     users.remove(user.getUsername());
@@ -221,47 +285,52 @@ public class AuthController {
                        \_____*/
 
   @PostMapping("/login")
-  public ResponseEntity<String> login(HttpSession session, @Valid @RequestBody User user) {
+  public ResponseEntity<String> login(HttpSession session, @Valid @RequestBody UserCredentials credentials) {
     //Check if user is valid
-    user.checkValid();
+    credentials.checkValid();
 
-    //Check if exists
-    if (!users.containsKey(user.getUsername()))
-      throw new UserNotFoundException("User does not exist");
+    //Get user
+    User user = getUser(credentials.getUsername());
+    if (user.isOnline()) throw new RuntimeException("User is already online");
 
     //Get encoded password
-    String encodedPassword = encode(user.getPassword());
-    if (encodedPassword == user.getPassword())
-      throw new RuntimeException("Error while encoding password");
+    String encodedPassword = encode(credentials.getPassword());
 
     //Invalid user
-    if (!encodedPassword.equals(users.get(user.getUsername()).getPassword())) 
+    if (!encodedPassword.equals(user.getPassword())) 
       throw new InvalidCredentialsException("Invalid user credentials");
 
     //Save session
-    saveSession(session, user);
+    saveSession(session, credentials.getUsername());
 
     //All good
     return ResponseEntity.ok("Logged in successfully");
   }
   
-  private void saveSession(HttpSession session, User user) {
+  private void saveSession(HttpSession session, String username) {
     //Save username in session
-    session.setAttribute("username", user.getUsername());
+    session.setAttribute("username", username);
 
-    //Save session in connected list
-    //connected.put(session.getId(), user.getUsername());
+    //Update user online timestamp
+    User user = users.get(username);
+    user.notifyOnline();
+    
+    //Notify user as online
+    notifyOnline(username);
   }
   
   @PostMapping("/logout")
   public ResponseEntity<String> logout(HttpSession session) {
+    //Check logged
+    checkIfLogged(session);
+
     //Invalidate session
     session.setAttribute("username", null);
     session.invalidate();
 
-    //Remove session from connected list
-    //if (connected.containsKey(session.getId())) connected.remove(session.getId());
-
+    //Remove user from online list
+    online.remove(getUsername(session));
+ 
     //All good
     return ResponseEntity.ok("Logged out successfully");
   }
