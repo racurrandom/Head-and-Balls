@@ -164,11 +164,11 @@ public class AuthController {
     //Get user
     User user = Auth.getUser(session);
 
-    //Delete user
-    Auth.deleteUser(user);
-
     //Logout
     logout(session);
+
+    //Delete user
+    Auth.deleteUser(user);
 
     //All good
     return ResponseEntity.ok("User deleted successfully");

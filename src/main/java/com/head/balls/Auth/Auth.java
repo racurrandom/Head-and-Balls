@@ -1,8 +1,12 @@
 package com.head.balls.Auth;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.math.BigInteger;
@@ -12,6 +16,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.springframework.boot.json.GsonJsonParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -237,23 +247,51 @@ public class Auth {
     //Log
     System.out.println("Loading users file...");
 
-    //Try to load users
+    users = new HashMap<String, User>();
+
+    //Load users (json)
+    try (BufferedReader br = new BufferedReader(new FileReader("users.json"))) {
+      //Read text
+      StringBuilder sb = new StringBuilder();
+      String line = br.readLine();
+      while (line != null) {
+          sb.append(line);
+          sb.append(System.lineSeparator());
+          line = br.readLine();
+      }
+      String everything = sb.toString();
+      
+      //Parse json
+      users = new Gson().fromJson(everything, new TypeToken<HashMap<String, User>>(){}.getType());
+    } catch (IOException e) {
+      System.err.println("Error loading users file: " + e.getMessage());
+    }
+
+    /*//Load users (sav)
     try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream("users.sav"))) {
       users = (HashMap<String, User>) ois.readObject();
     } catch (IOException | ClassNotFoundException e) {
       System.err.println("Error loading users file: " + e.getMessage());
-    }
+    }*/
   }
 
   private static void saveUsers() {
     //Log
     System.out.println("Saving users file...");
 
-    //Try to save users
+    //Save users (json)
+    try (FileWriter myWriter = new FileWriter("users.json")) {
+      myWriter.write(new GsonBuilder().setPrettyPrinting().create().toJson(users));
+      myWriter.close();
+    } catch (IOException e) {
+      System.err.println("Error saving users file: " + e.getMessage());
+    }
+
+    /*//Save users (sav)
     try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("users.sav"))) {
       oos.writeObject(users);
     } catch (IOException e) {
       System.err.println("Error saving users file: " + e.getMessage());
-    }
+    }*/
   }
 }

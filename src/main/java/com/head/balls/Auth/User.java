@@ -8,12 +8,16 @@ public class User extends UserCredentials {
   public static final long timeoutDuration = 20000L; //20s
 
 
-  public User(UserCredentials info) {
-    super(info.username, info.password);
-  }
-
   public User(String username, String password) {
     super(username, password);
+  }
+
+  public User(UserCredentials user) {
+    super(user.username, user.password);
+  }
+
+  public User(User user) {
+    super(user.username, user.password);
   }
 
   //Online check
