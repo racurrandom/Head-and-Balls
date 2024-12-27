@@ -98,7 +98,7 @@ class SceneAccount extends Phaser.Scene {
         this.toggleLogged()
 
         //Check if logged in changed
-        mainScene.checkLogged()
+        mainScene.checkIsLogged()
       })
     })
 
@@ -123,7 +123,7 @@ class SceneAccount extends Phaser.Scene {
         this.toggleLogged()
 
         //Check if logged in changed
-        mainScene.checkLogged()
+        mainScene.checkIsLogged()
       })
     })
 
@@ -148,7 +148,7 @@ class SceneAccount extends Phaser.Scene {
         this.toggleLogged()
 
         //Check if logged in changed
-        mainScene.checkLogged()
+        mainScene.checkIsLogged()
       })
     })
 
@@ -174,7 +174,7 @@ class SceneAccount extends Phaser.Scene {
         this.toggleLogged()
 
         //Check if logged in changed
-        mainScene.checkLogged()
+        mainScene.checkIsLogged()
       })
     })
 
@@ -198,7 +198,7 @@ class SceneAccount extends Phaser.Scene {
         this.toggleLogged()
 
         //Check if logged in changed
-        mainScene.checkLogged()
+        mainScene.checkIsLogged()
       })
     })
 
@@ -213,7 +213,7 @@ class SceneAccount extends Phaser.Scene {
       this.scene.stop()
 
       //Check if logged in changed
-      mainScene.checkLogged()
+      mainScene.checkIsLogged()
     })
 
     

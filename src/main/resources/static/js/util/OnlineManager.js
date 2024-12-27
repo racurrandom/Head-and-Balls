@@ -7,44 +7,26 @@ class OnlineManager {
   static notifyInterval = undefined
   
 
-  //Checks
-  static checkOnline(callback) {
+  //Server
+  static checkServerOnline(callback) {
     $.ajax({
       url: OnlineManager.IP + '/api/test',
       timeout: 5000,
       type: 'GET',
       success: (data) => {
         //Run callback
+        if (typeof callback !== 'function') return
         callback(true)
       },
       error: (error) => {
         //Run callback
+        if (typeof callback !== 'function') return
         callback(false, error)
       },
     })
   }
 
-  static checkLogged(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/check',
-      timeout: 5000,
-      type: 'GET',
-      success: (data) => {
-        //Update isLogged
-        OnlineManager.setIsLogged(true)
-        //Run callback
-        callback(data)
-      },
-      error: (error) => {
-        //Update isLogged
-        OnlineManager.setIsLogged(false)
-        //Run callback
-        callback(undefined, error)
-      },
-    })
-  }
-
-  //Notify online
+  //Session
   static setIsLogged(isLogged) {
     //Update isLogged
     OnlineManager.isLogged = isLogged
@@ -54,27 +36,34 @@ class OnlineManager {
     
     //Add a new one if logged
     if (!isLogged) return
-    OnlineManager.notifyInterval = setInterval(OnlineManager.notifyOnline, 10000)
+    OnlineManager.notifyInterval = setInterval(() => {
+      OnlineManager.checkIsLogged((logged, error) => {
+        //No error or it isnt a timeout
+        if (!error || error.status != 0) return
+
+        //Timeout ocurred
+      })
+    }, 10000)
   }
 
-  static notifyOnline(callback) {
+  static checkIsLogged(callback) {
     $.ajax({
-      url: OnlineManager.IP + '/api/auth/notify',
+      url: OnlineManager.IP + '/api/auth',
       timeout: 5000,
-      type: 'POST',
+      type: 'GET',
       success: (data) => {
         //Update isLogged
         OnlineManager.setIsLogged(true)
         //Run callback
         if (typeof callback !== 'function') return
-        callback(true)
+        callback(data)
       },
       error: (error) => {
         //Update isLogged
         OnlineManager.setIsLogged(false)
         //Run callback
         if (typeof callback !== 'function') return
-        callback(false, error)
+        callback(undefined, error)
       },
     })
   }
@@ -151,7 +140,7 @@ class OnlineManager {
     })
   }
 
-  //Loggin/out
+  //Session
   static login(username, password, callback) {
     $.ajax({
       url: OnlineManager.IP + '/api/auth/login',
@@ -197,31 +186,58 @@ class OnlineManager {
     })
   }
 
+  static getUsers(callback) {
+    $.ajax({
+      url: OnlineManager.IP + '/api/auth/users',
+      timeout: 5000,
+      type: 'GET',
+      success: (data) => {
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback(data)
+      },
+      error: (error) => {
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback(undefined, error)
+      },
+    })
+  }
+  
+
   //Chat
-  static chatRead(onRead, after=0) {
+  static chatRead(callback, after=0) {
     $.ajax({
       url: OnlineManager.IP + '/api/chat?after=' + after,
       timeout: 5000,
       type: 'GET',
       success: (data) => {
-        onRead(data)
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback(data)
       },
       error: (error) => {
-        onRead(undefined, error)
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback(undefined, error)
       },
     })
   }
 
-  static chatSend(message, onSend) {
+  static chatSend(message, callback) {
     $.ajax({
       url: OnlineManager.IP + '/api/chat?message=' + message,
       timeout: 5000,
       type: 'POST',
       success: (data) => {
-        onSend()
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback()
       },
       error: (error) => {
-        onSend(error)
+        //Run callback
+        if (typeof callback !== 'function') return
+        callback(error)
       },
     })
   }

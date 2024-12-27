@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.head.balls.Auth.AuthController;
+import com.head.balls.Auth.Auth;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -36,7 +36,7 @@ public class ChatController {
     //http://localhost:8080/api/chat?after=0
 
     //Check logged
-    AuthController.checkIfLogged(session);
+    Auth.errorIfNotLogged(session);
 
     //Contents for chat response
     int lastID = after;
@@ -63,14 +63,14 @@ public class ChatController {
     //http://localhost:8080/api/chat?message=bomba
 
     //Check logged
-    AuthController.checkIfLogged(session);
+    Auth.errorIfNotLogged(session);
 
     synchronized (messages) {
       //Increase last id for next message
       lastID++;
 
       //Save message
-      messages.add(new ChatMessage(lastID, AuthController.getUsername(session), message));
+      messages.add(new ChatMessage(lastID, Auth.getUsername(session), message));
       
       //Only keep the last 50 messages
       if (messages.size() > 50) messages.remove(0); 

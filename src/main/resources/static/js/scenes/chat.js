@@ -37,11 +37,30 @@ class SceneChat extends Phaser.Scene {
     })
 
 
-    //Create chat view
+    //Create chat view & users count
     const chat = new ChatView(this, 100, 570, 1080, 470)
+    const usersText = this.add.text(1200, 200, '', {
+      fontFamily: 'poppins',
+      fontSize: '30px',
+      fill: '#fff'
+    }).setOrigin(1, 1)
+
+
+    //Create read messages function
+    let checkUsersCounter = 0
     const onMessages = (data, error) => {
       //Show error message
       if (error) this.onError(error)
+
+      //Check users
+      checkUsersCounter--
+      if (checkUsersCounter <= 0) {
+        checkUsersCounter = 10
+        OnlineManager.getUsers((users, error) => {
+          if (error) return
+          usersText.text = 'Users: ' + users.length
+        })
+      }
 
       //Get data
       if (typeof data !== 'object') return

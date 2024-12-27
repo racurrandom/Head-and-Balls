@@ -142,11 +142,11 @@ class SceneMain extends Phaser.Scene {
     Element.onClick(this.account, () => {
       this.scene.launch('Account', this)
     })
-    this.checkLogged()
+    this.checkIsLogged()
   }
 
-  checkLogged() {
-    OnlineManager.checkLogged((username) => {
+  checkIsLogged() {
+    OnlineManager.checkIsLogged((username) => {
       //Update icon
       this.account.setTexture(username ? 'userOn' : 'userOff')
 

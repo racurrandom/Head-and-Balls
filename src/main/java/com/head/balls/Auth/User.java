@@ -21,6 +21,10 @@ public class User extends UserCredentials {
     lastSeen = new Date().getTime();
   }
 
+  public void notifyOffline() {
+    lastSeen = 0;
+  }
+
   public long idleTime() {
     return new Date().getTime() - lastSeen;
   }
