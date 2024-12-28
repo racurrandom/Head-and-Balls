@@ -43,7 +43,7 @@ class OnlineManager {
 
         //Timeout ocurred
       })
-    }, 10000)
+    }, 6000)
   }
 
   static checkIsLogged(callback) {

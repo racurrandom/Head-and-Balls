@@ -5,7 +5,7 @@ import java.util.Date;
 public class User extends UserCredentials {
   
   private long lastSeen = 0;
-  public static final long timeoutDuration = 20000L; //20s
+  public static final long timeoutDuration = 10000L; //10s
 
 
   public User(String username, String password) {
