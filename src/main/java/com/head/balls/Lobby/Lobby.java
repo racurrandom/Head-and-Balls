@@ -1,5 +1,7 @@
 package com.head.balls.Lobby;
 
+import com.head.balls.Auth.Auth;
+
 public class Lobby {
   
   private String host = "";
@@ -10,8 +12,17 @@ public class Lobby {
     this.host = host;
   }
 
+  //Getters
+  public String getHost() {
+    return host;
+  }
+
+  public String getNoob() {
+    return noob;
+  }
+
   //Users
-  void join(String username) {
+  public void join(String username) {
     //Lobby is full
     if (isFull())
       throw new RuntimeException("Lobby is already full");
@@ -24,15 +35,19 @@ public class Lobby {
     noob = username;
   }
 
-  boolean contains(String username) {
+  public boolean contains(String username) {
     return host.equals(username) || noob.equals(username);
   }
 
-  boolean isFull() {
+  public boolean isFull() {
     return !host.equals("") && !noob.equals("");
   }
 
-  boolean isHost(String username) {
-    return host.equals(username);
+  public boolean isActive() {
+    try {
+      return Auth.getUser(host).isOnline() && Auth.getUser(noob).isOnline();
+    } catch (Exception e) {
+      return false;
+    }
   }
 }

@@ -39,9 +39,8 @@ class SceneError extends Phaser.Scene {
 
 
     //Add back button
-    const back = new Button(this, 640, 600, 'Volver')
-    Element.onClick(back.image, () => {
-      OnlineManager.isLogged = false
+    const back = new Button(this, 640, 600, 'Volver', () => {
+      Online.isLogged = false
       Scene.changeScene(this, 'Main')
     })
   }

@@ -27,6 +27,7 @@ class SceneResults extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
+
     //Get winner string
     const isTie = data.p1.points == data.p2.points
     let winner_s = 'Empate'
@@ -48,6 +49,7 @@ class SceneResults extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
     
+
     //Player 1
     const player1 = this.add.image(320, 360, 'preview' + data.p1.skin)
     player1.setScale(1, 1)
@@ -68,22 +70,12 @@ class SceneResults extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
-    //Back button
-    const back = this.add.image(640, 600, 'button')
-    const backText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(back, () => {
-      back.setTexture('buttonHover')
-    }, () => {
-      back.setTexture('button')
-    })
-    Element.onClick(back, () => {
+
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver', () => {
       Scene.changeScene(this, 'Main')
     })
+    
 
     //Stop music on scene close
     Scene.onClose(this, () => {

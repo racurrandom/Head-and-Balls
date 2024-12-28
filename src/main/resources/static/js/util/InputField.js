@@ -53,6 +53,7 @@ class InputField {
 
   setCanType(canType) {
     this.canType = canType
+    if (!canType && this.enabled) this.disable()
   }
 
   setNext(next) {
@@ -60,16 +61,26 @@ class InputField {
     this.next = next
   }
 
+  //Movement
+  move(x, y) {
+    this.element.x = x
+    this.element.y = y
+  }
+
   //Other
   updateText() {
-    if (this.text.length <= 0) {
-      //Placeholder
-      this.element.alpha = 0.5
-      this.element.text = this.placeholder
-    } else {
-      //Text
-      this.element.alpha = 1
-      this.element.text = this.text
+    try {
+      if (this.text.length <= 0) {
+        //Placeholder
+        this.element.alpha = 0.5
+        this.element.text = this.placeholder
+      } else {
+        //Text
+        this.element.alpha = 1
+        this.element.text = this.text
+      }
+    } catch (e) {
+      InputField.reset()
     }
   }
 
@@ -80,7 +91,9 @@ class InputField {
 
     //Deselect input
     InputField.current = undefined
-    this.element.setBackgroundColor('transparent')
+    try {
+      this.element.setBackgroundColor('transparent')
+    } catch (e) {}
     
     //Remove listener
     window.removeEventListener('keydown', this.onKey)
@@ -102,7 +115,12 @@ class InputField {
 
     //Select input (change background)
     InputField.current = this
-    this.element.setBackgroundColor(this.selectColor)
+    try {
+      this.element.setBackgroundColor(this.selectColor)
+    } catch (e) {
+      InputField.reset()
+      return
+    }
 
     //Create & add listener
     this.onKey = async (event) => {

@@ -1,9 +1,15 @@
 package com.head.balls.Lobby;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,8 +23,29 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/lobby")
 public class LobbyController {
 
-  private static Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
+  private final static Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
+  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+  private ScheduledFuture<?> scheduledFuture;
 
+
+  @GetMapping
+  public LobbyInfo inLobby(HttpSession session) {
+    //Check logged
+    Auth.errorIfNotLogged(session);
+
+    //Get username
+    String username = Auth.getUsername(session);
+
+    //Not in a lobby
+    if (!lobbies.containsKey(username)) 
+      return new LobbyInfo("", "", 0);
+
+    //Get lobby
+    Lobby lobby = getLobby(username);
+
+    //All good
+    return new LobbyInfo(lobby.getHost(), lobby.getNoob(), lobby.isFull() ? 2 : 1);
+  }
 
   @PostMapping("/create")
   public ResponseEntity<String> create(HttpSession session) {
@@ -72,6 +99,29 @@ public class LobbyController {
 
     //Create lobby with username as host
     lobbies.put(username, new Lobby(username));
+
+    //Schedule
+    if (lobbies.size() == 1) {
+      //Create task
+      Runnable task = () -> {
+        //Get lobby keys
+        ArrayList<String> keys = new ArrayList<>();
+        for (String key: lobbies.keySet()) keys.add(key);
+
+        //Remove inactive lobbies
+        System.out.println("________________");
+        for (String key: keys) {
+          Lobby lobby = lobbies.get(key);
+          if (lobby.isFull() && !lobby.isActive()) lobbies.remove(key);
+        }
+
+        //Stop loop if no more lobbies
+        if (lobbies.size() == 0) scheduledFuture.cancel(true);
+      };
+
+      //Schedule task
+      scheduledFuture = scheduler.scheduleAtFixedRate(task, 5, 5, TimeUnit.SECONDS);
+    }
   }
 
   private void joinLobby(String host, String noob) {
@@ -98,11 +148,14 @@ public class LobbyController {
       throw new RuntimeException("Can't leave the lobby if the game has started");
     
     //User isn't host
-    if (!lobby.isHost(username))
+    if (!lobby.getHost().equals(username))
       throw new RuntimeException("Cant leave the lobby if you are not the host");
 
     //Leave lobby
     lobbies.remove(username);
+
+    //No lobbies
+    if (lobbies.size() <= 0) scheduledFuture.cancel(true);
   }
 
 
@@ -114,5 +167,12 @@ public class LobbyController {
   private void errorIfNotInLobby(String username) {
     if (!lobbies.containsKey(username))
       throw new RuntimeException("User already in lobby");
+  }
+
+
+  public record LobbyInfo(String host, String noob, int users) {
+    public String getHost() { return host; }
+    public String getNoob() { return noob; }
+    public int getUsers() { return users; }
   }
 }

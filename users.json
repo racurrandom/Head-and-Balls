@@ -1,11 +1,16 @@
 {
-  "racu": {
+  "vic": {
     "lastSeen": 0,
+    "username": "vic",
+    "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+  },
+  "racu": {
+    "lastSeen": 1735407121331,
     "username": "racu",
     "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
   },
   "boti": {
-    "lastSeen": 1735320442370,
+    "lastSeen": 1735407124300,
     "username": "boti",
     "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
   }

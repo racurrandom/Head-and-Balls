@@ -1,4 +1,4 @@
-class OnlineManager {
+class Online {
 
   static IP = window.location.origin
   static username = ''
@@ -7,21 +7,85 @@ class OnlineManager {
   static notifyInterval = undefined
   
 
-  //Server
-  static checkServerOnline(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/test',
+  //Methods
+  static get(options) {
+    //Invalid options
+    if (typeof options !== 'object') return
+
+    //Create settings
+    const settings = {
       timeout: 5000,
       type: 'GET',
+    }
+
+    //Add options to settings
+    for (const [key, value] of Object.entries(options)) settings[key] = value
+    
+    //Send request
+    $.ajax(settings)
+  }
+
+  static post(options) {
+    //Invalid options
+    if (typeof options !== 'object') return
+
+    //Create settings
+    const settings = {
+      timeout: 5000,
+      type: 'POST',
+    }
+
+    //Add options to settings
+    for (const [key, value] of Object.entries(options)) settings[key] = value
+    
+    //Send request
+    $.ajax(settings)
+  }
+
+  static put(options) {
+    //Invalid options
+    if (typeof options !== 'object') return
+
+    //Create settings
+    const settings = {
+      timeout: 5000,
+      type: 'PUT',
+    }
+
+    //Add options to settings
+    for (const [key, value] of Object.entries(options)) settings[key] = value
+    
+    //Send request
+    $.ajax(settings)
+  }
+
+  static delete(options) {
+    //Invalid options
+    if (typeof options !== 'object') return
+
+    //Create settings
+    const settings = {
+      timeout: 5000,
+      type: 'DELETE',
+    }
+
+    //Add options to settings
+    for (const [key, value] of Object.entries(options)) settings[key] = value
+    
+    //Send request
+    $.ajax(settings)
+  }
+
+
+  //Server
+  static checkServerOnline(callback) {
+    Online.get({
+      url: Online.IP + '/api/test',
       success: (data) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(true)
+        if (typeof callback === 'function') callback(true)
       },
       error: (error) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(false, error)
+        if (typeof callback === 'function') callback(false, error)
       },
     })
   }
@@ -29,15 +93,15 @@ class OnlineManager {
   //Session
   static setIsLogged(isLogged) {
     //Update isLogged
-    OnlineManager.isLogged = isLogged
+    Online.isLogged = isLogged
 
     //Stop interval
-    if (OnlineManager.notifyInterval) clearInterval(OnlineManager.notifyInterval)
+    if (Online.notifyInterval) clearInterval(Online.notifyInterval)
     
     //Add a new one if logged
     if (!isLogged) return
-    OnlineManager.notifyInterval = setInterval(() => {
-      OnlineManager.checkIsLogged((logged, error) => {
+    Online.notifyInterval = setInterval(() => {
+      Online.checkIsLogged((logged, error) => {
         //No error or it isnt a timeout
         if (!error || error.status != 0) return
 
@@ -47,33 +111,29 @@ class OnlineManager {
   }
 
   static checkIsLogged(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth',
-      timeout: 5000,
-      type: 'GET',
+    Online.get({
+      url: Online.IP + '/api/auth',
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(true)
+        Online.setIsLogged(true)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(data)
+        if (typeof callback === 'function') callback(data)
       },
       error: (error) => {
         //Update isLogged
-        OnlineManager.setIsLogged(false)
+        Online.setIsLogged(false)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(undefined, error)
+        if (typeof callback === 'function') callback(undefined, error)
       },
     })
   }
 
   //Update account
   static updateAccount(password, callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/update',
-      timeout: 5000,
-      type: 'PUT',
+    Online.put({
+      url: Online.IP + '/api/auth/update',
       contentType: 'application/json',
       data: JSON.stringify({
         username: this.username,
@@ -81,25 +141,22 @@ class OnlineManager {
       }),
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(true)
+        Online.setIsLogged(true)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged)
+        if (typeof callback === 'function') callback(Online.isLogged)
       },
       error: (error) => {
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged, error)
+        if (typeof callback === 'function') callback(Online.isLogged, error)
       },
     })
   }
 
   //Register/delete
   static register(username, password, callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/register',
-      timeout: 5000,
-      type: 'POST',
+    Online.post({
+      url: Online.IP + '/api/auth/register',
       contentType: 'application/json',
       data: JSON.stringify({
         username: username,
@@ -107,45 +164,39 @@ class OnlineManager {
       }),
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(true)
+        Online.setIsLogged(true)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged)
+        if (typeof callback === 'function') callback(Online.isLogged)
       },
       error: (error) => {
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged, error)
+        if (typeof callback === 'function') callback(Online.isLogged, error)
       },
     })
   }
   
   static deleteAccount(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/delete',
-      timeout: 5000,
-      type: 'DELETE',
+    Online.delete({
+      url: Online.IP + '/api/auth/delete',
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(false)
+        Online.setIsLogged(false)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged)
+        if (typeof callback === 'function') callback(Online.isLogged)
       },
       error: (error) => {
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged, error)
+        if (typeof callback === 'function') callback(Online.isLogged, error)
       },
     })
   }
 
   //Session
   static login(username, password, callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/login',
-      timeout: 5000,
-      type: 'POST',
+    Online.post({
+      url: Online.IP + '/api/auth/login',
       contentType: 'application/json',
       data: JSON.stringify({
         username: username,
@@ -153,53 +204,43 @@ class OnlineManager {
       }),
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(true)
+        Online.setIsLogged(true)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged)
+        if (typeof callback === 'function') callback(Online.isLogged)
       },
       error: (error) => {
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged, error)
+        if (typeof callback === 'function') callback(Online.isLogged, error)
       },
     })
   }
 
   static logout(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/logout',
-      timeout: 5000,
-      type: 'POST',
+    Online.post({
+      url: Online.IP + '/api/auth/logout',
       success: (data) => {
         //Update isLogged
-        OnlineManager.setIsLogged(false)
+        Online.setIsLogged(false)
+
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged)
+        if (typeof callback === 'function') callback(Online.isLogged)
       },
       error: (error) => {
         //Run callback
-        if (typeof callback !== 'function') return
-        callback(OnlineManager.isLogged, error)
+        if (typeof callback === 'function') callback(Online.isLogged, error)
       },
     })
   }
 
   static getUsers(callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/auth/users',
-      timeout: 5000,
-      type: 'GET',
+    Online.get({
+      url: Online.IP + '/api/auth/users',
       success: (data) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(data)
+        if (typeof callback === 'function') callback(data)
       },
       error: (error) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(undefined, error)
+        if (typeof callback === 'function') callback(undefined, error)
       },
     })
   }
@@ -207,37 +248,75 @@ class OnlineManager {
 
   //Chat
   static chatRead(callback, after=0) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/chat?after=' + after,
-      timeout: 5000,
-      type: 'GET',
+    Online.get({
+      url: Online.IP + '/api/chat?after=' + after,
       success: (data) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(data)
+        if (typeof callback === 'function') callback(data)
       },
       error: (error) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(undefined, error)
+        if (typeof callback === 'function') callback(undefined, error)
       },
     })
   }
 
   static chatSend(message, callback) {
-    $.ajax({
-      url: OnlineManager.IP + '/api/chat?message=' + message,
-      timeout: 5000,
-      type: 'POST',
+    Online.post({
+      url: Online.IP + '/api/chat?message=' + message,
       success: (data) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback()
+        if (typeof callback === 'function') callback(data)
       },
       error: (error) => {
-        //Run callback
-        if (typeof callback !== 'function') return
-        callback(error)
+        if (typeof callback === 'function') callback(undefined, error)
+      },
+    })
+  }
+
+
+  //Lobby
+  static checkInLobby(callback) {
+    Online.get({
+      url: Online.IP + '/api/lobby',
+      success: (data) => {
+        if (typeof callback === 'function') callback(data)
+      },
+      error: (error) => {
+        if (typeof callback === 'function') callback(undefined, error)
+      },
+    })
+  }
+
+  static createLobby(callback) {
+    Online.post({
+      url: Online.IP + '/api/lobby/create',
+      success: (data) => {
+        if (typeof callback === 'function') callback(data)
+      },
+      error: (error) => {
+        if (typeof callback === 'function') callback(undefined, error)
+      },
+    })
+  }
+  
+  static joinLobby(username, callback) {
+    Online.post({
+      url: Online.IP + '/api/lobby/join?host=' + username,
+      success: (data) => {
+        if (typeof callback === 'function') callback(data)
+      },
+      error: (error) => {
+        if (typeof callback === 'function') callback(undefined, error)
+      },
+    })
+  }
+  
+  static leaveLobby(callback) {
+    Online.post({
+      url: Online.IP + '/api/lobby/leave',
+      success: (data) => {
+        if (typeof callback === 'function') callback(data)
+      },
+      error: (error) => {
+        if (typeof callback === 'function') callback(undefined, error)
       },
     })
   }

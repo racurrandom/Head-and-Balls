@@ -121,18 +121,15 @@ class SceneMain extends Phaser.Scene {
 
 
     //Play, options & credits buttons
-    const play = new Button(this, 640, 400, 'Jugar')
-    Element.onClick(play.image, () => {
+    const play = new Button(this, 640, 400, 'Jugar', () => {
       this.scene.launch('Modes', this)
     })
     
-    const options = new Button(this, 640, 500, 'Opciones')
-    Element.onClick(options.image, () => {
+    const options = new Button(this, 640, 500, 'Opciones', () => {
       this.scene.launch('Options', 'Main')
     })
 
-    const credits = new Button(this, 640, 600, 'Créditos')
-    Element.onClick(credits.image, () => {
+    const credits = new Button(this, 640, 600, 'Créditos', () => {
       this.scene.launch('Credits')
     })
     
@@ -146,12 +143,12 @@ class SceneMain extends Phaser.Scene {
   }
 
   checkIsLogged() {
-    OnlineManager.checkIsLogged((username) => {
+    Online.checkIsLogged((username, error) => {
       //Update icon
       this.account.setTexture(username ? 'userOn' : 'userOff')
 
       //Update username
-      if (username) OnlineManager.username = username
+      if (username) Online.username = username
     })
   }
 }

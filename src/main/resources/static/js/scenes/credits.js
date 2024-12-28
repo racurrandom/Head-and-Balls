@@ -39,8 +39,7 @@ class SceneCredits extends Phaser.Scene {
 
     
     //Add back button
-    const back = new Button(this, 640, 600, 'Volver')
-    Element.onClick(back.image, () => {
+    const back = new Button(this, 640, 600, 'Volver', () => {
       this.scene.stop()
     })
   }

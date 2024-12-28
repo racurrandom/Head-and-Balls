@@ -19,6 +19,7 @@ class SceneModes extends Phaser.Scene {
     const bg = this.add.image(1280 / 2, 720 / 2, 'window')
     Element.onClick(bg, () => {}) //Prevent clickthrough
 
+    
     //Add title
     const title = this.add.text(640, 120, 'Modos', {
       fontFamily: 'college',
@@ -27,61 +28,26 @@ class SceneModes extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
+
     //Add online button
-    const online = this.add.image(420, 360, 'button')
-    const onlineText = this.add.text(420, 360 - 6, 'Chat', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(online, () => {
-      online.setTexture('buttonHover')
-    }, () => {
-      online.setTexture('button')
-    })
-    Element.onClick(online, () => {
+    const online = new Button(this, 420, 360, 'Online', () => {
       this.scene.stop()
-      if(!OnlineManager.isLogged){
+      if (!Online.isLogged) {
         this.scene.launch('Account', mainScene)
-      }else{
-        mainScene.scene.stop()
-        this.scene.launch('Chat')
+      } else {
+        Scene.changeScene(this, 'Lobby', mainScene)
       }
     })
 
     //Add local button
-    const local = this.add.image(860, 360, 'button')
-    const localText = this.add.text(860, 360 - 6, 'Local', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(local, () => {
-      local.setTexture('buttonHover')
-    }, () => {
-      local.setTexture('button')
-    })
-    Element.onClick(local, () => {
+    const local = new Button(this, 860, 360, 'Local', () => {
       this.scene.stop()
       Scene.changeScene(mainScene, 'Characters')
     })
 
-    //Add resume button
-    const resume = this.add.image(640, 600, 'button')
-    const resumeText = this.add.text(640, 600 - 6, 'Volver', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    Element.onHover(resume, () => {
-      resume.setTexture('buttonHover')
-    }, () => {
-      resume.setTexture('button')
-    })
-    Element.onClick(resume, () => {
+
+    //Add back button
+    const back = new Button(this, 640, 600, 'Volver', () => {
       this.scene.stop()
     })
   }

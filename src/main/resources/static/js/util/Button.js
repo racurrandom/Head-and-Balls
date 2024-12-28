@@ -3,7 +3,7 @@ class Button {
   image = undefined
   text = undefined
 
-  constructor(scene, x, y, text) {
+  constructor(scene, x, y, text, onClick) {
     //Create image & text
     this.image = scene.add.image(x, y, 'button')
     this.text = scene.add.text(x, y - 6, text, {
@@ -19,9 +19,13 @@ class Button {
     }, () => {
       this.image.setTexture('button')
     })
+
+    //Click event
+    if (typeof onClick !== 'function') return
+    Element.onClick(this.image, onClick)
   }
 
-  Move(x, y){
+  move(x, y){
     this.image.x = x
     this.image.y = y
     this.text.x = x

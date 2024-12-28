@@ -32,7 +32,6 @@ class SceneChat extends Phaser.Scene {
     const back = this.add.image(1170, 110, 'back_button')
     Element.onClick(back, () => {
       clearInterval(this.readChatLoop);
-      InputField.reset()
       Scene.changeScene(this, 'Main')
     })
 
@@ -56,7 +55,7 @@ class SceneChat extends Phaser.Scene {
       checkUsersCounter--
       if (checkUsersCounter <= 0) {
         checkUsersCounter = 10
-        OnlineManager.getUsers((users, error) => {
+        Online.getUsers((users, error) => {
           if (error) return
           usersText.text = 'Users: ' + users.length
         })
@@ -78,9 +77,9 @@ class SceneChat extends Phaser.Scene {
     }
     
     //Read chat & create read loop
-    OnlineManager.chatRead(onMessages)
+    Online.chatRead(onMessages)
     this.readChatLoop = setInterval(() => {
-      OnlineManager.chatRead(onMessages, chat.getLastID())
+      Online.chatRead(onMessages, chat.getLastID())
     }, 250)
 
 
@@ -98,7 +97,7 @@ class SceneChat extends Phaser.Scene {
         messageInput.setText('')
 
         //Send message
-        OnlineManager.chatSend(text, (error) => {
+        Online.chatSend(text, (data, error) => {
           //Show error message
           if (error) this.onError(error)
         })
@@ -125,7 +124,6 @@ class SceneChat extends Phaser.Scene {
     //Do stuff
     console.log(error.responseText)
     clearInterval(this.readChatLoop)
-    InputField.reset()
     Scene.changeScene(this, 'Error')
   }
 }
