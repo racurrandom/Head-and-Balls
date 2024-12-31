@@ -6,13 +6,10 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.head.balls.Lobby.Lobby;
 import com.head.balls.Lobby.LobbyController;
 
-import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.*;
 
 
 @Component
@@ -21,20 +18,68 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
   private final Map<String, PlayerConnection> loginQueue = new HashMap<>();
   private final Map<String, PlayerConnection> players = new HashMap<>();
 
-  private final ObjectMapper mapper = new ObjectMapper();
-  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-  public static final char SCENE_CHARACTERS = 'c';
-  public static final char MENU_GAME = 'g';
+  @Override
+  public void afterConnectionEstablished(WebSocketSession session) {
+    //Already in queue (error?)
+    if (loginQueue.containsKey(session.getId())) return;
 
-  public static final char TYPE_INIT = 'i';
+    //Add player to login queue
+    loginQueue.put(session.getId(), new PlayerConnection(session));
+  }
+
+  @Override
+  protected void handleTextMessage(WebSocketSession session, TextMessage message) {
+    //Get id
+    String id = session.getId();
 
 
+    //Player is logged in -> Let its lobby handle the message
+    if (players.containsKey(id)) {
+      players.get(id).lobby.handleMessage(message);
+      return;
+    }
+
+
+    //Not logged in -> Check if trying to login
+    if (loginQueue.containsKey(id)) {
+      //Get message contents
+      String content = message.getPayload();
+      
+      //Invalid message
+      if (content.length() <= 2) return;
+
+      //Get type & data
+      String type = content.substring(0, 2);
+      String data = content.substring(2);
+
+      //Type is CHARACTERS_INIT (init chatacters scene)
+      if (type.equals(Lobby.CHARACTERS_INIT)) {
+        //Loggin player
+        PlayerConnection player = loginQueue.get(id);
+        player.login(data);
+        players.put(id, player);
+      }
+    }
+  }
+  
+  @Override
+  public void handleTransportError(WebSocketSession session, Throwable exception) {
+    
+  }
+
+  @Override
+  public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+
+  }
+
+
+  //Classes
   private static class PlayerConnection {
+
     public WebSocketSession session;
     public boolean isHost;
     public Lobby lobby;
-
     private boolean isLogged = false;
     
 
@@ -47,110 +92,15 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
       if (isLogged) return;
 
       //Login
-      lobby = LobbyController.getLobby(username);
-      isHost = lobby.getHost() == username;
-    }
-  }
-
-
-
-  @Override
-  public void afterConnectionEstablished(WebSocketSession session) {
-    //Add player to login queue
-    loginQueue.put(session.getId(), new PlayerConnection(session));
-
-    System.out.println(session.getAttributes().size());
-    session.getAttributes().forEach((key, value) -> {
-      System.out.println("Key : " + key + " Value : " + value);
-    });
-  }
-
-
-
-  @Override
-  protected void handleTextMessage(WebSocketSession session, TextMessage message) {
-    try {
-      //Get message contents
-      String payload = message.getPayload();
-
-      //Get scene, type & data
-      char scene = payload.charAt(0);
-      char type = payload.charAt(1);
-      String data = payload.length() > 2 ? payload.substring(2) : "";
-
-      //Check scene
-      switch (scene) {
-
-         /*$$$$$  /$$   /$$  /$$$$$$  /$$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$$$ /$$$$$$$$ /$$$$$$$ 
-        /$$__  $$| $$  | $$ /$$__  $$| $$__  $$ /$$__  $$ /$$__  $$|__  $$__/| $$_____/| $$__  $$
-       | $$  \__/| $$  | $$| $$  \ $$| $$  \ $$| $$  \ $$| $$  \__/   | $$   | $$      | $$  \ $$
-       | $$      | $$$$$$$$| $$$$$$$$| $$$$$$$/| $$$$$$$$| $$         | $$   | $$$$$   | $$$$$$$/
-       | $$      | $$__  $$| $$__  $$| $$__  $$| $$__  $$| $$         | $$   | $$__/   | $$__  $$
-       | $$    $$| $$  | $$| $$  | $$| $$  \ $$| $$  | $$| $$    $$   | $$   | $$      | $$  \ $$
-       |  $$$$$$/| $$  | $$| $$  | $$| $$  | $$| $$  | $$|  $$$$$$/   | $$   | $$$$$$$$| $$  | $$
-        \______/ |__/  |__/|__/  |__/|__/  |__/|__/  |__/ \______/    |__/   |________/|__/  |_*/
-        
-        case SCENE_CHARACTERS: {
-          switch (type) {
-            //Login
-            case TYPE_INIT:
-              //Get player
-              PlayerConnection player = loginQueue.get(session.getId());
-              if (player == null) return;
-
-              //Loggin player
-              player.login(data);
-              break;
-          }
-          break;
-        }
-        
-          /*$$$$$   /$$$$$$  /$$      /$$ /$$$$$$$$
-         /$$__  $$ /$$__  $$| $$$    /$$$| $$_____/
-        | $$  \__/| $$  \ $$| $$$$  /$$$$| $$      
-        | $$ /$$$$| $$$$$$$$| $$ $$/$$ $$| $$$$$   
-        | $$|_  $$| $$__  $$| $$  $$$| $$| $$__/   
-        | $$  \ $$| $$  | $$| $$\  $ | $$| $$      
-        |  $$$$$$/| $$  | $$| $$ \/  | $$| $$$$$$$$
-         \______/ |__/  |__/|__/     |__/|_______*/
-
-        case MENU_GAME: {
-          //Other types
-          //PlayerConnection player = players.get(session.getId());
-          break;
-        }
+      try {
+        //Get lobby & login websocket
+        lobby = LobbyController.getLobby(username);
+        isHost = lobby.getHost().equals(username);
+        lobby.setSession(isHost, session);
+        isLogged = true;
+      } catch (Exception e) {
+        System.out.println(e.getMessage());
       }
-    } catch (Exception e) {
-      e.printStackTrace();
     }
-  }
-  
-  private void sendMessage(WebSocketSession session, String type, Object data) {
-    try {
-      //Prepare message
-      String message = type;
-      if (data != null) message += mapper.writeValueAsString(data);
-
-      //Send it
-      synchronized (session) {
-        session.sendMessage(new TextMessage(message));
-      }
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  
-  
-  
-  @Override
-  public void handleTransportError(WebSocketSession session, Throwable exception) {
-    
-  }
-
-
-
-  @Override
-  public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
-
   }
 }

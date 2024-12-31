@@ -7,18 +7,22 @@ class Online {
   static notifyInterval = undefined
 
   static socket
+  static onSocketMessage
   static TYPE = {
     //Characters scene
-    C_INIT: 'ci',
+    C: 'C',
+    C_INIT: 'CI',
     //Game scene
-    G_INIT: 'ci',
+    G: 'G',
+    G_INIT: 'GI',
   };
 
 
   //WebSocket
-  static initSocket() {
+  static initSocket(onMessage) {
     //Close socket if active
-    if (Online.socket) Online.socket.close()
+    if (Online.socket) return
+    Online.onSocketMessage = onMessage
 
     //Create WebSocket
     Online.socket = new WebSocket("ws://" + location.host + "/ws");
@@ -26,23 +30,40 @@ class Online {
     //Add events
     Online.socket.onopen = () => {
       //Login with username
-      Online.socket.send(`${Online.TYPE.C_INIT}${Online.username}`)
+      Online.sendSocketMessage(Online.TYPE.C_INIT, Online.username)
     }
 
     Online.socket.onerror = (error) => {
+      //Log error
       console.log(error); 
     }
 
     Online.socket.onclose = () => {
+      //Clear socket variable
       Online.socket = undefined
     }
 
     Online.socket.onmessage = (event) => {
       //Get scene, type & data
-      const scene = event.data.charAt(0);
-      const type = event.data.charAt(1);
-      const data = event.data.length > 2 ? JSON.parse(event.data.substring(2)) : null;
+      const type = event.data.substring(0, 2)
+      const data = event.data.length > 2 ? JSON.parse(event.data.substring(2)) : null
+
+      //Run callback
+      if (typeof Online.onSocketMessage == 'function') Online.onSocketMessage(type, data)
     }
+  }
+
+  static sendSocketMessage(type, data) {
+    //Valid arguments
+    if (typeof type !== 'string') return
+    if (typeof data !== 'string') return
+
+    //Send message
+    Online.socket.send(`${type}${data}`)
+  }
+
+  static setSocketOnMessage(onMessage) {
+    Online.onSocketMessage = onMessage
   }
 
 

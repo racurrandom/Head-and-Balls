@@ -49,7 +49,7 @@ class SceneLobby extends Phaser.Scene {
         this.waitingForResponse = false
 
         //Update info text
-        this.infoText.text = error ? error.responseText : ''
+        if (error) this.infoText.text = error.responseText
         
         //Update views
         if (!error) this.setInLobby(true)
@@ -85,7 +85,7 @@ class SceneLobby extends Phaser.Scene {
         this.waitingForResponse = false
 
         //Update info text
-        this.infoText.text = error ? error.responseText : ''
+        if (error) this.infoText.text = error.responseText
 
         //Joined
         if (!error) this.setInLobby(true)
@@ -116,7 +116,7 @@ class SceneLobby extends Phaser.Scene {
           this.waitingForResponse = false
   
           //Update info text
-          this.infoText.text = error ? error.responseText : ''
+          if (error) this.infoText.text = error.responseText
 
           //Leave
           if (!error) this.setInLobby(false)
@@ -151,9 +151,18 @@ class SceneLobby extends Phaser.Scene {
 
         //Full lobby
         case 2:
-          //In a full lobby
-          this.mainScene.scene.stop()
-          Scene.changeScene(this, 'CharactersOnline')
+          //In a full lobby -> Init websocket
+          Online.initSocket((type, data) => {
+            //Check if type is init characters
+            if (type != Online.TYPE.C_INIT) return
+
+            //Load characters scene
+            this.mainScene.scene.stop()
+            Scene.changeScene(this, 'CharactersOnline', data)
+          })
+
+          //Change status
+          this.infoText.text = 'Cargando...'
   
           //Stop check interval
           if (SceneLobby.checkLobbyInterval) clearInterval(SceneLobby.checkLobbyInterval)

@@ -109,7 +109,6 @@ public class LobbyController {
         for (String key: lobbies.keySet()) keys.add(key);
 
         //Remove inactive lobbies
-        System.out.println("________________");
         for (String key: keys) {
           Lobby lobby = lobbies.get(key);
           if (lobby.isFull() && !lobby.isActive()) lobbies.remove(key);

@@ -20,7 +20,8 @@ class SceneCharactersOnline extends Phaser.Scene {
     const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
 
 
-    Online.initSocket()
+    //Data
+    console.log(data)
 
 
     /*//Add title
