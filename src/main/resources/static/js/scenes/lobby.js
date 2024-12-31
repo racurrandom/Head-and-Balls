@@ -153,7 +153,7 @@ class SceneLobby extends Phaser.Scene {
         case 2:
           //In a full lobby
           this.mainScene.scene.stop()
-          Scene.changeScene(this, 'Chat')
+          Scene.changeScene(this, 'CharactersOnline')
   
           //Stop check interval
           if (SceneLobby.checkLobbyInterval) clearInterval(SceneLobby.checkLobbyInterval)

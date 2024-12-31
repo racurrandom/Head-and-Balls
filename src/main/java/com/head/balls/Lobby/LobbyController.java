@@ -84,7 +84,7 @@ public class LobbyController {
   }
 
 
-  private Lobby getLobby(String username) {
+  public static Lobby getLobby(String username) {
     //Check if host is in lobby
     if (!lobbies.containsKey(username))
       throw new RuntimeException("User is not in a lobby");

@@ -35,7 +35,8 @@ class SceneModes extends Phaser.Scene {
       if (!Online.isLogged) {
         this.scene.launch('Account', mainScene)
       } else {
-        Scene.changeScene(this, 'Lobby', mainScene)
+        //Scene.changeScene(this, 'Lobby', mainScene)
+        Scene.changeScene(this, 'CharactersOnline')
       }
     })
 

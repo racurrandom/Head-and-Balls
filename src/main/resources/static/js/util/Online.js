@@ -5,7 +5,46 @@ class Online {
   static password = ''
   static isLogged = false
   static notifyInterval = undefined
-  
+
+  static socket
+  static TYPE = {
+    //Characters scene
+    C_INIT: 'ci',
+    //Game scene
+    G_INIT: 'ci',
+  };
+
+
+  //WebSocket
+  static initSocket() {
+    //Close socket if active
+    if (Online.socket) Online.socket.close()
+
+    //Create WebSocket
+    Online.socket = new WebSocket("ws://" + location.host + "/ws");
+
+    //Add events
+    Online.socket.onopen = () => {
+      //Login with username
+      Online.socket.send(`${Online.TYPE.C_INIT}${Online.username}`)
+    }
+
+    Online.socket.onerror = (error) => {
+      console.log(error); 
+    }
+
+    Online.socket.onclose = () => {
+      Online.socket = undefined
+    }
+
+    Online.socket.onmessage = (event) => {
+      //Get scene, type & data
+      const scene = event.data.charAt(0);
+      const type = event.data.charAt(1);
+      const data = event.data.length > 2 ? JSON.parse(event.data.substring(2)) : null;
+    }
+  }
+
 
   //Methods
   static get(options) {
