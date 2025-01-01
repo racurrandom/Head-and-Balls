@@ -83,6 +83,7 @@ public class LobbyController {
     return ResponseEntity.ok("Joined successfully");
   }
 
+  
 
   public static Lobby getLobby(String username) {
     //Check if host is in lobby

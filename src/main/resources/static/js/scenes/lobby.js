@@ -52,7 +52,10 @@ class SceneLobby extends Phaser.Scene {
         if (error) this.infoText.text = error.responseText
         
         //Update views
-        if (!error) this.setInLobby(true)
+        if (!error){ 
+          this.setInLobby(true)
+          Online.isHost = true;
+        }
       })
     })
 
@@ -79,7 +82,7 @@ class SceneLobby extends Phaser.Scene {
       if (this.waitingForResponse) return
       this.waitingForResponse = true
 
-      //Create lobby
+      //Join lobby
       Online.joinLobby(this.joinInput.text, (data, error) => {
         //Stop waiting
         this.waitingForResponse = false
@@ -153,6 +156,7 @@ class SceneLobby extends Phaser.Scene {
         case 2:
           //In a full lobby -> Init websocket
           Online.initSocket((type, data) => {
+            
             //Check if type is init characters
             if (type != Online.TYPE.C_INIT) return
 
@@ -195,6 +199,7 @@ class SceneLobby extends Phaser.Scene {
       this.joinBox.y = 300
       this.joinInput.move(860, 300)
       this.joinButton.move(860, 400)
+      Online.isHost = false;
     }
     this.backButton.move(640, 600)
   }

@@ -4,14 +4,29 @@
     "username": "vic",
     "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
   },
+  "r": {
+    "lastSeen": 1735772214361,
+    "username": "r",
+    "password": "454349e422f05297191ead13e21d3db520e5abef52055e4964b82fb213f593a1"
+  },
   "racu": {
-    "lastSeen": 1735407121331,
+    "lastSeen": 1735746987594,
     "username": "racu",
-    "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+    "password": "1fa4c77021373f4911800fc6ba43c74a596cda5e57ac8ac9797226aa31375e84"
   },
   "boti": {
     "lastSeen": 1735407124300,
     "username": "boti",
     "password": "3ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4"
+  },
+  "nig": {
+    "lastSeen": 0,
+    "username": "nig",
+    "password": "7d2969e37aa4ff6030ee5b5b9e60f8689a5bab0a4a24b432d7ee4be157e5f6bd"
+  },
+  "n": {
+    "lastSeen": 0,
+    "username": "n",
+    "password": "1b16b1df538ba12dc3f97edbb85caa7050d46c148134290feba80f8236c83db9"
   }
 }

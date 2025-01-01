@@ -5,6 +5,7 @@ class Online {
   static password = ''
   static isLogged = false
   static notifyInterval = undefined
+  static isHost = false;
 
   static socket
   static onSocketMessage
@@ -12,6 +13,7 @@ class Online {
     //Characters scene
     C: 'C',
     C_INIT: 'CI',
+    C_SKIN: 'CS',
     //Game scene
     G: 'G',
     G_INIT: 'GI',
@@ -41,6 +43,7 @@ class Online {
     Online.socket.onclose = () => {
       //Clear socket variable
       Online.socket = undefined
+      console.log("clossing socket nigga")
     }
 
     Online.socket.onmessage = (event) => {
@@ -64,6 +67,11 @@ class Online {
 
   static setSocketOnMessage(onMessage) {
     Online.onSocketMessage = onMessage
+  }
+
+  static changeSkin(skin){
+    const data = (this.isHost ? "host" : "noob")+":"+skin;
+    this.sendSocketMessage(Online.TYPE.C_SKIN, data)
   }
 
 

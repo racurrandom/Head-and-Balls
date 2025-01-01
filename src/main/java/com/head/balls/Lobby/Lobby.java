@@ -14,6 +14,7 @@ public class Lobby {
 
   //Websocket protocol (types)
   public static final String CHARACTERS_INIT = "CI";
+  public static final String CHARACTERS_SKIN = "CS";
   public static final String GAME_INIT = "GI";
   
   //Lobby usernames & websocket sessions
@@ -25,6 +26,10 @@ public class Lobby {
   //Util
   private final ObjectMapper mapper = new ObjectMapper();
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+
+  //Skin data 
+  private int hostSkin = -1;
+  private int noobSkin = -1;
 
   //Game info
   //bomba
@@ -127,6 +132,10 @@ public class Lobby {
     switch (type) {
       default:
         break;
+
+      case "CS":
+        changeSkin(data);
+        break;
     }
   }
 
@@ -134,6 +143,27 @@ public class Lobby {
   private void initCharacters() {
     sendMessage(hostSession, CHARACTERS_INIT, "hi host");
     sendMessage(noobSession, CHARACTERS_INIT, "hi noob");
+  }
+
+  private void changeSkin(String _data){
+    String[] data = _data.split(":");
+    boolean isHost = (data[0] == "host") ? true:false;
+    int skin = Integer.parseInt(data[1]);
+
+    //Skin is does not exist
+    if(skin <= 0 || skin > 4) 
+    throw new RuntimeException("Skin "+skin+" does not exist.");
+    
+    //Receiiver does not exist
+    if(data[0] != "noob")
+    throw new RuntimeException("Error on skin receiver name");
+
+    //Change skin
+    if(isHost) hostSkin = skin;
+    else noobSkin = skin;
+
+    //Send change to other player
+    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_SKIN, skin);
   }
 
   //Game classes

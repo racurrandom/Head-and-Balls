@@ -3,7 +3,8 @@ class SceneCharactersOnline extends Phaser.Scene {
     super({ key: 'CharactersOnline' });
   }
 
-
+  player1 
+  player2 
 
     /*$$$$$                                  /$$              
    /$$__  $$                                | $$              
@@ -19,12 +20,13 @@ class SceneCharactersOnline extends Phaser.Scene {
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
     const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
 
-
     //Data
     console.log(data)
 
+    
 
-    /*//Add title
+
+    //Add title
     const title = this.add.text(640, 120, 'Elije tu personaje', {  //120
       fontFamily: 'college',
       fontSize: '64px',
@@ -45,6 +47,9 @@ class SceneCharactersOnline extends Phaser.Scene {
         ready: false
       }
     }
+
+    this.player1 = this.add.image(320, 360, 'preview' + this.data.p1.skin)
+    this.player2 = this.add.image(960, 360, 'preview' + this.data.p2.skin)
     
     //Player 1
     this.createCharacterSelectScreen(this.data.p1)
@@ -55,33 +60,54 @@ class SceneCharactersOnline extends Phaser.Scene {
     //Stop music on scene close
     Scene.onClose(this, () => {
       SceneMain.music.stop()
-    })*/
+    })
+
+    //Register message listener
+    Online.onSocketMessage = (type, data) => {
+      switch (type) {
+        default:
+          break;
+
+        case Online.TYPE.C_SKIN:
+          console.log("a");
+          console.log(data)
+          this.updateOtherSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
+          break;
+      }
+    }
   }
 
-  /*createCharacterSelectScreen(key) {
+  createCharacterSelectScreen(key) {
     //Displacement
     const disp = 640 * (key.number - 1)
     const scale = key.number == 1 ? 1 : -1
 
+    //Is this me?
+    const me = Online.isHost ^ (key.number - 1);
+
+    const player = (key.number-1) ? this.player2 : this.player1
     //Create player skin indicator
-    const player = this.add.image(disp + 320, 360, 'preview' + key.skin)
     player.setScale(scale, 1)
 
     //Create skin swap buttons
     const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
     prev.setScale(-0.1, 0.1)
+    if(me) 
     Element.onClick(prev, () => {
       key.skin--
       if (key.skin < 1) key.skin = 4
       player.setTexture('preview' + key.skin)
+      Online.changeSkin(key.skin);
     })
 
     const next = this.add.image(disp + 320 + 150, 360, 'arrow_next')
     next.setScale(0.1, 0.1)
+    if(me)
     Element.onClick(next, () => {
       key.skin++
       if (key.skin > 4) key.skin = 1
       player.setTexture('preview' + key.skin)
+      Online.changeSkin(key.skin);
     })
 
     //Add ready button
@@ -101,7 +127,13 @@ class SceneCharactersOnline extends Phaser.Scene {
       key.ready = !key.ready
       readyText.setText(key.ready ? 'Listo' : 'No listo');
     })
-  }*/
+  }
+
+  updateOtherSkin(data, key){
+    key.skin = data;
+    if(key.number-1) this.player1.setTexture('preview' + key.skin)
+    else this.player2.setTexture('preview' + key.skin)
+  }
   
 
 
@@ -119,6 +151,6 @@ class SceneCharactersOnline extends Phaser.Scene {
   
   update(time, delta) {
     //Both ready
-    //if (this.data.p1.ready && this.data.p2.ready) Scene.changeScene(this, 'Game', this.data)
+    if (this.data.p1.ready && this.data.p2.ready) Scene.changeScene(this, 'Game', this.data)
   }
 }
