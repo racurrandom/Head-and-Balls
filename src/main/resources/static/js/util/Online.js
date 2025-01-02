@@ -37,13 +37,14 @@ class Online {
 
     Online.socket.onerror = (error) => {
       //Log error
-      console.log(error); 
+      console.error("WebSocket error:", error.message);
+      console.error("Details:", error); 
     }
 
     Online.socket.onclose = () => {
       //Clear socket variable
       Online.socket = undefined
-      console.log("clossing socket nigga")
+      console.log("closing socket")
     }
 
     Online.socket.onmessage = (event) => {
@@ -61,6 +62,12 @@ class Online {
     if (typeof type !== 'string') return
     if (typeof data !== 'string') return
 
+    if (Online.socket && Online.socket.readyState === WebSocket.OPEN) {
+      Online.socket.send(`${type}${data}`);
+    } else {
+      console.error("Socket is not open. Message not sent.");
+    }
+
     //Send message
     Online.socket.send(`${type}${data}`)
   }
@@ -71,7 +78,7 @@ class Online {
 
   static changeSkin(skin){
     const data = (this.isHost ? "host" : "noob")+":"+skin;
-    this.sendSocketMessage(Online.TYPE.C_SKIN, data)
+    this.sendSocketMessage("CS", data)
   }
 
 

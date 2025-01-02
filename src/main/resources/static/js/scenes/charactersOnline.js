@@ -69,8 +69,6 @@ class SceneCharactersOnline extends Phaser.Scene {
           break;
 
         case Online.TYPE.C_SKIN:
-          console.log("a");
-          console.log(data)
           this.updateOtherSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
           break;
       }
@@ -85,31 +83,38 @@ class SceneCharactersOnline extends Phaser.Scene {
     //Is this me?
     const me = Online.isHost ^ (key.number - 1);
 
-    const player = (key.number-1) ? this.player2 : this.player1
     //Create player skin indicator
+    const player = (key.number-1) ? this.player2 : this.player1
     player.setScale(scale, 1)
 
     //Create skin swap buttons
-    const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
-    prev.setScale(-0.1, 0.1)
-    if(me) 
-    Element.onClick(prev, () => {
-      key.skin--
-      if (key.skin < 1) key.skin = 4
-      player.setTexture('preview' + key.skin)
-      Online.changeSkin(key.skin);
-    })
+    if(me){
+      const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
+      prev.setScale(-0.1, 0.1) 
+      Element.onClick(prev, () => {
+        key.skin--
+        if (key.skin < 1) key.skin = 4
+        player.setTexture('preview' + key.skin)
+        Online.changeSkin(key.skin);
+      })
 
-    const next = this.add.image(disp + 320 + 150, 360, 'arrow_next')
-    next.setScale(0.1, 0.1)
-    if(me)
-    Element.onClick(next, () => {
-      key.skin++
-      if (key.skin > 4) key.skin = 1
-      player.setTexture('preview' + key.skin)
-      Online.changeSkin(key.skin);
-    })
+      const next = this.add.image(disp + 320 + 150, 360, 'arrow_next')
+      next.setScale(0.1, 0.1)
+      Element.onClick(next, () => {
+        key.skin++
+        if (key.skin > 4) key.skin = 1
+        player.setTexture('preview' + key.skin)
+        Online.changeSkin(key.skin);
+      })
 
+      //Create "TU" indicator
+      const Tu = this.add.text(disp + 320, 120 + 100, 'TÚ', {
+        fontFamily: 'college',
+        fontSize: '42px',
+        fill: '#fff',
+        align: 'center'
+      }).setOrigin(0.5)  
+    }
     //Add ready button
     const ready = this.add.image(disp + 320, 600, 'button')
     const readyText = this.add.text(disp + 320, 600 - 6, 'No listo', {
@@ -118,21 +123,23 @@ class SceneCharactersOnline extends Phaser.Scene {
       fill: '#fff',
       align: 'center'
     }).setOrigin(0.5)
-    Element.onHover(ready, () => {
-      ready.setTexture('buttonHover')
-    }, () => {
-      ready.setTexture('button')
-    })
-    Element.onClick(ready, () => {
-      key.ready = !key.ready
-      readyText.setText(key.ready ? 'Listo' : 'No listo');
-    })
+    if(me){
+      Element.onHover(ready, () => {
+        ready.setTexture('buttonHover')
+      }, () => {
+        ready.setTexture('button')
+      })
+      Element.onClick(ready, () => {
+        key.ready = !key.ready
+        readyText.setText(key.ready ? 'Listo' : 'No listo');
+      })
+    }
   }
 
   updateOtherSkin(data, key){
     key.skin = data;
-    if(key.number-1) this.player1.setTexture('preview' + key.skin)
-    else this.player2.setTexture('preview' + key.skin)
+    if(key.number-1) this.player2.setTexture('preview' + key.skin)
+    else this.player1.setTexture('preview' + key.skin)
   }
   
 

@@ -147,23 +147,32 @@ public class Lobby {
 
   private void changeSkin(String _data){
     String[] data = _data.split(":");
-    boolean isHost = (data[0] == "host") ? true:false;
+    boolean host;
+    switch (data[0]) {
+      case "host":
+        host = true;
+        break;
+      
+      case "noob":
+        host = false;
+        break;
+
+      default:
+      //Receiver does not exist
+      throw new RuntimeException("Error on skin receiver name");
+    }
     int skin = Integer.parseInt(data[1]);
 
     //Skin is does not exist
     if(skin <= 0 || skin > 4) 
     throw new RuntimeException("Skin "+skin+" does not exist.");
-    
-    //Receiiver does not exist
-    if(data[0] != "noob")
-    throw new RuntimeException("Error on skin receiver name");
 
     //Change skin
-    if(isHost) hostSkin = skin;
+    if(host) hostSkin = skin;
     else noobSkin = skin;
 
     //Send change to other player
-    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_SKIN, skin);
+    sendMessage(host ? noobSession : hostSession, CHARACTERS_SKIN, skin);
   }
 
   //Game classes
