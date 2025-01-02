@@ -2,8 +2,6 @@ package com.head.balls.Lobby;
 
 import java.io.IOException;
 import java.util.Random;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.web.socket.TextMessage;
@@ -28,7 +26,6 @@ public class Lobby {
 
   //Util
   private final ObjectMapper mapper = new ObjectMapper();
-  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
   //Characters info
   private CharactersInfo characters;
@@ -146,6 +143,20 @@ public class Lobby {
   }
 
   //Characters scene
+  public class CharactersInfo {
+    public int hostSkin = -1;
+    public boolean hostReady = false;
+    public int noobSkin = -1;
+    public boolean noobReady = false;
+
+    CharactersInfo() {
+      //Select random skins
+      Random rand = new Random();
+      hostSkin = rand.nextInt(4) + 1;
+      noobSkin = rand.nextInt(4) + 1;
+    }
+  }
+
   private void initCharacters() {
     //Create characters info
     characters = new CharactersInfo();
@@ -191,39 +202,32 @@ public class Lobby {
   }
 
   //Game scene
-  private void initGame() {
-    game = new GameInfo();
-    String initData = "{ \"variant\":" + getMapVariant() + " }";
-    sendMessage(hostSession, GAME_INIT, initData);
-    sendMessage(noobSession, GAME_INIT, initData);
-  }
-
-  private String getMapVariant() {
-    float x = 640 + ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
-    float y = 250 + ThreadLocalRandom.current().nextFloat(-50, 50 + 1);
-    float angle = ThreadLocalRandom.current().nextFloat(-30, 30 + 1) * (float) Math.PI / 180;
-    return "{ \"x\":" + x + ", \"y\":" + y + ", \"angle\":" + angle + " }";
-  }
-
-  //Game classes
-  public class CharactersInfo {
-    public int hostSkin = -1;
-    public boolean hostReady = false;
-    public int noobSkin = -1;
-    public boolean noobReady = false;
-
-    CharactersInfo() {
-      //Select random skins
-      Random rand = new Random();
-      hostSkin = rand.nextInt(4) + 1;
-      noobSkin = rand.nextInt(4) + 1;
-    }
-  }
-
   public class GameInfo {
+    float mapVariantX = 0;
+    float mapVariantY = 0;
+    float mapVariantAngle = 0;
     
     GameInfo() {
-      
+      //Create map variant
+      createMapVariant();
     }
+
+    //Map variant
+    public void createMapVariant() {
+      mapVariantX = 640 + ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
+      mapVariantY = 250 + ThreadLocalRandom.current().nextFloat(-50, 50 + 1);
+      mapVariantAngle = ThreadLocalRandom.current().nextFloat(-30, 30 + 1) * (float) Math.PI / 180;
+    }
+
+    public String getMapVariant() {
+      return "{ \"x\":" + mapVariantX + ", \"y\":" + mapVariantY + ", \"angle\":" + mapVariantAngle + " }";
+    }
+  }
+
+  private void initGame() {
+    game = new GameInfo();
+    String initData = "{ \"variant\":" + game.getMapVariant() + " }";
+    sendMessage(hostSession, GAME_INIT, initData);
+    sendMessage(noobSession, GAME_INIT, initData);
   }
 }
