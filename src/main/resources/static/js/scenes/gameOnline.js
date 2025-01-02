@@ -34,35 +34,33 @@ class SceneGameOnline extends Phaser.Scene {
       timeStart: new Date().getTime(),
       //Timestamp when the game will end (after 3 minutes)
       timeEnd: new Date().getTime() + 1 * 60 * 1000,  //1 minute
-      //timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
     }
+
 
     //Add background music
     SceneGame.music = this.sound.add('music_game')
     SceneGame.music.loop = true
     SceneGame.music.play()
 
-    //Play piii
-    this.sound.add('piii').play()
 
     //Add pause button
     const pause_button = this.add.image(1280-60, 55, 'setting_button')
-    Element.onClick(pause_button, ()=>{
+    Element.onClick(pause_button, () => {
       //Stop power spawn timer
       clearTimeout(this.powerTimer)
 
       ///Open options
       this.scene.pause()
-      this.scene.launch('Options', 'Game')
+      this.scene.launch('Options', 'GameOnline')
     })
 
 
     //Add back button
-    const back_button = this.add.image(60, 55, 'back_button')
+    /*const back_button = this.add.image(60, 55, 'back_button')
     Element.onClick(back_button, () => {
       SceneGame.music.stop()
       Scene.changeScene(this, 'Main')
-    })
+    })*/
 
 
     //Add floor
@@ -90,22 +88,19 @@ class SceneGameOnline extends Phaser.Scene {
     })
     
 
-
     //Add ball
     this.ball = new Ball(this)
 
 
-
     //Powers
-    this.spawnPower()
-
+    //this.spawnPower()
 
 
     //Map
     this.mapVariant = this.add.rectangle(0, 0, 200, 40, 0x3e383d)
     this.matter.add.gameObject(this.mapVariant)
     this.mapVariant.setStatic(true)
-
+    this.updateMapVariant(data.variant)
 
 
     //Counter (time & points)
@@ -128,13 +123,11 @@ class SceneGameOnline extends Phaser.Scene {
     }).setOrigin(0.5)
 
 
-
-    //Create player 1
+    /*//Create player 1
     this.player1 = new Player(this, data.p1)
 
     //Create player 2
-    this.player2 = new Player(this, data.p2)
-
+    this.player2 = new Player(this, data.p2)*/
 
 
     //Reset game
@@ -148,14 +141,20 @@ class SceneGameOnline extends Phaser.Scene {
     //Reset ball
     this.ball.reset()
 
-    //Reset players
+    /*//Reset players
     this.player1.reset()
     this.player2.reset()
 
     //Move & rotate map variant
     this.mapVariant.x = 640 + Util.rand(-450, 450)
     this.mapVariant.y = 250 + Util.rand(-50, 50)
-    this.mapVariant.setRotation(Util.rand(-30, 30) * Math.PI / 180)
+    this.mapVariant.setRotation(Util.rand(-30, 30) * Math.PI / 180)*/
+  }
+
+  updateMapVariant(variant) {
+    this.mapVariant.x = variant.x
+    this.mapVariant.y = variant.y
+    this.mapVariant.setRotation(variant.angle)
   }
 
   onGoal(number) {
@@ -186,11 +185,11 @@ class SceneGameOnline extends Phaser.Scene {
     }, 2000)
   }
 
-  spawnPower() {
+  /*spawnPower() {
     this.powerTimer = setTimeout(() => {
       this.power = new Power(this)
     }, PowerInfo.DELAY)
-  }
+  }*/
   
 
 
@@ -207,16 +206,16 @@ class SceneGameOnline extends Phaser.Scene {
             |_*/
   
   update(time, delta) {
-    //Update players
+    /*//Update players
     this.player1.update(delta)
     this.player2.update(delta)
 
     //Still in game
-    if (this.data.isFinished) return
+    if (this.data.isFinished) return*/
 
     //Update timer
     this.updateTimer()
-
+   
     //Game finished
     if (new Date().getTime() >= this.data.timeEnd) {
       //Stop playing
@@ -229,7 +228,7 @@ class SceneGameOnline extends Phaser.Scene {
       //Wait to show results scene
       setTimeout(() => {
         //Stop power spawn timer
-        clearTimeout(this.powerTimer)
+        //clearTimeout(this.powerTimer)
 
         ///Go to results
         Scene.changeScene(this, 'Results', {

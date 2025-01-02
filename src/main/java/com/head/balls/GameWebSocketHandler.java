@@ -36,7 +36,7 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
     //Player is logged in -> Let its lobby handle the message
     if (players.containsKey(id)) {
-      players.get(id).lobby.handleMessage(message);
+      players.get(id).lobby.handleMessage(id, message);
       return;
     }
 

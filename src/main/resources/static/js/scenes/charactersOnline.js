@@ -53,7 +53,6 @@ class SceneCharactersOnline extends Phaser.Scene {
     //Player skin previews
     this.player1 = this.add.image(320, 360, 'preview' + this.data.p1.skin)
     this.player2 = this.add.image(960, 360, 'preview' + this.data.p2.skin)
-    
 
 
     //Create players
@@ -152,13 +151,11 @@ class SceneCharactersOnline extends Phaser.Scene {
 
   //This user changed something
   onChangedSkin(key) {
-    const data = key.number + ":" + key.skin;
-    Online.sendSocketMessage(Online.TYPE.C_SKIN, data)
+    Online.sendSocketMessage(Online.TYPE.C_SKIN, key.skin)
   }
 
   onChangedReady(key) {
-    const data = key.number + ":" + key.ready;
-    Online.sendSocketMessage(Online.TYPE.C_READY, data)
+    Online.sendSocketMessage(Online.TYPE.C_READY, key.ready)
   }
 
   //Other user changed something
@@ -189,7 +186,7 @@ class SceneCharactersOnline extends Phaser.Scene {
 
     //Create init data
     const initData = this.data
-    initData.game = serverData
+    initData.variant = serverData.variant
 
     //Load game
     setTimeout(() => {

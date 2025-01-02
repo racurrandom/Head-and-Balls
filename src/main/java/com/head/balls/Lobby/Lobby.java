@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadLocalRandom;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -118,7 +119,10 @@ public class Lobby {
     }
   }
 
-  public void handleMessage(TextMessage message) {
+  public void handleMessage(String id, TextMessage message) {
+    //Check if message is from host
+    boolean isHost = hostSession.getId().equals(id);
+
     //Get message contents
     String content = message.getPayload();
     
@@ -133,10 +137,10 @@ public class Lobby {
     switch (type) {
       //Characters
       case CHARACTERS_SKIN:
-        changeSkin(data);
+        changeSkin(isHost, data);
         break;
       case CHARACTERS_READY:
-        changeReady(data);
+        changeReady(isHost, data);
         break;
     }
   }
@@ -151,22 +155,9 @@ public class Lobby {
     sendMessage(noobSession, CHARACTERS_INIT, initData);
   }
 
-  private boolean getIsHostFromMessage(String part) {
-    switch (part) {
-      case "1":
-        return true;
-      case "2":
-        return false;
-      default:
-        //Receiver does not exist
-        throw new RuntimeException("Error on skin receiver name");
-    }
-  }
-
-  private void changeSkin(String data) {
-    String[] parts = data.split(":");
-    boolean isHost = getIsHostFromMessage(parts[0]);
-    int skin = Integer.parseInt(parts[1]);
+  private void changeSkin(boolean isHost, String data) {
+    //Parse skin index
+    int skin = Integer.parseInt(data);
 
     //Skin is does not exist
     if (skin < 1 || skin > 4) 
@@ -182,10 +173,9 @@ public class Lobby {
     sendMessage(isHost ? noobSession : hostSession, CHARACTERS_SKIN, skin);
   }
   
-  private void changeReady(String data) {
-    String[] parts = data.split(":");
-    boolean isHost = getIsHostFromMessage(parts[0]);
-    boolean ready = Boolean.parseBoolean(parts[1]);
+  private void changeReady(boolean isHost, String data) {
+    //Parse ready
+    boolean ready = Boolean.parseBoolean(data);
 
     //Change skin
     if (isHost) 
@@ -197,12 +187,22 @@ public class Lobby {
     sendMessage(isHost ? noobSession : hostSession, CHARACTERS_READY, ready);
 
     //Both ready
-    if (characters.hostReady && characters.noobReady) {
-      game = new GameInfo();
-      String initData = "{ \"test\":\"bomba\" }";
-      sendMessage(hostSession, GAME_INIT, initData);
-      sendMessage(noobSession, GAME_INIT, initData);
-    }
+    if (characters.hostReady && characters.noobReady) initGame();
+  }
+
+  //Game scene
+  private void initGame() {
+    game = new GameInfo();
+    String initData = "{ \"variant\":" + getMapVariant() + " }";
+    sendMessage(hostSession, GAME_INIT, initData);
+    sendMessage(noobSession, GAME_INIT, initData);
+  }
+
+  private String getMapVariant() {
+    float x = 640 + ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
+    float y = 250 + ThreadLocalRandom.current().nextFloat(-50, 50 + 1);
+    float angle = ThreadLocalRandom.current().nextFloat(-30, 30 + 1) * (float) Math.PI / 180;
+    return "{ \"x\":" + x + ", \"y\":" + y + ", \"angle\":" + angle + " }";
   }
 
   //Game classes

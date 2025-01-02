@@ -61,7 +61,7 @@ class Online {
   static sendSocketMessage(type, data) {
     //Valid arguments
     if (typeof type !== 'string') return
-    if (typeof data !== 'string') return
+    if (typeof data === undefined) return
 
     if (Online.socket && Online.socket.readyState === WebSocket.OPEN) {
       //Send message
