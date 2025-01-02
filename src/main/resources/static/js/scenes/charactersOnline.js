@@ -3,6 +3,8 @@ class SceneCharactersOnline extends Phaser.Scene {
     super({ key: 'CharactersOnline' });
   }
 
+  isLoading = false
+  data 
   player1 
   player2 
 
@@ -20,12 +22,7 @@ class SceneCharactersOnline extends Phaser.Scene {
     const bg = this.add.image(1280 / 2, 720 / 2, 'bg_menu')
     const bgw = this.add.image(1280 / 2, 720 / 2, 'window')
 
-    //Data
-    console.log(data)
-
     
-
-
     //Add title
     const title = this.add.text(640, 120, 'Elije tu personaje', {  //120
       fontFamily: 'college',
@@ -34,77 +31,97 @@ class SceneCharactersOnline extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5)
 
+
     //Data to pass to game
     this.data = {
       p1: {
+        isHost: true,
+        isMe: Online.isHost,
         number: 1,
-        skin: Util.rand(1, 4),
+        skin: data.p1.skin,
         ready: false
       },
       p2: {
+        isHost: false,
+        isMe: !Online.isHost,
         number: 2,
-        skin: Util.rand(1, 4),
+        skin: data.p2.skin,
         ready: false
       }
     }
 
+    //Player skin previews
     this.player1 = this.add.image(320, 360, 'preview' + this.data.p1.skin)
     this.player2 = this.add.image(960, 360, 'preview' + this.data.p2.skin)
     
-    //Player 1
+
+
+    //Create players
     this.createCharacterSelectScreen(this.data.p1)
-    
-    //Player 2
     this.createCharacterSelectScreen(this.data.p2)
+
 
     //Stop music on scene close
     Scene.onClose(this, () => {
       SceneMain.music.stop()
     })
 
-    //Register message listener
-    Online.onSocketMessage = (type, data) => {
-      switch (type) {
-        default:
-          break;
 
+    //Register message listener
+    Online.setSocketOnMessage((type, data) => {
+      switch (type) {
         case Online.TYPE.C_SKIN:
           this.updateOtherSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
           break;
+        case Online.TYPE.C_READY:
+          this.updateOtherReady(data, Online.isHost ? this.data.p2 : this.data.p1);
+          break;
+        case Online.TYPE.G_INIT:
+          this.onBothReady(data)
+          break;
       }
-    }
+    })
   }
 
   createCharacterSelectScreen(key) {
     //Displacement
     const disp = 640 * (key.number - 1)
-    const scale = key.number == 1 ? 1 : -1
-
-    //Is this me?
-    const me = Online.isHost ^ (key.number - 1);
 
     //Create player skin indicator
-    const player = (key.number-1) ? this.player2 : this.player1
+    const player = key.isHost ? this.player1 : this.player2
+    const scale = key.isHost ? 1 : -1
     player.setScale(scale, 1)
 
     //Create skin swap buttons
-    if(me){
+    if (key.isMe) {
       const prev = this.add.image(disp + 320 - 150, 360, 'arrow_next')
       prev.setScale(-0.1, 0.1) 
       Element.onClick(prev, () => {
+        //Loading game
+        if (this.isLoading) return
+
+        //Change skin
         key.skin--
         if (key.skin < 1) key.skin = 4
         player.setTexture('preview' + key.skin)
-        Online.changeSkin(key.skin);
+
+        //Tell server skin changed
+        this.onChangedSkin(key);
       })
 
       const next = this.add.image(disp + 320 + 150, 360, 'arrow_next')
       next.setScale(0.1, 0.1)
       Element.onClick(next, () => {
+        //Loading game
+        if (this.isLoading) return
+
+        //Change skin
         key.skin++
         if (key.skin > 4) key.skin = 1
         player.setTexture('preview' + key.skin)
-        Online.changeSkin(key.skin);
+
+        //Tell server skin changed
+        this.onChangedSkin(key);
       })
 
       //Create "TU" indicator
@@ -115,49 +132,68 @@ class SceneCharactersOnline extends Phaser.Scene {
         align: 'center'
       }).setOrigin(0.5)  
     }
+
     //Add ready button
-    const ready = this.add.image(disp + 320, 600, 'button')
-    const readyText = this.add.text(disp + 320, 600 - 6, 'No listo', {
-      fontFamily: 'college',
-      fontSize: '30px',
-      fill: '#fff',
-      align: 'center'
-    }).setOrigin(0.5)
-    if(me){
-      Element.onHover(ready, () => {
-        ready.setTexture('buttonHover')
-      }, () => {
-        ready.setTexture('button')
-      })
-      Element.onClick(ready, () => {
-        key.ready = !key.ready
-        readyText.setText(key.ready ? 'Listo' : 'No listo');
-      })
-    }
+    player.ready = new Button(this, disp + 320, 600, 'No listo', () => {
+      //Loading game
+      if (this.isLoading) return
+      
+      //Not me
+      if (!key.isMe) return
+
+      //Update ready
+      key.ready = !key.ready
+      player.ready.text.setText(key.ready ? 'Listo' : 'No listo');
+
+      //Tell server ready changed
+      this.onChangedReady(key)
+    })
   }
 
-  updateOtherSkin(data, key){
+  //This user changed something
+  onChangedSkin(key) {
+    const data = key.number + ":" + key.skin;
+    Online.sendSocketMessage(Online.TYPE.C_SKIN, data)
+  }
+
+  onChangedReady(key) {
+    const data = key.number + ":" + key.ready;
+    Online.sendSocketMessage(Online.TYPE.C_READY, data)
+  }
+
+  //Other user changed something
+  updateOtherSkin(data, key) {
     key.skin = data;
-    if(key.number-1) this.player2.setTexture('preview' + key.skin)
-    else this.player1.setTexture('preview' + key.skin)
+    if (key.isHost) 
+      this.player1.setTexture('preview' + key.skin)
+    else 
+      this.player2.setTexture('preview' + key.skin)
   }
-  
 
+  updateOtherReady(data, key) {
+    key.ready = data;
+    if (key.isHost) 
+      this.player1.ready.text.setText(key.ready ? 'Listo' : 'No listo');
+    else 
+      this.player2.ready.text.setText(key.ready ? 'Listo' : 'No listo');
+  }
 
-   /*$   /$$                 /$$             /$$
-  | $$  | $$                | $$            | $$
-  | $$  | $$  /$$$$$$   /$$$$$$$  /$$$$$$  /$$$$$$    /$$$$$$ 
-  | $$  | $$ /$$__  $$ /$$__  $$ |____  $$|_  $$_/   /$$__  $$
-  | $$  | $$| $$  \ $$| $$  | $$  /$$$$$$$  | $$    | $$$$$$$$
-  | $$  | $$| $$  | $$| $$  | $$ /$$__  $$  | $$ /$$| $$_____/
-  |  $$$$$$/| $$$$$$$/|  $$$$$$$|  $$$$$$$  |  $$$$/|  $$$$$$$
-   \______/ | $$____/  \_______/ \_______/   \___/   \_______/
-            | $$
-            | $$
-            |_*/
-  
-  update(time, delta) {
-    //Both ready
-    if (this.data.p1.ready && this.data.p2.ready) Scene.changeScene(this, 'Game', this.data)
+  //Load game
+  onBothReady(data) {
+    //Parse server data
+    const serverData = JSON.parse(data)
+
+    //Start loading game
+    this.isLoading = true
+    this.sound.add('piii').play()
+
+    //Create init data
+    const initData = this.data
+    initData.game = serverData
+
+    //Load game
+    setTimeout(() => {
+      Scene.changeScene(this, 'GameOnline', initData)
+    }, 1000)
   }
 }

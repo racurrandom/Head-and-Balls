@@ -51,10 +51,10 @@ class SceneLobby extends Phaser.Scene {
         //Update info text
         if (error) this.infoText.text = error.responseText
         
-        //Update views
-        if (!error){ 
+        //Hosting
+        if (!error) { 
           this.setInLobby(true)
-          Online.isHost = true;
+          Online.isHost = true
         }
       })
     })
@@ -91,7 +91,10 @@ class SceneLobby extends Phaser.Scene {
         if (error) this.infoText.text = error.responseText
 
         //Joined
-        if (!error) this.setInLobby(true)
+        if (!error) {
+          this.setInLobby(true)
+          Online.isHost = false
+        }
       })
     })
 
@@ -159,6 +162,9 @@ class SceneLobby extends Phaser.Scene {
             
             //Check if type is init characters
             if (type != Online.TYPE.C_INIT) return
+    
+            //Parse server data
+            data = JSON.parse(data)
 
             //Load characters scene
             this.mainScene.scene.stop()
@@ -199,7 +205,6 @@ class SceneLobby extends Phaser.Scene {
       this.joinBox.y = 300
       this.joinInput.move(860, 300)
       this.joinButton.move(860, 400)
-      Online.isHost = false;
     }
     this.backButton.move(640, 600)
   }

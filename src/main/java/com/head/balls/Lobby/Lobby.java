@@ -1,6 +1,7 @@
 package com.head.balls.Lobby;
 
 import java.io.IOException;
+import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
@@ -15,6 +16,7 @@ public class Lobby {
   //Websocket protocol (types)
   public static final String CHARACTERS_INIT = "CI";
   public static final String CHARACTERS_SKIN = "CS";
+  public static final String CHARACTERS_READY = "CR";
   public static final String GAME_INIT = "GI";
   
   //Lobby usernames & websocket sessions
@@ -27,12 +29,11 @@ public class Lobby {
   private final ObjectMapper mapper = new ObjectMapper();
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-  //Skin data 
-  private int hostSkin = -1;
-  private int noobSkin = -1;
+  //Characters info
+  private CharactersInfo characters;
 
   //Game info
-  //bomba
+  private GameInfo game;
 
   
   //Constructor
@@ -130,51 +131,99 @@ public class Lobby {
 
     //Check type
     switch (type) {
-      default:
-        break;
-
-      case "CS":
+      //Characters
+      case CHARACTERS_SKIN:
         changeSkin(data);
+        break;
+      case CHARACTERS_READY:
+        changeReady(data);
         break;
     }
   }
 
   //Characters scene
   private void initCharacters() {
-    sendMessage(hostSession, CHARACTERS_INIT, "hi host");
-    sendMessage(noobSession, CHARACTERS_INIT, "hi noob");
+    //Create characters info
+    characters = new CharactersInfo();
+
+    String initData = "{ \"p1\":{ \"username\":\"" + host + "\", \"skin\":" + characters.hostSkin + " }, \"p2\":{ \"username\":\"" + noob + "\", \"skin\":" + characters.noobSkin + " } }";
+    sendMessage(hostSession, CHARACTERS_INIT, initData);
+    sendMessage(noobSession, CHARACTERS_INIT, initData);
   }
 
-  private void changeSkin(String _data){
-    String[] data = _data.split(":");
-    boolean host;
-    switch (data[0]) {
-      case "host":
-        host = true;
-        break;
-      
-      case "noob":
-        host = false;
-        break;
-
+  private boolean getIsHostFromMessage(String part) {
+    switch (part) {
+      case "1":
+        return true;
+      case "2":
+        return false;
       default:
-      //Receiver does not exist
-      throw new RuntimeException("Error on skin receiver name");
+        //Receiver does not exist
+        throw new RuntimeException("Error on skin receiver name");
     }
-    int skin = Integer.parseInt(data[1]);
+  }
+
+  private void changeSkin(String data) {
+    String[] parts = data.split(":");
+    boolean isHost = getIsHostFromMessage(parts[0]);
+    int skin = Integer.parseInt(parts[1]);
 
     //Skin is does not exist
-    if(skin <= 0 || skin > 4) 
-    throw new RuntimeException("Skin "+skin+" does not exist.");
+    if (skin < 1 || skin > 4) 
+      throw new RuntimeException("Skin " + skin + " does not exist.");
 
     //Change skin
-    if(host) hostSkin = skin;
-    else noobSkin = skin;
+    if (isHost) 
+      characters.hostSkin = skin;
+    else 
+      characters.noobSkin = skin;
 
     //Send change to other player
-    sendMessage(host ? noobSession : hostSession, CHARACTERS_SKIN, skin);
+    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_SKIN, skin);
+  }
+  
+  private void changeReady(String data) {
+    String[] parts = data.split(":");
+    boolean isHost = getIsHostFromMessage(parts[0]);
+    boolean ready = Boolean.parseBoolean(parts[1]);
+
+    //Change skin
+    if (isHost) 
+      characters.hostReady = ready;
+    else 
+      characters.noobReady = ready;
+
+    //Send change to other player
+    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_READY, ready);
+
+    //Both ready
+    if (characters.hostReady && characters.noobReady) {
+      game = new GameInfo();
+      String initData = "{ \"test\":\"bomba\" }";
+      sendMessage(hostSession, GAME_INIT, initData);
+      sendMessage(noobSession, GAME_INIT, initData);
+    }
   }
 
   //Game classes
-  public class PlayerInfo {}
+  public class CharactersInfo {
+    public int hostSkin = -1;
+    public boolean hostReady = false;
+    public int noobSkin = -1;
+    public boolean noobReady = false;
+
+    CharactersInfo() {
+      //Select random skins
+      Random rand = new Random();
+      hostSkin = rand.nextInt(4) + 1;
+      noobSkin = rand.nextInt(4) + 1;
+    }
+  }
+
+  public class GameInfo {
+    
+    GameInfo() {
+      
+    }
+  }
 }

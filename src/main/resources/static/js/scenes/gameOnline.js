@@ -1,9 +1,9 @@
-class SceneGame extends Phaser.Scene {
+class SceneGameOnline extends Phaser.Scene {
 
   static music
 
   constructor() {
-    super({ key: 'Game' });
+    super({ key: 'GameOnline' });
   }
 
 

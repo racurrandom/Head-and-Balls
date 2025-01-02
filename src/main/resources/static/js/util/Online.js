@@ -14,6 +14,7 @@ class Online {
     C: 'C',
     C_INIT: 'CI',
     C_SKIN: 'CS',
+    C_READY: 'CR',
     //Game scene
     G: 'G',
     G_INIT: 'GI',
@@ -63,22 +64,16 @@ class Online {
     if (typeof data !== 'string') return
 
     if (Online.socket && Online.socket.readyState === WebSocket.OPEN) {
+      //Send message
       Online.socket.send(`${type}${data}`);
     } else {
+      //Error
       console.error("Socket is not open. Message not sent.");
     }
-
-    //Send message
-    Online.socket.send(`${type}${data}`)
   }
 
   static setSocketOnMessage(onMessage) {
     Online.onSocketMessage = onMessage
-  }
-
-  static changeSkin(skin){
-    const data = (this.isHost ? "host" : "noob")+":"+skin;
-    this.sendSocketMessage("CS", data)
   }
 
 
