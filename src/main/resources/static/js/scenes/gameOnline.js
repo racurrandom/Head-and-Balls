@@ -90,6 +90,13 @@ class SceneGameOnline extends Phaser.Scene {
 
     //Add ball
     this.ball = new Ball(this)
+    this.ball.onKick = (player) => {
+      //Not the current player
+      if (player != this.player.data.number) return
+
+      //Notify server that player kicked the ball
+      Online.sendSocketMessage(Online.TYPE.G_KICK)
+    }
 
 
     //Powers
@@ -123,15 +130,39 @@ class SceneGameOnline extends Phaser.Scene {
     }).setOrigin(0.5)
 
 
-    /*//Create player 1
+    //Create player 1
     this.player1 = new Player(this, data.p1)
 
     //Create player 2
-    this.player2 = new Player(this, data.p2)*/
+    this.player2 = new Player(this, data.p2)
+
+    //Save players as player & other (for easier online use)
+    this.other = data.p1.isMe ? this.player2 : this.player1
+    this.player = data.p1.isMe ? this.player1 : this.player2
+    this.player.onKick = () => {
+      //Notify server that player started kick animation
+      Online.sendSocketMessage(Online.TYPE.G_ANIMATE)
+    }
 
 
     //Reset game
     this.reset()
+
+
+    //Register callback
+    Online.setSocketOnMessage((type, data) => {
+      switch (type) {
+        case Online.TYPE.G_PLAYER:
+          this.updateOtherPlayer(data)
+          break;
+        case Online.TYPE.G_BALL:
+          this.updateBall(data)
+          break;
+        case Online.TYPE.G_ANIMATE:
+          this.animateKick()
+          break;
+      }
+    })
   }
 
   reset() {
@@ -141,20 +172,14 @@ class SceneGameOnline extends Phaser.Scene {
     //Reset ball
     this.ball.reset()
 
-    /*//Reset players
+    //Reset players
     this.player1.reset()
     this.player2.reset()
 
-    //Move & rotate map variant
+    /*//Move & rotate map variant
     this.mapVariant.x = 640 + Util.rand(-450, 450)
     this.mapVariant.y = 250 + Util.rand(-50, 50)
     this.mapVariant.setRotation(Util.rand(-30, 30) * Math.PI / 180)*/
-  }
-
-  updateMapVariant(variant) {
-    this.mapVariant.x = variant.x
-    this.mapVariant.y = variant.y
-    this.mapVariant.setRotation(variant.angle)
   }
 
   onGoal(number) {
@@ -191,6 +216,28 @@ class SceneGameOnline extends Phaser.Scene {
     }, PowerInfo.DELAY)
   }*/
   
+  //Online updates
+  updateMapVariant(variant) {
+    this.mapVariant.x = variant.x
+    this.mapVariant.y = variant.y
+    this.mapVariant.setRotation(variant.angle)
+  }
+
+  updateOtherPlayer(data) {
+    data = JSON.parse(data)
+    this.other.setPosition(data.posX, data.posY)
+    this.other.setVelocity(data.velX, data.velY)
+  }
+  
+  updateBall(data) {
+    data = JSON.parse(data)
+    this.ball.setPosition(data.posX, data.posY)
+    this.ball.setVelocity(data.velX, data.velY)
+  }
+  
+  animateKick() {
+    this.other.animateKick()
+  }
 
 
    /*$   /$$                 /$$             /$$
@@ -206,17 +253,37 @@ class SceneGameOnline extends Phaser.Scene {
             |_*/
   
   update(time, delta) {
-    /*//Update players
+    //Update players
     this.player1.update(delta)
     this.player2.update(delta)
 
-    //Still in game
-    if (this.data.isFinished) return*/
+
+    //Send player info to server
+    Online.sendSocketMessage(Online.TYPE.G_PLAYER, {
+      posX: this.player.player.x,
+      posY: this.player.player.y,
+      velX: this.player.player.body.velocity.x,
+      velY: this.player.player.body.velocity.y,
+    })
+
+    //Send ball info to server
+    Online.sendSocketMessage(Online.TYPE.G_BALL, {
+      posX: this.ball.ball.x,
+      posY: this.ball.ball.y,
+      velX: this.ball.ball.body.velocity.x,
+      velY: this.ball.ball.body.velocity.y,
+    })
+
+
+    //Stop if game finished
+    if (this.data.isFinished) return
+
 
     //Update timer
     this.updateTimer()
    
-    //Game finished
+
+    //Check if game finished
     if (new Date().getTime() >= this.data.timeEnd) {
       //Stop playing
       this.data.isFinished = true

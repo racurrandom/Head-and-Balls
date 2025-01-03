@@ -18,6 +18,10 @@ class Online {
     //Game scene
     G: 'G',
     G_INIT: 'GI',
+    G_PLAYER: 'GP',
+    G_BALL: 'GB',
+    G_KICK: 'GK',
+    G_ANIMATE: 'GA',
   };
 
 
@@ -61,15 +65,19 @@ class Online {
   static sendSocketMessage(type, data) {
     //Valid arguments
     if (typeof type !== 'string') return
-    if (typeof data === undefined) return
+    if (typeof data === 'object') data = JSON.stringify(data)
 
-    if (Online.socket && Online.socket.readyState === WebSocket.OPEN) {
-      //Send message
-      Online.socket.send(`${type}${data}`);
-    } else {
-      //Error
+    //Socket not open
+    if (!Online.socket || Online.socket.readyState !== WebSocket.OPEN) {
       console.error("Socket is not open. Message not sent.");
+      return
     }
+
+    //Send message
+    if (data)
+      Online.socket.send(`${type}${data}`);
+    else
+      Online.socket.send(type);
   }
 
   static setSocketOnMessage(onMessage) {

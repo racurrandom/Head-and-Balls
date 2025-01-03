@@ -17,6 +17,10 @@ public class Lobby {
   public static final String CHARACTERS_SKIN = "CS";
   public static final String CHARACTERS_READY = "CR";
   public static final String GAME_INIT = "GI";
+  public static final String GAME_PLAYER = "GP";  //Player position & velocity
+  public static final String GAME_BALL = "GB";    //Ball position & velocity
+  public static final String GAME_KICK = "GK";    //Player kicked ball
+  public static final String GAME_ANIMATE = "GA"; //Play kick animation
   
   //Lobby usernames & websocket sessions
   private String host = "";
@@ -50,6 +54,10 @@ public class Lobby {
 
   public WebSocketSession getSession(boolean isHost) {
     return isHost ? hostSession : noobSession;
+  }
+
+  public WebSocketSession getSession(String id) {
+    return hostSession.getId().equals(id) ? hostSession : noobSession;
   }
 
   public void setSession(boolean isHost, WebSocketSession session) {
@@ -116,6 +124,17 @@ public class Lobby {
     }
   }
 
+  public void sendMessage(WebSocketSession session, String type) {
+    //Send message
+    try {
+      synchronized (session) {
+        session.sendMessage(new TextMessage(type));
+      }
+    } catch (IOException e) {
+      System.out.println(e.getMessage());
+    }
+  }
+
   public void handleMessage(String id, TextMessage message) {
     //Check if message is from host
     boolean isHost = hostSession.getId().equals(id);
@@ -124,7 +143,7 @@ public class Lobby {
     String content = message.getPayload();
     
     //Invalid message
-    if (content.length() <= 2) return;
+    if (content.length() < 2) return;
 
     //Get type & data
     String type = content.substring(0, 2);
@@ -134,10 +153,23 @@ public class Lobby {
     switch (type) {
       //Characters
       case CHARACTERS_SKIN:
-        changeSkin(isHost, data);
+        onSkinChange(isHost, data);
         break;
       case CHARACTERS_READY:
-        changeReady(isHost, data);
+        onReadyChange(isHost, data);
+        break;
+      //Game
+      case GAME_PLAYER:
+        onPlayerUpdate(isHost, data);
+        break;
+      case GAME_BALL:
+        onBallUpdate(isHost, data);
+        break;
+      case GAME_KICK:
+        onBallKick(isHost);
+        break;
+      case GAME_ANIMATE:
+        onAnimateKick(isHost);
         break;
     }
   }
@@ -149,7 +181,7 @@ public class Lobby {
     public int noobSkin = -1;
     public boolean noobReady = false;
 
-    CharactersInfo() {
+    public CharactersInfo() {
       //Select random skins
       Random rand = new Random();
       hostSkin = rand.nextInt(4) + 1;
@@ -166,7 +198,7 @@ public class Lobby {
     sendMessage(noobSession, CHARACTERS_INIT, initData);
   }
 
-  private void changeSkin(boolean isHost, String data) {
+  private void onSkinChange(boolean isHost, String data) {
     //Parse skin index
     int skin = Integer.parseInt(data);
 
@@ -181,10 +213,10 @@ public class Lobby {
       characters.noobSkin = skin;
 
     //Send change to other player
-    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_SKIN, skin);
+    sendMessage(getSession(!isHost), CHARACTERS_SKIN, skin);
   }
   
-  private void changeReady(boolean isHost, String data) {
+  private void onReadyChange(boolean isHost, String data) {
     //Parse ready
     boolean ready = Boolean.parseBoolean(data);
 
@@ -195,7 +227,7 @@ public class Lobby {
       characters.noobReady = ready;
 
     //Send change to other player
-    sendMessage(isHost ? noobSession : hostSession, CHARACTERS_READY, ready);
+    sendMessage(getSession(!isHost), CHARACTERS_READY, ready);
 
     //Both ready
     if (characters.hostReady && characters.noobReady) initGame();
@@ -203,11 +235,15 @@ public class Lobby {
 
   //Game scene
   public class GameInfo {
+    //Map variant
     float mapVariantX = 0;
     float mapVariantY = 0;
     float mapVariantAngle = 0;
+    //Ball
+    boolean ballLastIsHost = true;
+
     
-    GameInfo() {
+    public GameInfo(Lobby lobby) {
       //Create map variant
       createMapVariant();
     }
@@ -225,9 +261,32 @@ public class Lobby {
   }
 
   private void initGame() {
-    game = new GameInfo();
+    game = new GameInfo(this);
     String initData = "{ \"variant\":" + game.getMapVariant() + " }";
     sendMessage(hostSession, GAME_INIT, initData);
     sendMessage(noobSession, GAME_INIT, initData);
+  }
+
+  private void onPlayerUpdate(boolean isHost, String data) {
+    //Resend message to other player
+    sendMessage(getSession(!isHost), GAME_PLAYER, data);
+  }
+
+  private void onBallUpdate(boolean isHost, String data) {
+    //Not the last player to touch the ball
+    if (isHost != game.ballLastIsHost) return;
+
+    //Resend message to other player
+    sendMessage(getSession(!isHost), GAME_BALL, data);
+  }
+
+  private void onBallKick(boolean isHost) {
+    //Save host as last to touch ball
+    game.ballLastIsHost = isHost;
+  }
+
+  private void onAnimateKick(boolean isHost) {
+    //Resend message to other player
+    sendMessage(getSession(!isHost), GAME_ANIMATE);
   }
 }

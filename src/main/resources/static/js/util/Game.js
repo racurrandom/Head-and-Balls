@@ -6,8 +6,13 @@
 //Ball
 class Ball {
 
+  //Last player hit
   last = 1
+
+  //Events
+  onKick = undefined
   
+
   constructor(scene) {
     //Save scene
     this.scene = scene
@@ -34,18 +39,39 @@ class Ball {
     this.reset()
   }
 
+  //Getters & setters
+  getPosition() {
+    return [this.ball.x, this.ball.y]
+  }
+
+  setPosition(x, y) {
+    this.ball.x = x
+    this.ball.y = y
+  }  
+  
+  getVelocity() {
+    return [this.ball.body.velocity.x, this.ball.body.velocity.y]
+  }
+
+  setVelocity(x, y) {
+    this.ball.setVelocity(x, y)
+  }
+
   //Movement
   kick(direction, player) {
-    this.ball.setVelocity(direction.x, direction.y)
+    this.setVelocity(direction.x, direction.y)
     this.last = player
     this.sfx.play()
+
+    //Call kick event
+    if (typeof this.onKick === 'function') this.onKick(player)
   }
 
   //State
   reset() {
     //Reset position & velocity
-    this.ball.setPosition(640, 360)
-    this.ball.setVelocity(0, 0)
+    this.setPosition(640, 360)
+    this.setVelocity(0, 0)
     this.ball.setAngularVelocity(0)
   }
 }
@@ -57,6 +83,7 @@ class Player {
   //Player data
   scene
   data = {}
+  canPlay = true
   
   //Points
   points = 0
@@ -76,11 +103,18 @@ class Player {
 
   //Other
   isStunned = false
+
+  //Events
+  onKick = undefined
+
   
   constructor(scene, data) {
     //Save data
     this.scene = scene
     this.data = data
+
+    //Can play (used for online games)
+    if (data.isMe != undefined) this.canPlay = data.isMe
 
     //Update data
     this.data.index = data.number - 1
@@ -107,6 +141,23 @@ class Player {
       fontSize: '18px',
       fill: '#fff',
     }).setOrigin(0.5)
+  }
+
+  //Getters & setters
+  getPosition() {
+    return [this.player.x, this.player.y]
+  }
+
+  setPosition(x, y) {
+    this.player.setPosition(x, y)
+  }  
+  
+  getVelocity() {
+    return [this.player.body.velocity.x, this.player.body.velocity.y]
+  }
+
+  setVelocity(x, y) {
+    this.player.setVelocity(x, y)
   }
 
   //Init
@@ -240,6 +291,9 @@ class Player {
   }
 
   _initInput() {
+    //Can't play (most likely is online and the other player)
+    if (!this.canPlay) return
+
     //Move left
     Scene.input(this.scene, this.data.number == 1 ? 'A' : 'LEFT', () => {
       //Button down
@@ -268,8 +322,10 @@ class Player {
     Scene.input(this.scene, this.data.number == 1 ? 'S' : 'DOWN', () => {
       //Button down
       if (!this.isStunned && !this.isKicking) {
-        this.isKicking = true
-        this.kickProgress = 0
+        this.animateKick()
+
+        //Call kick event
+        if (typeof this.onKick === 'function') this.onKick()
       }
     })
   }
@@ -291,19 +347,21 @@ class Player {
 
   reset() {
     //Reset position & velocity
-    this.player.setPosition(640 + (this.data.number == 1 ? -360 : 360), 600 + this.data.number)
-    this.player.setVelocity(0, 0)
+    this.setPosition(640 + (this.data.number == 1 ? -360 : 360), 600 + this.data.number)
+    this.setVelocity(0, 0)
   }
 
   update(delta) {
-    //Update current velocity based on input
-    let inputX = 0
-    if (this.isMovingLeft) inputX--
-    if (this.isMovingRight) inputX++
-    this.player.setVelocityX(inputX * this.moveSpeed * (this.isStunned ? 0 : 1))
-    
-    
+    //Is playing
+    if (this.canPlay) {
+      //Update current velocity based on input
+      let inputX = 0
+      if (this.isMovingLeft) inputX--
+      if (this.isMovingRight) inputX++
+      this.player.setVelocityX(inputX * this.moveSpeed * (this.isStunned ? 0 : 1))
+    }
 
+    
     //Prepare raycast (to check if grounded)
     const bodies = [
       (this.data.number == 2 ? this.scene.player1 : this.scene.player2).player.body,
@@ -317,7 +375,6 @@ class Player {
     const ray = Phaser.Physics.Matter.Matter.Query.ray(bodies, from, to, 1)
     this.isGrounded = ray.length > 0
     
-
 
     //Kick animation
     if (this.isKicking) {
@@ -334,7 +391,6 @@ class Player {
     }
 
 
-
     //Update foot position
     const footOrigin = new Vec2(
       this.player.x + (this.player.width / 2 - this.foot.width / 2 - 2) * this.data.scale, 
@@ -342,6 +398,11 @@ class Player {
     )
     const footPosition = footOrigin.add(this.footOffset)
     this.foot.setPosition(footPosition.x, footPosition.y)
+  }
+
+  animateKick() {
+    this.isKicking = true
+    this.kickProgress = 0
   }
 
   //Other
