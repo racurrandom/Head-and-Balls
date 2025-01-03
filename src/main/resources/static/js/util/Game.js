@@ -83,7 +83,7 @@ class Player {
   //Player data
   scene
   data = {}
-  canPlay = true
+  isPlaying = true
   
   //Points
   points = 0
@@ -113,8 +113,8 @@ class Player {
     this.scene = scene
     this.data = data
 
-    //Can play (used for online games)
-    if (data.isMe != undefined) this.canPlay = data.isMe
+    //Is playing (used for online games)
+    if (typeof data.isMe === 'boolean') this.isPlaying = data.isMe
 
     //Update data
     this.data.index = data.number - 1
@@ -179,7 +179,10 @@ class Player {
     })
 
     //Add goal interaction
-    this.goalTrigger.setOnCollide(pair => {
+    if (this.isPlaying) this.goalTrigger.setOnCollide(pair => {
+      //Not playing
+      if (!this.scene.data.isPlaying) return
+
       //Not touching the ball
       if (pair.bodyA.label != 'ball' && pair.bodyB.label != 'ball') return
 
@@ -291,8 +294,8 @@ class Player {
   }
 
   _initInput() {
-    //Can't play (most likely is online and the other player)
-    if (!this.canPlay) return
+    //Not playing -> Use no input
+    if (!this.isPlaying) return
 
     //Move left
     Scene.input(this.scene, this.data.number == 1 ? 'A' : 'LEFT', () => {
@@ -353,7 +356,7 @@ class Player {
 
   update(delta) {
     //Is playing
-    if (this.canPlay) {
+    if (this.isPlaying) {
       //Update current velocity based on input
       let inputX = 0
       if (this.isMovingLeft) inputX--

@@ -2,7 +2,10 @@ package com.head.balls.Lobby;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -21,6 +24,8 @@ public class Lobby {
   public static final String GAME_BALL = "GB";    //Ball position & velocity
   public static final String GAME_KICK = "GK";    //Player kicked ball
   public static final String GAME_ANIMATE = "GA"; //Play kick animation
+  public static final String GAME_GOAL = "GG";    //Player scoared a goal
+  public static final String GAME_VARIANT = "GV"; //Updated map variant
   
   //Lobby usernames & websocket sessions
   private String host = "";
@@ -30,6 +35,7 @@ public class Lobby {
 
   //Util
   private final ObjectMapper mapper = new ObjectMapper();
+  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
   //Characters info
   private CharactersInfo characters;
@@ -171,6 +177,9 @@ public class Lobby {
       case GAME_ANIMATE:
         onAnimateKick(isHost);
         break;
+      case GAME_GOAL:
+        onGoal(isHost);
+        break;
     }
   }
 
@@ -288,5 +297,20 @@ public class Lobby {
   private void onAnimateKick(boolean isHost) {
     //Resend message to other player
     sendMessage(getSession(!isHost), GAME_ANIMATE);
+  }
+  
+  private void onGoal(boolean isHost) {
+    //Resend message to other players
+    int goal = isHost ? 1 : 2;
+    sendMessage(getSession(true), GAME_GOAL, goal);
+    sendMessage(getSession(false), GAME_GOAL, goal);
+
+    //Create new map variant
+    scheduler.schedule(() -> {
+      game.createMapVariant();
+      String message = game.getMapVariant();
+      sendMessage(getSession(true), GAME_VARIANT, message);
+      sendMessage(getSession(false), GAME_VARIANT, message);
+    }, 2000, TimeUnit.MILLISECONDS);
   }
 }

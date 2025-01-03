@@ -22,6 +22,8 @@ class Online {
     G_BALL: 'GB',
     G_KICK: 'GK',
     G_ANIMATE: 'GA',
+    G_GOAL: 'GG',
+    G_VARIANT: 'GV',
   };
 
 

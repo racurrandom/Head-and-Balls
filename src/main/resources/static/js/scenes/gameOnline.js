@@ -107,7 +107,7 @@ class SceneGameOnline extends Phaser.Scene {
     this.mapVariant = this.add.rectangle(0, 0, 200, 40, 0x3e383d)
     this.matter.add.gameObject(this.mapVariant)
     this.mapVariant.setStatic(true)
-    this.updateMapVariant(data.variant)
+    this.onlineOnMapVariant(data.variant)
 
 
     //Counter (time & points)
@@ -153,14 +153,20 @@ class SceneGameOnline extends Phaser.Scene {
     Online.setSocketOnMessage((type, data) => {
       switch (type) {
         case Online.TYPE.G_PLAYER:
-          this.updateOtherPlayer(data)
-          break;
+          this.onlineOnUpdatePlayer(data)
+          break
         case Online.TYPE.G_BALL:
-          this.updateBall(data)
-          break;
+          this.onlineOnUpdateBall(data)
+          break
         case Online.TYPE.G_ANIMATE:
-          this.animateKick()
-          break;
+          this.onlineOnAnimateKick()
+          break
+        case Online.TYPE.G_GOAL:
+          this.onlineOnUpdateGoal(data)
+          break
+        case Online.TYPE.G_VARIANT:
+          this.onlineOnMapVariant(data)
+          break
       }
     })
   }
@@ -183,6 +189,37 @@ class SceneGameOnline extends Phaser.Scene {
   }
 
   onGoal(number) {
+    //Tell the server a goal was scored in the players goal
+    Online.sendSocketMessage(Online.TYPE.G_GOAL)
+  }
+
+  /*spawnPower() {
+    this.powerTimer = setTimeout(() => {
+      this.power = new Power(this)
+    }, PowerInfo.DELAY)
+  }*/
+  
+  //Online updates
+  onlineOnUpdatePlayer(data) {
+    data = JSON.parse(data)
+    this.other.setPosition(data.posX, data.posY)
+    this.other.setVelocity(data.velX, data.velY)
+  }
+  
+  onlineOnUpdateBall(data) {
+    data = JSON.parse(data)
+    this.ball.setPosition(data.posX, data.posY)
+    this.ball.setVelocity(data.velX, data.velY)
+  }
+  
+  onlineOnAnimateKick() {
+    this.other.animateKick()
+  }
+  
+  onlineOnUpdateGoal(data) {
+    //Player goal number
+    const number = parseInt(data)
+
     //Not playing
     if (!this.data.isPlaying) return
 
@@ -210,33 +247,11 @@ class SceneGameOnline extends Phaser.Scene {
     }, 2000)
   }
 
-  /*spawnPower() {
-    this.powerTimer = setTimeout(() => {
-      this.power = new Power(this)
-    }, PowerInfo.DELAY)
-  }*/
-  
-  //Online updates
-  updateMapVariant(variant) {
+  onlineOnMapVariant(variant) {
+    if (typeof variant === 'string') variant = JSON.parse(variant)
     this.mapVariant.x = variant.x
     this.mapVariant.y = variant.y
     this.mapVariant.setRotation(variant.angle)
-  }
-
-  updateOtherPlayer(data) {
-    data = JSON.parse(data)
-    this.other.setPosition(data.posX, data.posY)
-    this.other.setVelocity(data.velX, data.velY)
-  }
-  
-  updateBall(data) {
-    data = JSON.parse(data)
-    this.ball.setPosition(data.posX, data.posY)
-    this.ball.setVelocity(data.velX, data.velY)
-  }
-  
-  animateKick() {
-    this.other.animateKick()
   }
 
 
