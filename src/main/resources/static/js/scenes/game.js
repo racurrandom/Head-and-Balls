@@ -30,12 +30,14 @@ class SceneGame extends Phaser.Scene {
       //Players
       p1: data.p1,
       p2: data.p2,
-      //Timestamp when the game started
-      timeStart: new Date().getTime(),
-      //Timestamp when the game will end (after 3 minutes)
-      timeEnd: new Date().getTime() + 1 * 60 * 1000,  //1 minute
-      //timeEnd: new Date().getTime() + 6 * 1000,  //6 seconds for testing
+      //Time (ms)
+      duration: 60000,
     }
+
+    //Add start & end timestamps to data
+    this.data.timeStart = new Date().getTime()
+    this.data.timeEnd = new Date().getTime() + this.data.duration
+    
 
     //Add background music
     SceneGame.music = this.sound.add('music_game')
@@ -247,9 +249,15 @@ class SceneGame extends Phaser.Scene {
   }
 
   updateTimer() {
-    const current = new Date(new Date().getTime() - this.data.timeStart)
+    const current = new Date(Math.abs(this.data.duration - (new Date().getTime() - this.data.timeStart)))
+    
+    //Get time
+    let minutes = current.getMinutes()
     let seconds = current.getSeconds()
+
+    //Convert time to text
+    if (minutes < 10) minutes = '0' + minutes
     if (seconds < 10) seconds = '0' + seconds
-    this.timer.setText('0' + current.getMinutes() + ':' + seconds)
+    this.timer.setText(minutes + ':' + seconds)
   }
 }

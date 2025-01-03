@@ -50,6 +50,11 @@ class SceneCharactersOnline extends Phaser.Scene {
       }
     }
 
+
+    //Reset state
+    this.isLoading = false
+
+
     //Player skin previews
     this.player1 = this.add.image(320, 360, 'preview' + this.data.p1.skin)
     this.player2 = this.add.image(960, 360, 'preview' + this.data.p2.skin)
@@ -70,10 +75,10 @@ class SceneCharactersOnline extends Phaser.Scene {
     Online.setSocketOnMessage((type, data) => {
       switch (type) {
         case Online.TYPE.C_SKIN:
-          this.updateOtherSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
+          this.onlineOnChangeSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
           break;
         case Online.TYPE.C_READY:
-          this.updateOtherReady(data, Online.isHost ? this.data.p2 : this.data.p1);
+          this.onlineOnReady(data, Online.isHost ? this.data.p2 : this.data.p1);
           break;
         case Online.TYPE.G_INIT:
           this.onBothReady(data)
@@ -129,7 +134,7 @@ class SceneCharactersOnline extends Phaser.Scene {
         fontSize: '42px',
         fill: '#fff',
         align: 'center'
-      }).setOrigin(0.5)  
+      }).setOrigin(0.5)
     }
 
     //Add ready button
@@ -159,7 +164,7 @@ class SceneCharactersOnline extends Phaser.Scene {
   }
 
   //Other user changed something
-  updateOtherSkin(data, key) {
+  onlineOnChangeSkin(data, key) {
     key.skin = data;
     if (key.isHost) 
       this.player1.setTexture('preview' + key.skin)
@@ -167,7 +172,7 @@ class SceneCharactersOnline extends Phaser.Scene {
       this.player2.setTexture('preview' + key.skin)
   }
 
-  updateOtherReady(data, key) {
+  onlineOnReady(data, key) {
     key.ready = data;
     if (key.isHost) 
       this.player1.ready.text.setText(key.ready ? 'Listo' : 'No listo');

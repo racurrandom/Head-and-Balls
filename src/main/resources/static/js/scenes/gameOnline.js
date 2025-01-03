@@ -30,11 +30,13 @@ class SceneGameOnline extends Phaser.Scene {
       //Players
       p1: data.p1,
       p2: data.p2,
-      //Timestamp when the game started
-      timeStart: new Date().getTime(),
-      //Timestamp when the game will end (after 3 minutes)
-      timeEnd: new Date().getTime() + 1 * 60 * 1000,  //1 minute
+      //Time (ms)
+      duration: 60000,
     }
+
+    //Add start & end timestamps to data
+    this.data.timeStart = new Date().getTime()
+    this.data.timeEnd = new Date().getTime() + this.data.duration
 
 
     //Add background music
@@ -164,7 +166,8 @@ class SceneGameOnline extends Phaser.Scene {
         case Online.TYPE.G_GOAL:
           this.onlineOnUpdateGoal(data)
           break
-        case Online.TYPE.G_VARIANT:
+        case Online.TYPE.G_RESET:
+          this.reset()
           this.onlineOnMapVariant(data)
           break
       }
@@ -181,11 +184,6 @@ class SceneGameOnline extends Phaser.Scene {
     //Reset players
     this.player1.reset()
     this.player2.reset()
-
-    /*//Move & rotate map variant
-    this.mapVariant.x = 640 + Util.rand(-450, 450)
-    this.mapVariant.y = 250 + Util.rand(-50, 50)
-    this.mapVariant.setRotation(Util.rand(-30, 30) * Math.PI / 180)*/
   }
 
   onGoal(number) {
@@ -240,11 +238,6 @@ class SceneGameOnline extends Phaser.Scene {
         this.player1.addPoint()
         break
     }
-    
-    //Wait and reset
-    setTimeout(() => {
-      this.reset()
-    }, 2000)
   }
 
   onlineOnMapVariant(variant) {
@@ -309,8 +302,8 @@ class SceneGameOnline extends Phaser.Scene {
 
       //Wait to show results scene
       setTimeout(() => {
-        //Stop power spawn timer
-        //clearTimeout(this.powerTimer)
+        //Close socket
+        Online.closeSocket()
 
         ///Go to results
         Scene.changeScene(this, 'Results', {
@@ -328,9 +321,15 @@ class SceneGameOnline extends Phaser.Scene {
   }
 
   updateTimer() {
-    const current = new Date(new Date().getTime() - this.data.timeStart)
+    const current = new Date(Math.abs(this.data.duration - (new Date().getTime() - this.data.timeStart)))
+    
+    //Get time
+    let minutes = current.getMinutes()
     let seconds = current.getSeconds()
+
+    //Convert time to text
+    if (minutes < 10) minutes = '0' + minutes
     if (seconds < 10) seconds = '0' + seconds
-    this.timer.setText('0' + current.getMinutes() + ':' + seconds)
+    this.timer.setText(minutes + ':' + seconds)
   }
 }

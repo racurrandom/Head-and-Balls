@@ -25,7 +25,7 @@ public class Lobby {
   public static final String GAME_KICK = "GK";    //Player kicked ball
   public static final String GAME_ANIMATE = "GA"; //Play kick animation
   public static final String GAME_GOAL = "GG";    //Player scoared a goal
-  public static final String GAME_VARIANT = "GV"; //Updated map variant
+  public static final String GAME_RESET = "GR";   //Reset map
   
   //Lobby usernames & websocket sessions
   private String host = "";
@@ -116,6 +116,9 @@ public class Lobby {
 
   //WebSockets
   public void sendMessage(WebSocketSession session, String type, Object data) {
+    //Socket is closed
+    if (!session.isOpen()) return;
+
     //No data
     if (data == null) return;
 
@@ -252,26 +255,21 @@ public class Lobby {
     boolean ballLastIsHost = true;
 
     
-    public GameInfo(Lobby lobby) {
-      //Create map variant
-      createMapVariant();
-    }
-
     //Map variant
-    public void createMapVariant() {
+    public String createMapVariant() {
       mapVariantX = 640 + ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
       mapVariantY = 250 + ThreadLocalRandom.current().nextFloat(-50, 50 + 1);
       mapVariantAngle = ThreadLocalRandom.current().nextFloat(-30, 30 + 1) * (float) Math.PI / 180;
-    }
-
-    public String getMapVariant() {
       return "{ \"x\":" + mapVariantX + ", \"y\":" + mapVariantY + ", \"angle\":" + mapVariantAngle + " }";
     }
   }
 
   private void initGame() {
-    game = new GameInfo(this);
-    String initData = "{ \"variant\":" + game.getMapVariant() + " }";
+    //Create game
+    game = new GameInfo();
+
+    //Create & send map variant
+    String initData = "{ \"variant\":" + game.createMapVariant() + " }";
     sendMessage(hostSession, GAME_INIT, initData);
     sendMessage(noobSession, GAME_INIT, initData);
   }
@@ -305,12 +303,12 @@ public class Lobby {
     sendMessage(getSession(true), GAME_GOAL, goal);
     sendMessage(getSession(false), GAME_GOAL, goal);
 
-    //Create new map variant
+    //Wait for reset
     scheduler.schedule(() -> {
-      game.createMapVariant();
-      String message = game.getMapVariant();
-      sendMessage(getSession(true), GAME_VARIANT, message);
-      sendMessage(getSession(false), GAME_VARIANT, message);
+      //Create new map variant & send reset
+      String mapVariant = game.createMapVariant();
+      sendMessage(getSession(true), GAME_RESET, mapVariant);
+      sendMessage(getSession(false), GAME_RESET, mapVariant);
     }, 2000, TimeUnit.MILLISECONDS);
   }
 }

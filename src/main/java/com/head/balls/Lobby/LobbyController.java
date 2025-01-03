@@ -23,9 +23,9 @@ import jakarta.servlet.http.HttpSession;
 @RequestMapping("/api/lobby")
 public class LobbyController {
 
-  private final static Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
-  private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-  private ScheduledFuture<?> scheduledFuture;
+  private static final Map<String, Lobby> lobbies = new HashMap<String, Lobby>();
+  private static final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+  private static ScheduledFuture<?> scheduledFuture;
 
 
   @GetMapping
@@ -153,6 +153,19 @@ public class LobbyController {
 
     //Leave lobby
     lobbies.remove(username);
+
+    //No lobbies
+    if (lobbies.size() <= 0) scheduledFuture.cancel(true);
+  }
+
+  public static void endLobby(Lobby lobby) {
+    //Remove host
+    if (lobbies.containsKey(lobby.getHost())) 
+      lobbies.remove(lobby.getHost());
+
+    //Remove noob
+    if (lobbies.containsKey(lobby.getNoob())) 
+      lobbies.remove(lobby.getNoob());
 
     //No lobbies
     if (lobbies.size() <= 0) scheduledFuture.cancel(true);

@@ -55,8 +55,10 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
       //Type is CHARACTERS_INIT (init chatacters scene)
       if (type.equals(Lobby.CHARACTERS_INIT)) {
+        //Remove player from login queue
+        PlayerConnection player = loginQueue.remove(id);
+
         //Loggin player
-        PlayerConnection player = loginQueue.get(id);
         player.login(data);
         players.put(id, player);
       }
@@ -70,13 +72,22 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
 
   @Override
   public void afterConnectionClosed(WebSocketSession session, CloseStatus status) {
+    //Get id
+    String id = session.getId();
 
+    //Player is not logged in
+    if (!players.containsKey(id)) return;
+    
+    //Remove connection of player
+    PlayerConnection player = players.remove(id);
+
+    //End lobby
+    LobbyController.endLobby(player.lobby);
   }
 
 
   //Classes
   private static class PlayerConnection {
-
     public WebSocketSession session;
     public boolean isHost;
     public Lobby lobby;

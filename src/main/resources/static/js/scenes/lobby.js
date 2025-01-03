@@ -25,7 +25,6 @@ class SceneLobby extends Phaser.Scene {
 
     //Is waiting for server response
     this.waitingForResponse = false
-    this.inLobby = false
     this.mainScene = mainScene
 
 
@@ -175,18 +174,26 @@ class SceneLobby extends Phaser.Scene {
           this.infoText.text = 'Cargando...'
   
           //Stop check interval
-          if (SceneLobby.checkLobbyInterval) clearInterval(SceneLobby.checkLobbyInterval)
+          if (SceneLobby.checkLobbyInterval) {
+            clearInterval(SceneLobby.checkLobbyInterval)
+            SceneLobby.checkLobbyInterval = undefined
+          }
           return
       }
 
       //Start check interval
-      if (!SceneLobby.checkLobbyInterval) SceneLobby.checkLobbyInterval = setInterval(() => {
-        this.checkInLobby()
-      }, 1000)
+      if (!SceneLobby.checkLobbyInterval) {
+        SceneLobby.checkLobbyInterval = setInterval(() => {
+          this.checkInLobby()
+        }, 1000)
+      }
     })
   }
 
   setInLobby(inLobby) {
+    //Already there
+    if (this.inLobby == inLobby) return
+
     //Update var
     this.inLobby = inLobby
 

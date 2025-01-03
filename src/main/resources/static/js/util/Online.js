@@ -24,17 +24,20 @@ class Online {
     G_ANIMATE: 'GA',
     G_GOAL: 'GG',
     G_VARIANT: 'GV',
+    G_RESET: 'GR',
   };
 
 
   //WebSocket
   static initSocket(onMessage) {
-    //Close socket if active
+    //A socket already exists
     if (Online.socket) return
-    Online.onSocketMessage = onMessage
+
+    //Update on message event
+    Online.setSocketOnMessage(onMessage)
 
     //Create WebSocket
-    Online.socket = new WebSocket("ws://" + location.host + "/ws");
+    Online.socket = new WebSocket("ws://" + location.host + "/ws")
 
     //Add events
     Online.socket.onopen = () => {
@@ -84,6 +87,18 @@ class Online {
 
   static setSocketOnMessage(onMessage) {
     Online.onSocketMessage = onMessage
+  }
+
+  static closeSocket() {
+    //No socket exists
+    if (!Online.socket) return
+
+    //Update on message event
+    Online.setSocketOnMessage(undefined)
+
+    //Close WebSocket
+    Online.socket.close()
+    Online.socket = undefined
   }
 
 
