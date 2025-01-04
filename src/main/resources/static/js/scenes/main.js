@@ -120,9 +120,6 @@ class SceneMain extends Phaser.Scene {
     //Add title
     const title = this.add.image(640, 150, 'title')
 
-    //Test mini chat (DELETE)
-    this.scene.launch("ChatLobby");
-
 
     //Play, options & credits buttons
     const play = new Button(this, 640, 400, 'Jugar', () => {
