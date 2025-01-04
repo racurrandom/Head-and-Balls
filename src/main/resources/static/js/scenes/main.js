@@ -79,6 +79,7 @@ class SceneMain extends Phaser.Scene {
       ['back_button', 'assets/game/back_button.png'],
       ['textBox', 'assets/game/CajaTexto.png'],
       ['textBox2', 'assets/game/CajaTexto2.png'],
+      ['textBox3', 'assets/game/CajaTexto3.png'],
       //Results
       ['trophy', 'assets/game/trophy.png'],
     ])
@@ -118,6 +119,9 @@ class SceneMain extends Phaser.Scene {
 
     //Add title
     const title = this.add.image(640, 150, 'title')
+
+    //Test mini chat (DELETE)
+    this.scene.launch("ChatLobby");
 
 
     //Play, options & credits buttons

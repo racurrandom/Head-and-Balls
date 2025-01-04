@@ -7,6 +7,7 @@ class ChatView {
   _h = 0
   _scroll = 0
   _scrollMax = 0
+  _fs
 
   //Gap between messages
   gap = 15
@@ -20,12 +21,13 @@ class ChatView {
   messages = []
 
 
-  constructor(scene, x, y, w, h) {
+  constructor(scene, x, y, w, h, fs) {
     this.scene = scene
     this._x = x
     this._y = y
     this._w = w
     this._h = h
+    this._fs = fs
     this.updateMask()
   }
 
@@ -48,7 +50,7 @@ class ChatView {
     //Create message view
     const view = this.scene.add.text(this._x, this._y, (username + ':\n' + text).split('\n'), {
       fontFamily: 'poppins',
-      fontSize: '24px',
+      fontSize: this._fs+'px',
       fill: '#fff'
     }).setOrigin(0, 1)
     view.setMask(this.mask)
