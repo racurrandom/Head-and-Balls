@@ -32,6 +32,7 @@ class SceneGameOnline extends Phaser.Scene {
       p2: data.p2,
       //Time (ms)
       duration: 60000,
+      durationEnd: 3000,
     }
 
     //Add start & end timestamps to data
@@ -101,10 +102,6 @@ class SceneGameOnline extends Phaser.Scene {
     }
 
 
-    //Powers
-    //this.spawnPower()
-
-
     //Map
     this.mapVariant = this.add.rectangle(0, 0, 200, 40, 0x3e383d)
     this.matter.add.gameObject(this.mapVariant)
@@ -154,6 +151,7 @@ class SceneGameOnline extends Phaser.Scene {
     //Register callback
     Online.setSocketOnMessage((type, data) => {
       switch (type) {
+        //Game
         case Online.TYPE.G_PLAYER:
           this.onlineOnUpdatePlayer(data)
           break
@@ -174,8 +172,13 @@ class SceneGameOnline extends Phaser.Scene {
           this.onlineSpawnPower(data);
           break;
         case Online.TYPE.G_POWERUSE:
-          this.power.onTake(false);
+          this.power.use();
           break;
+        //Error
+        case Online.TYPE.E_DISCONNECTED: 
+          Online.closeSocket()
+          Scene.error(this, 'El otro usuario se ha desconectado.')
+          break 
       }
     })
   }
@@ -251,11 +254,13 @@ class SceneGameOnline extends Phaser.Scene {
   onlineSpawnPower(data) {
     data = JSON.parse(data)
     this.power = new Power()
-    this.power.onlineInit(this, data.x, data.y, data.type, this.onlinePickPower)
-  }
-
-  onlinePickPower(){
-    Online.sendSocketMessage(Online.TYPE.G_POWERUSE)
+    this.power.onlineInit(this, data.x, data.y, data.type, () => {
+      //On pick
+      Online.sendSocketMessage(Online.TYPE.G_POWERUSE)
+    }, () => {
+      //On end
+      Online.sendSocketMessage(Online.TYPE.G_POWERSPAWN)
+    })
   }
 
 

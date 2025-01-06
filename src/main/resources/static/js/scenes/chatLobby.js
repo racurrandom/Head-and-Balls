@@ -24,15 +24,13 @@ class SceneChatLobby extends Phaser.Scene {
 
 
     //Create chat view & users count
-    const chat = new ChatView(this, 1280/2 - 130, 600, 1080, 450, 16)
+    const chat = new ChatView(this, 1280/2 - 130, 580, 1080, 400, 16)
    
 
     //Create read messages function
     const onMessages = (data, error) => {
       //Show error message
       if (error) this.onError(error)
-
-     
 
       //Get data
       if (typeof data !== 'object') return
@@ -97,6 +95,6 @@ class SceneChatLobby extends Phaser.Scene {
     //Do stuff
     console.log(error.responseText)
     clearInterval(this.readChatLoop)
-    Scene.changeScene(this, 'Error')
+    Scene.error(this)
   }
 }

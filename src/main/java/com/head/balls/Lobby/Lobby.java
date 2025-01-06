@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
@@ -28,6 +29,7 @@ public class Lobby {
   public static final String GAME_RESET = "GR";         //Reset map
   public static final String GAME_POWERSPAWN = "GS";    //Spawn powerup
   public static final String GAME_POWERUSE = "GU";      //Use powerup
+  public static final String ERROR_DISCONNECTED = "ED"; //Error, one user disconnected
   
   //Lobby usernames & websocket sessions
   private String host = "";
@@ -39,16 +41,47 @@ public class Lobby {
   private final ObjectMapper mapper = new ObjectMapper();
   private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
 
-  //Characters info
+  //Scenes
   private CharactersInfo characters;
-
-  //Game info
   private GameInfo game;
 
   
   //Constructor
   Lobby(String host) {
     this.host = host;
+  }
+
+  public void OnEnd(boolean isError) {
+    //Close sockets
+    try {
+      if (hostSession.isOpen()) {
+        //Tell user an error ocurred
+        if (isError) sendMessage(hostSession, ERROR_DISCONNECTED);
+        //Close socket
+        else hostSession.close();
+      }
+    } catch (Exception e) {
+      System.out.println("Error closing host socket: " + e.getMessage());
+    }
+    try {
+      if (noobSession.isOpen()) {
+        //Tell user an error ocurred
+        if (isError) sendMessage(noobSession, ERROR_DISCONNECTED);
+        //Close socket
+        else noobSession.close();
+      }
+    } catch (Exception e) {
+      System.out.println("Error closing noob socket: " + e.getMessage());
+    }
+
+    //Stop scheduled tasks
+    if (game != null) {
+      if (game.scheduledPowerup != null) game.scheduledPowerup.cancel(true);
+      if (game.scheduledEnd != null) game.scheduledEnd.cancel(true);
+    }
+
+    //Log lobby ended
+    System.out.println("Lobby ended " + (isError ? "with error" : "without error"));
   }
 
   //Getters & setters
@@ -185,6 +218,9 @@ public class Lobby {
       case GAME_GOAL:
         onGoal(isHost);
         break;
+      case GAME_POWERSPAWN:
+        onPowerSpawn();
+        break;
       case GAME_POWERUSE:
         onPowerPick(isHost);
         break;
@@ -252,14 +288,26 @@ public class Lobby {
 
   //Game scene
   public class GameInfo {
+    //Duration in ms (match duration + wait before results scene)
+    public static final long duration = 60000 + 3000;
     //Map variant
-    float mapVariantX = 0;
-    float mapVariantY = 0;
-    float mapVariantAngle = 0;
+    public float mapVariantX = 0;
+    public float mapVariantY = 0;
+    public float mapVariantAngle = 0;
     //Ball
-    boolean ballLastIsHost = true;
+    public boolean ballLastIsHost = true;
+    //Powerup
+    public ScheduledFuture<?> scheduledPowerup;
+    public ScheduledFuture<?> scheduledEnd;
 
     
+    public GameInfo(Lobby lobby) {
+      //End lobby on game finished
+      scheduledEnd = scheduler.schedule(() -> {
+        LobbyController.endLobby(lobby, false);
+      }, duration, TimeUnit.MILLISECONDS);
+    }
+
     //Map variant
     public String createMapVariant() {
       mapVariantX = 640 + ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
@@ -271,7 +319,7 @@ public class Lobby {
 
   private void initGame() {
     //Create game
-    game = new GameInfo();
+    game = new GameInfo(this);
 
     //Start Powerup generation
     generatePowerup();
@@ -320,8 +368,12 @@ public class Lobby {
     }, 2000, TimeUnit.MILLISECONDS);
   }
 
-  private void generatePowerup(){
-    int delay = 8000;
+  private void generatePowerup() {
+    //Waiting for a powerup to spawn
+    if (game.scheduledPowerup != null) return;
+
+    //Powerup delay
+    int delay = 10000;
 
     //Powerup position
     float posX = 1280f * 0.2f + ThreadLocalRandom.current().nextFloat(0,  (1280f * 0.6f) + 1f);
@@ -334,16 +386,19 @@ public class Lobby {
     String data = "{ \"x\":" + posX + ", \"y\":" + posY +", \"type\":" + type + " }";
 
     //Wait to send the message
-    scheduler.schedule(() -> {
+    game.scheduledPowerup = scheduler.schedule(() -> {
+      game.scheduledPowerup = null;
       sendMessage(getSession(true), GAME_POWERSPAWN, data);
       sendMessage(getSession(false), GAME_POWERSPAWN, data);
-
-      //Start next powerup generation
-      generatePowerup();
     }, delay, TimeUnit.MILLISECONDS);
   }
 
-  private void onPowerPick(boolean isHost){
-    sendMessage(getSession(isHost), GAME_POWERUSE);
+  private void onPowerSpawn() {
+    generatePowerup();
+  }
+
+  private void onPowerPick(boolean isHost) {
+    sendMessage(getSession(true), GAME_POWERUSE);
+    sendMessage(getSession(false), GAME_POWERUSE);
   }
 }

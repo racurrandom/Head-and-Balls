@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.head.balls.GameWebSocketHandler;
 import com.head.balls.Auth.Auth;
 
 import jakarta.servlet.http.HttpSession;
@@ -83,7 +84,6 @@ public class LobbyController {
     return ResponseEntity.ok("Joined successfully");
   }
 
-  
 
   public static Lobby getLobby(String username) {
     //Check if host is in lobby
@@ -158,17 +158,27 @@ public class LobbyController {
     if (lobbies.size() <= 0) scheduledFuture.cancel(true);
   }
 
-  public static void endLobby(Lobby lobby) {
-    //Remove host
-    if (lobbies.containsKey(lobby.getHost())) 
-      lobbies.remove(lobby.getHost());
+  public static void endLobby(Lobby lobby, boolean isError) {
+    //Invalid lobby
+    if (lobby == null) return;
 
+    //Remove host
+    if (lobbies.containsKey(lobby.getHost())) {
+      lobbies.remove(lobby.getHost());
+      GameWebSocketHandler.playerDisconnected(lobby.getSession(true));
+    }
+    
     //Remove noob
-    if (lobbies.containsKey(lobby.getNoob())) 
+    if (lobbies.containsKey(lobby.getNoob())) {
       lobbies.remove(lobby.getNoob());
+      GameWebSocketHandler.playerDisconnected(lobby.getSession(false));
+    }
 
     //No lobbies
     if (lobbies.size() <= 0) scheduledFuture.cancel(true);
+
+    //Destroy lobby
+    lobby.OnEnd(isError);
   }
 
 

@@ -76,15 +76,22 @@ class SceneCharactersOnline extends Phaser.Scene {
     //Register message listener
     Online.setSocketOnMessage((type, data) => {
       switch (type) {
+        //Characters
         case Online.TYPE.C_SKIN:
           this.onlineOnChangeSkin(data, Online.isHost ? this.data.p2 : this.data.p1);
-          break;
+          break
         case Online.TYPE.C_READY:
           this.onlineOnReady(data, Online.isHost ? this.data.p2 : this.data.p1);
-          break;
+          break
+        //Game
         case Online.TYPE.G_INIT:
           this.onBothReady(data)
-          break;
+          break
+        //Error
+        case Online.TYPE.E_DISCONNECTED: 
+          Online.closeSocket()
+          Scene.error(this, 'El otro usuario se ha desconectado.')
+          break 
       }
     })
   }

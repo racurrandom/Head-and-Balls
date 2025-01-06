@@ -15,8 +15,8 @@ import java.util.*;
 @Component
 public class GameWebSocketHandler extends TextWebSocketHandler {
 
-  private final Map<String, PlayerConnection> loginQueue = new HashMap<>();
-  private final Map<String, PlayerConnection> players = new HashMap<>();
+  private static final Map<String, PlayerConnection> loginQueue = new HashMap<>();
+  private static final Map<String, PlayerConnection> players = new HashMap<>();
 
 
   @Override
@@ -78,11 +78,21 @@ public class GameWebSocketHandler extends TextWebSocketHandler {
     //Player is not logged in
     if (!players.containsKey(id)) return;
     
-    //Remove connection of player
-    PlayerConnection player = players.remove(id);
+    //End player lobby
+    LobbyController.endLobby(players.get(id).lobby, true);
+  }
 
-    //End lobby
-    LobbyController.endLobby(player.lobby);
+
+  //Util
+  public static void playerDisconnected(WebSocketSession session) {
+    //Get id
+    String id = session.getId();
+
+    //Player is not logged in
+    if (!players.containsKey(id)) return;
+    
+    //Remove connection of player
+    players.remove(id);
   }
 
 

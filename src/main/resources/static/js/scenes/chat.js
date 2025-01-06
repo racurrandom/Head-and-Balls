@@ -124,6 +124,6 @@ class SceneChat extends Phaser.Scene {
     //Do stuff
     console.log(error.responseText)
     clearInterval(this.readChatLoop)
-    Scene.changeScene(this, 'Error')
+    Scene.error(this)
   }
 }

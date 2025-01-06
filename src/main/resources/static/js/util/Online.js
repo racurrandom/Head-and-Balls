@@ -27,21 +27,11 @@ class Online {
     G_RESET: 'GR',
     G_POWERSPAWN: 'GS',
     G_POWERUSE: 'GU',
+    //Error
+    E_DISCONNECTED: 'ED',
   };
 
-  static reconnectInterval = 1000; //Attemp reconnect every 1 second
-  static niceClose = false
-
   //WebSocket
-  static attemptReconnect() {
-    if (!Online.socket) {
-      setTimeout(() => {
-        console.log("Attempting to reconnect...");
-        Online.initSocket(Online.onSocketMessage);
-      }, Online.reconnectInterval);
-    }
-  }
-
   static initSocket(onMessage) {
     //A socket already exists
     if (Online.socket) return
@@ -61,20 +51,14 @@ class Online {
 
     Online.socket.onerror = (error) => {
       //Log error
-      console.error("WebSocket error:", error.message);
-      console.error("Details:", error); 
+      console.error("socket error: ", error.message);
+      console.error(error); 
     }
 
     Online.socket.onclose = () => {
       //Clear socket variable
       Online.socket = undefined
-      console.log("closing socket")
-
-      //Attempt reconnect
-      if(!this.niceClose)   //Closed on error -> Reconnect
-        Online.attemptReconnect(); 
-        
-      Online.niceClose = false;
+      console.log("socket closing")
     }
 
     Online.socket.onmessage = (event) => {
@@ -117,9 +101,7 @@ class Online {
     Online.setSocketOnMessage(undefined)
 
     //Close WebSocket
-    Online.niceClose = true
-    Online.socket.close()
-    Online.socket = undefined
+    if (Online.socket.readyState === WebSocket.OPEN) Online.socket.close()
   }
 
 

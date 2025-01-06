@@ -225,6 +225,16 @@ class Scene {
   |  $$$$$$/  |  $$$$/| $$  | $$|  $$$$$$$| $$
    \______/    \___/  |__/  |__/ \_______/|_*/
 
+  static error(scene, errorMessage) {
+    //Stop all scenes
+    scene.game.scene.scenes.forEach((s) => {
+      scene.scene.stop(s.scene.key)
+    })
+
+    //Launch error scene
+    scene.scene.launch('Error', errorMessage)
+  }
+
   static changeScene(scene, name, data) {
     if (data == undefined)
       scene.scene.launch(name)

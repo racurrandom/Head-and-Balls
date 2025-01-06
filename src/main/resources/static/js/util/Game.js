@@ -444,7 +444,7 @@ const PowerSprite = Object.freeze([
 
 class Power {
 
-  init(scene){
+  init(scene) {
     //Save scene
     this.scene = scene
 
@@ -472,19 +472,22 @@ class Power {
 
       //Take powerup
       this.power.destroy(true)
-      this.onTake(true)
+
+      //Use it
+      this.use()
     })
   }
 
-  onlineInit(scene, posX, posY, type, onPick){
+  onlineInit(scene, posX, posY, type, onPick, onEnd) {
     //Save scene
     this.scene = scene
 
     //Save type
     this.type = type
 
-    //Save callback
+    //Save callbacks
     this.onPick = onPick
+    this.onEnd = onEnd
 
     //The power does NOT spawn another automatically
     this.selfSpawn = false
@@ -507,11 +510,13 @@ class Power {
 
       //Take powerup
       this.power.destroy(true)
-      this.onTake(false)
+
+      //Execute onPick callback
+      if (typeof this.onPick === 'function') this.onPick()
     })
   }
 
-  onTake() {
+  use() {
     //Get ball & players
     const ball = this.scene.ball.ball
     const player = this.scene.ball.last == 1 ? this.scene.player1 : this.scene.player2
@@ -541,15 +546,13 @@ class Power {
         break
     }
 
-    if(this.onPick == 'function') this.onPick();
-
     //Wait until end
     setTimeout(() => {
-      this.onEnd()
+      this.end()
     }, duration)
   }
 
-  onEnd() {
+  end() {
     //Get ball
     const ball = this.scene.ball.ball
 
@@ -564,9 +567,12 @@ class Power {
         break
     }
     
-    if(this.selfSpawn){     //Is the pwer allowed to spawn another?
+    if (this.selfSpawn) {     //Is the pwer allowed to spawn another?
       //Wait to spawn another
       this.scene.spawnPower()
-    } 
+    }
+
+    //Execute onEnd callback
+    if (typeof this.onEnd === 'function') this.onEnd()
   }
 }
