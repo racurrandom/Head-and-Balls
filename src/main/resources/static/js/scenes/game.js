@@ -7,7 +7,6 @@ class SceneGame extends Phaser.Scene {
   }
 
 
-
     /*$$$$$                                  /$$
    /$$__  $$                                | $$
   | $$  \__/  /$$$$$$   /$$$$$$   /$$$$$$  /$$$$$$    /$$$$$$
@@ -95,7 +94,6 @@ class SceneGame extends Phaser.Scene {
 
     //Add ball
     this.ball = new Ball(this)
-
 
 
     //Powers
@@ -190,7 +188,8 @@ class SceneGame extends Phaser.Scene {
 
   spawnPower() {
     this.powerTimer = setTimeout(() => {
-      this.power = new Power(this)
+      this.power = new Power()
+      this.power.init(this)
     }, PowerInfo.DELAY)
   }
   

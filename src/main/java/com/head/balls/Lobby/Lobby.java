@@ -321,11 +321,11 @@ public class Lobby {
   }
 
   private void generatePowerup(){
-    int delay = 10000;
+    int delay = 8000;
 
     //Powerup position
-    float posX = ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
-    float posY = ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
+    float posX = 1280f * 0.2f + ThreadLocalRandom.current().nextFloat(0,  (1280f * 0.6f) + 1f);
+    float posY = 250 + ThreadLocalRandom.current().nextFloat(-50, 50 + 1);
 
     //Powerup type
     int type = ThreadLocalRandom.current().nextInt(0, 4 + 1);

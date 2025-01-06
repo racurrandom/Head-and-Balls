@@ -6,7 +6,7 @@ class SceneGameOnline extends Phaser.Scene {
     super({ key: 'GameOnline' });
   }
 
-
+    
 
     /*$$$$$                                  /$$
    /$$__  $$                                | $$
@@ -250,7 +250,8 @@ class SceneGameOnline extends Phaser.Scene {
 
   onlineSpawnPower(data) {
     data = JSON.parse(data)
-    this.power = new Power(this, data.posX, data.posY, data.type, this.onlinePickPower)
+    this.power = new Power()
+    this.power.onlineInit(this, data.x, data.y, data.type, this.onlinePickPower)
   }
 
   onlinePickPower(){
