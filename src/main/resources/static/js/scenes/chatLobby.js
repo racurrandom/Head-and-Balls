@@ -23,8 +23,12 @@ class SceneChatLobby extends Phaser.Scene {
     SceneChat.openTime = this.openTime
 
 
+    //Chat position
+    const chatX = 1280/2 + 200
+
+
     //Create chat view & users count
-    const chat = new ChatView(this, 1280/2 - 130, 580, 1080, 400, 16)
+    const chat = new ChatView(this, chatX, 490, 1080, 380, 16)
    
 
     //Create read messages function
@@ -55,13 +59,13 @@ class SceneChatLobby extends Phaser.Scene {
 
 
     //Create message input
-    const chatBox = this.add.image(1280 / 2, 620, 'textBox3')
-    const messageInput = new InputField(this.add.text(1280/2 - 130, 620, '', {
+    const chatBox = this.add.image(chatX + 130, 520, 'textBox3')
+    const messageInput = new InputField(this.add.text(chatX, 520, '', {
       fontFamily: 'poppins',
       fontSize: '16px',
       fill: '#000'
     }).setOrigin(0, 0.5), {
-      placeholder: 'Mensaje',
+      placeholder: 'Mensaje (chat global)',
       max: 25,
       onEnter: (text) => {
         //Clear input text

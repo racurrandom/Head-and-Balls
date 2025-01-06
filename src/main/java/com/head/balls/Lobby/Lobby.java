@@ -171,7 +171,7 @@ public class Lobby {
   public void sendMessage(WebSocketSession session, String type) {
     //Send message
     try {
-      synchronized (session) {
+      synchronized(session) {
         session.sendMessage(new TextMessage(type));
       }
     } catch (IOException e) {
@@ -290,6 +290,7 @@ public class Lobby {
   public class GameInfo {
     //Duration in ms (match duration + wait before results scene)
     public static final long duration = 60000 + 3000;
+    public ScheduledFuture<?> scheduledEnd;
     //Map variant
     public float mapVariantX = 0;
     public float mapVariantY = 0;
@@ -297,8 +298,8 @@ public class Lobby {
     //Ball
     public boolean ballLastIsHost = true;
     //Powerup
+    public boolean hasPowerup = false;
     public ScheduledFuture<?> scheduledPowerup;
-    public ScheduledFuture<?> scheduledEnd;
 
     
     public GameInfo(Lobby lobby) {
@@ -322,7 +323,7 @@ public class Lobby {
     game = new GameInfo(this);
 
     //Start Powerup generation
-    generatePowerup();
+    onPowerSpawn();
 
     //Create & send map variant
     String initData = "{ \"variant\":" + game.createMapVariant() + " }";
@@ -368,9 +369,9 @@ public class Lobby {
     }, 2000, TimeUnit.MILLISECONDS);
   }
 
-  private void generatePowerup() {
+  private void onPowerSpawn() {
     //Waiting for a powerup to spawn
-    if (game.scheduledPowerup != null) return;
+    if (game.hasPowerup) return;
 
     //Powerup delay
     int delay = 10000;
@@ -386,15 +387,12 @@ public class Lobby {
     String data = "{ \"x\":" + posX + ", \"y\":" + posY +", \"type\":" + type + " }";
 
     //Wait to send the message
+    game.hasPowerup = true;
     game.scheduledPowerup = scheduler.schedule(() -> {
-      game.scheduledPowerup = null;
+      game.hasPowerup = false;
       sendMessage(getSession(true), GAME_POWERSPAWN, data);
       sendMessage(getSession(false), GAME_POWERSPAWN, data);
     }, delay, TimeUnit.MILLISECONDS);
-  }
-
-  private void onPowerSpawn() {
-    generatePowerup();
   }
 
   private void onPowerPick(boolean isHost) {

@@ -64,9 +64,6 @@ class SceneCharactersOnline extends Phaser.Scene {
     this.createCharacterSelectScreen(this.data.p1)
     this.createCharacterSelectScreen(this.data.p2)
 
-    //Mini chat
-    this.scene.launch('ChatLobby');
-
     //Stop music on scene close
     Scene.onClose(this, () => {
       SceneMain.music.stop()
@@ -204,7 +201,6 @@ class SceneCharactersOnline extends Phaser.Scene {
 
     //Load game
     setTimeout(() => {
-      this.scene.stop('ChatLobby')
       Scene.changeScene(this, 'GameOnline', initData)
     }, 1000)
   }

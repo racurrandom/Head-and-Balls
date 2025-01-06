@@ -25,6 +25,7 @@ class SceneLobby extends Phaser.Scene {
 
     //Is waiting for server response
     this.waitingForResponse = false
+    this.inLobby = undefined
     this.mainScene = mainScene
 
 
@@ -99,7 +100,7 @@ class SceneLobby extends Phaser.Scene {
 
 
     //Info text
-    this.infoText = this.add.text(640, 520, 'Cargando...', {
+    this.infoText = this.add.text(400, 520, 'Cargando...', {
       fontSize: '24px',
       fill: '#fff',
       align: 'center'
@@ -127,10 +128,19 @@ class SceneLobby extends Phaser.Scene {
           if (!error) this.setInLobby(false)
         })
       } else {
+        //Clear check interval
+        clearInterval(SceneLobby.checkLobbyInterval)
+        SceneLobby.checkLobbyInterval = undefined
+
         //Go back to modes
+        this.scene.stop('ChatLobby')
         Scene.changeScene(this, 'Modes', mainScene)
       }
     })
+
+
+    //Mini chat
+    this.scene.launch('ChatLobby');
 
 
     //Check if in a lobby
@@ -139,7 +149,10 @@ class SceneLobby extends Phaser.Scene {
 
   checkInLobby() {
     Online.checkInLobby((lobby, error) => {
-      if (error) return
+      if (error) {
+        console.log(error)
+        return
+      }
 
       switch (lobby.users) {
         //None
@@ -167,6 +180,7 @@ class SceneLobby extends Phaser.Scene {
 
             //Load characters scene
             this.mainScene.scene.stop()
+            this.scene.stop('ChatLobby')
             Scene.changeScene(this, 'CharactersOnline', data)
           })
 
@@ -207,11 +221,11 @@ class SceneLobby extends Phaser.Scene {
       this.joinButton.move(-1000, -1000)
     } else {
       this.infoText.text = ''
-      this.createButton.move(420, 400)
-      this.joinBox.x = 860
+      this.createButton.move(250, 400)
+      this.joinBox.x = 400
       this.joinBox.y = 300
-      this.joinInput.move(860, 300)
-      this.joinButton.move(860, 400)
+      this.joinInput.move(400, 300)
+      this.joinButton.move(550, 400)
     }
     this.backButton.move(640, 600)
   }
