@@ -469,18 +469,51 @@ class Power {
 
       //Take powerup
       this.power.destroy(true)
-      this.onTake()
+      this.onTake(true)
     })
   }
 
-  onTake() {
+  constructor(scene, posX, posY, type, onPick){
+    //Save scene
+    this.scene = scene
+
+    //Save type
+    this.type = type
+
+    //Save callback
+    this.onPick = onPick
+
+    //Create power image
+    this.power = Scene.imageWithPhysics(this.scene, PowerSprite[this.type], {
+      //Position
+      x: posX,
+      y: posY,
+      //Options
+      ignoreGravity: true,
+      isStatic: true,
+      isSensor: true
+    })
+
+    //Add on trigger
+    this.power.setOnCollideActive(pair => {
+      //Not touching the ball
+      if (pair.bodyA.label != 'ball' && pair.bodyB.label != 'ball') return
+
+      //Take powerup
+      this.power.destroy(true)
+      this.onTake(false)
+    })
+
+  }
+
+  onTake(selfSpawn) {
     //Get ball & players
     const ball = this.scene.ball.ball
     const player = this.scene.ball.last == 1 ? this.scene.player1 : this.scene.player2
     const enemy = this.scene.ball.last == 1 ? this.scene.player2 : this.scene.player1
 
-    //Get duration (default 10 seconds)
-    let duration = 10000
+    //Get duration (default 8 seconds)
+    let duration = 8000
 
     //Execute power
     switch (this.type) {
@@ -503,10 +536,14 @@ class Power {
         break
     }
 
-    //Wait until end
-    setTimeout(() => {
-      this.onEnd()
-    }, duration)
+    if(this.onPick == 'function') this.onPick();
+
+    if(selfSpawn){    //The power is allowed to spawn another?
+      //Wait until end
+      setTimeout(() => {
+        this.onEnd()
+      }, duration)
+    }
   }
 
   onEnd() {

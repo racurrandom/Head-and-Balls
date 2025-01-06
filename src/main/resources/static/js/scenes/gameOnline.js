@@ -170,6 +170,12 @@ class SceneGameOnline extends Phaser.Scene {
           this.reset()
           this.onlineOnMapVariant(data)
           break
+        case Online.TYPE.G_POWERSPAWN:
+          this.onlineSpawnPower(data);
+          break;
+        case Online.TYPE.G_POWERUSE:
+          this.power.onTake(false);
+          break;
       }
     })
   }
@@ -190,12 +196,7 @@ class SceneGameOnline extends Phaser.Scene {
     //Tell the server a goal was scored in the players goal
     Online.sendSocketMessage(Online.TYPE.G_GOAL)
   }
-
-  /*spawnPower() {
-    this.powerTimer = setTimeout(() => {
-      this.power = new Power(this)
-    }, PowerInfo.DELAY)
-  }*/
+  
   
   //Online updates
   onlineOnUpdatePlayer(data) {
@@ -245,6 +246,15 @@ class SceneGameOnline extends Phaser.Scene {
     this.mapVariant.x = variant.x
     this.mapVariant.y = variant.y
     this.mapVariant.setRotation(variant.angle)
+  }
+
+  onlineSpawnPower(data) {
+    data = JSON.parse(data)
+    this.power = new Power(this, data.posX, data.posY, data.type, this.onlinePickPower)
+  }
+
+  onlinePickPower(){
+    Online.sendSocketMessage(Online.TYPE.G_POWERUSE)
   }
 
 

@@ -20,12 +20,14 @@ public class Lobby {
   public static final String CHARACTERS_SKIN = "CS";
   public static final String CHARACTERS_READY = "CR";
   public static final String GAME_INIT = "GI";
-  public static final String GAME_PLAYER = "GP";  //Player position & velocity
-  public static final String GAME_BALL = "GB";    //Ball position & velocity
-  public static final String GAME_KICK = "GK";    //Player kicked ball
-  public static final String GAME_ANIMATE = "GA"; //Play kick animation
-  public static final String GAME_GOAL = "GG";    //Player scoared a goal
-  public static final String GAME_RESET = "GR";   //Reset map
+  public static final String GAME_PLAYER = "GP";        //Player position & velocity
+  public static final String GAME_BALL = "GB";          //Ball position & velocity
+  public static final String GAME_KICK = "GK";          //Player kicked ball
+  public static final String GAME_ANIMATE = "GA";       //Play kick animation
+  public static final String GAME_GOAL = "GG";          //Player scoared a goal
+  public static final String GAME_RESET = "GR";         //Reset map
+  public static final String GAME_POWERSPAWN = "GS";    //Spawn powerup
+  public static final String GAME_POWERUSE = "GU";      //Use powerup
   
   //Lobby usernames & websocket sessions
   private String host = "";
@@ -183,6 +185,9 @@ public class Lobby {
       case GAME_GOAL:
         onGoal(isHost);
         break;
+      case GAME_POWERUSE:
+        onPowerPick(isHost);
+        break;
     }
   }
 
@@ -268,6 +273,9 @@ public class Lobby {
     //Create game
     game = new GameInfo();
 
+    //Start Powerup generation
+    generatePowerup();
+
     //Create & send map variant
     String initData = "{ \"variant\":" + game.createMapVariant() + " }";
     sendMessage(hostSession, GAME_INIT, initData);
@@ -310,5 +318,32 @@ public class Lobby {
       sendMessage(getSession(true), GAME_RESET, mapVariant);
       sendMessage(getSession(false), GAME_RESET, mapVariant);
     }, 2000, TimeUnit.MILLISECONDS);
+  }
+
+  private void generatePowerup(){
+    int delay = 10000;
+
+    //Powerup position
+    float posX = ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
+    float posY = ThreadLocalRandom.current().nextFloat(-450, 450 + 1);
+
+    //Powerup type
+    int type = ThreadLocalRandom.current().nextInt(0, 4 + 1);
+
+    //Create message
+    String data = "{ \"x\":" + posX + ", \"y\":" + posY +", \"type\":" + type + " }";
+
+    //Wait to send the message
+    scheduler.schedule(() -> {
+      sendMessage(getSession(true), GAME_POWERSPAWN, data);
+      sendMessage(getSession(false), GAME_POWERSPAWN, data);
+
+      //Start next powerup generation
+      generatePowerup();
+    }, delay, TimeUnit.MILLISECONDS);
+  }
+
+  private void onPowerPick(boolean isHost){
+    sendMessage(getSession(isHost), GAME_POWERUSE);
   }
 }

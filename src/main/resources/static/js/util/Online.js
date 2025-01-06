@@ -25,6 +25,8 @@ class Online {
     G_GOAL: 'GG',
     G_VARIANT: 'GV',
     G_RESET: 'GR',
+    G_POWERSPAWN: 'GS',
+    G_POWERUSE: 'GU',
   };
 
   static reconnectInterval = 1000; //Attemp reconnect every 1 second
