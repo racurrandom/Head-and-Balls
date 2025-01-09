@@ -40,6 +40,8 @@ class SceneMain extends Phaser.Scene {
     //Load images
     Scene.loadImages(this, [
       //Main menu
+      ['ojo_abierto', 'assets/main/ojo_abierto.png'],
+      ['ojo_cerrado', 'assets/main/ojo_cerrado.png'],
       ['bg_menu', 'assets/main/bg_menu.png'],
       ['title', 'assets/main/title.png'],
       ['button', 'assets/main/button.png'],
