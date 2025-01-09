@@ -61,12 +61,20 @@ class SceneAccount extends Phaser.Scene {
       align: 'center'
     }).setOrigin(0.5), {
       placeholder: 'Contraseña',
-      max: 15
+      max: 15,
+      isPassword: true
     })
     Element.onClick(passwordBox, () => {
       this.passwordInput.toggle()
     })
     this.usernameInput.setNext(this.passwordInput)
+
+
+    //Password show
+    this.passwordShow = this.add.image(900, 310, 'ice')
+    Element.onClick(this.passwordShow, () => {
+      this.passwordInput.setIsPassword(!this.passwordInput.isPassword)
+    })
 
 
     //Info text

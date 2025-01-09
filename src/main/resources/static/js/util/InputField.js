@@ -18,6 +18,8 @@ class InputField {
   min = 0
   onInput = undefined
   onEnter = undefined
+  isPassword = false
+
 
   constructor(element, options) {
     //Save element
@@ -35,6 +37,7 @@ class InputField {
       if (typeof options.min === 'number') this.min = options.min
       if (typeof options.onInput === 'function') this.onInput = options.onInput
       if (typeof options.onEnter === 'function') this.onEnter = options.onEnter
+      if (typeof options.isPassword === 'boolean') this.isPassword = options.isPassword
     }
 
     //Update text
@@ -61,6 +64,11 @@ class InputField {
     this.next = next
   }
 
+  setIsPassword(password) {
+    this.isPassword = password
+    this.updateText()
+  }
+
   //Movement
   move(x, y) {
     this.element.x = x
@@ -77,7 +85,13 @@ class InputField {
       } else {
         //Text
         this.element.alpha = 1
-        this.element.text = this.text
+        if (this.isPassword) {
+          let censoredText = ''
+          for (let i = 0; i < this.text.length; i++) censoredText += '*'
+          this.element.text = censoredText
+        } else {
+          this.element.text = this.text
+        }
       }
     } catch (e) {
       InputField.reset()
