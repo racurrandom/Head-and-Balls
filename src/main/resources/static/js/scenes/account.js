@@ -71,9 +71,11 @@ class SceneAccount extends Phaser.Scene {
 
 
     //Password show
-    this.passwordShow = this.add.image(900, 310, 'ice')
+    this.passwordShow = this.add.image(900, 310, 'powerIce')
     Element.onClick(this.passwordShow, () => {
-      this.passwordInput.setIsPassword(!this.passwordInput.isPassword)
+      const isPassword = !this.passwordInput.isPassword
+      this.passwordInput.setIsPassword(isPassword)
+      this.passwordShow.setTexture(isPassword ? 'powerIce' : 'powerIceBad')
     })
 
 
