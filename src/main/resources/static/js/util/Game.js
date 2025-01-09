@@ -160,6 +160,10 @@ class Player {
     this.player.setVelocity(x, y)
   }
 
+  getSize() {
+    return [this.player.width, this.player.height]
+  }
+
   //Init
   _initGoal() {
     //Create goal
@@ -342,9 +346,16 @@ class Player {
     this.player.setVelocityX(0)
     this.isStunned = true
 
+    //Create ice image
+    const [x, y] = this.getPosition()
+    const [width, height] = this.getSize()
+    this.ice = this.scene.add.image(x, y - height / 2 - 50, 'ice')
+
     //Wait for stun to end
     setTimeout(() => {
       this.isStunned = false
+      this.ice.destroy(true)
+      this.ice = undefined
     }, duration)
   }
 

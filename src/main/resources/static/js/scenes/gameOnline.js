@@ -59,11 +59,12 @@ class SceneGameOnline extends Phaser.Scene {
 
 
     //Add back button
-    /*const back_button = this.add.image(60, 55, 'back_button')
+    const back_button = this.add.image(60, 55, 'back_button')
     Element.onClick(back_button, () => {
+      Online.closeSocket()
       SceneGame.music.stop()
       Scene.changeScene(this, 'Main')
-    })*/
+    })
 
 
     //Add floor

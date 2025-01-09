@@ -157,6 +157,8 @@ class SceneCharactersOnline extends Phaser.Scene {
 
       //Tell server ready changed
       this.onChangedReady(key)
+    }, {
+      animateHover: key.isMe
     })
   }
 

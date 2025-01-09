@@ -70,6 +70,7 @@ class SceneMain extends Phaser.Scene {
       //Game (powers)
       ['powerBigBall', 'assets/game/powerBigBall.png'],
       ['powerBouncyBall', 'assets/game/powerBouncyBall.png'],
+      ['ice', 'assets/game/ice.png'],
       ['powerIce', 'assets/game/powerIce.png'],
       ['powerIceBad', 'assets/game/powerIceBad.png'],
       ['powerSmallBall', 'assets/game/powerSmallBall.png'],

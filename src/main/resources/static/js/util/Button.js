@@ -3,7 +3,10 @@ class Button {
   image = undefined
   text = undefined
 
-  constructor(scene, x, y, text, onClick) {
+  constructor(scene, x, y, text, onClick, options) {
+    //Fix options
+    if (typeof options !== 'object') options = {}
+
     //Create image & text
     this.image = scene.add.image(x, y, 'button')
     this.text = scene.add.text(x, y - 6, text, {
@@ -14,11 +17,13 @@ class Button {
     }).setOrigin(0.5)
 
     //Hover animation
-    Element.onHover(this.image, () => {
-      this.image.setTexture('buttonHover')
-    }, () => {
-      this.image.setTexture('button')
-    })
+    if (typeof options.animateHover !== 'boolean' || options.animateHover) {
+      Element.onHover(this.image, () => {
+        this.image.setTexture('buttonHover')
+      }, () => {
+        this.image.setTexture('button')
+      })
+    }
 
     //Click event
     if (typeof onClick !== 'function') return
