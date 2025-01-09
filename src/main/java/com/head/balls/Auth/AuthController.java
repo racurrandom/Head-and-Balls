@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.head.balls.Messages;
+
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -62,17 +64,17 @@ public class AuthController {
     //Get user
     User user = Auth.getUser(credentials.getUsername());
     if (user.isOnline()) 
-      throw new RuntimeException("User is already online");
+      throw new RuntimeException(Messages.authOnline);
 
     //Check if password is valid
     if (!Auth.encode(credentials.getPassword()).equals(user.getPassword())) 
-      throw new InvalidCredentialsException("Invalid user credentials");
+      throw new InvalidCredentialsException(Messages.authInvalidCredentials);
 
     //Login (save session)
     Auth.login(session, credentials.getUsername());
 
     //All good
-    return ResponseEntity.ok("Logged in successfully");
+    return ResponseEntity.ok(Messages.authLoggedIn);
   }
    
   @PostMapping("/logout")
@@ -91,7 +93,7 @@ public class AuthController {
     Auth.notifyOffline(user);
 
     //All good
-    return ResponseEntity.ok("Logged out successfully");
+    return ResponseEntity.ok(Messages.authLoggedOut);
   }
  
   @GetMapping("/users")
@@ -132,7 +134,7 @@ public class AuthController {
     Auth.login(session, credentials.getUsername());
 
     //All good
-    return ResponseEntity.ok("User registered successfully");
+    return ResponseEntity.ok(Messages.authRegistered);
   }
 
   @PutMapping("/update")
@@ -153,7 +155,7 @@ public class AuthController {
     Auth.saveUser(user);
 
     //All good
-    return ResponseEntity.ok("User registered successfully");
+    return ResponseEntity.ok(Messages.authUpdated);
   }
 
   @DeleteMapping("/delete")
@@ -171,6 +173,6 @@ public class AuthController {
     Auth.deleteUser(user);
 
     //All good
-    return ResponseEntity.ok("User deleted successfully");
+    return ResponseEntity.ok(Messages.authDeleted);
   }
 }

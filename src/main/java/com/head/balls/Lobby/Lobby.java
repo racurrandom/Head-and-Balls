@@ -12,6 +12,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.head.balls.Messages;
 import com.head.balls.Auth.Auth;
 
 public class Lobby {
@@ -119,11 +120,11 @@ public class Lobby {
   public void join(String username) {
     //Lobby is full
     if (isFull())
-      throw new RuntimeException("Lobby is already full");
+      throw new RuntimeException(Messages.lobbyFull);
 
     //User is already in the lobby
     if (contains(username))
-      throw new RuntimeException("User is already in the lobby");
+      throw new RuntimeException(Messages.lobbyInLobby);
 
     //Join
     noob = username;
@@ -255,9 +256,9 @@ public class Lobby {
     //Parse skin index
     int skin = Integer.parseInt(data);
 
-    //Skin is does not exist
-    if (skin < 1 || skin > 4) 
-      throw new RuntimeException("Skin " + skin + " does not exist.");
+    //Skin is does not exist -> Clamp it
+    if (skin < 1) skin = 1;
+    if (skin > 4) skin = 4;
 
     //Change skin
     if (isHost) 

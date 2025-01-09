@@ -166,7 +166,7 @@ class SceneAccount extends Phaser.Scene {
     this.updateButon = new Button(this, 640, 450, 'Actualizar', () => { 
       Online.updateAccount(this.passwordInput.text, (isLogged, error) => {
         //Update error text
-        errorText.text = error ? error.responseText : ''
+        errorText.text = error ? error.responseText : 'Usuario actualizado correctamente'
 
         //Still logged in -> Return
         if (!isLogged) return

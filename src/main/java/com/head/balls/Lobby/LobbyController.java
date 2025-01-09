@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.head.balls.GameWebSocketHandler;
+import com.head.balls.Messages;
 import com.head.balls.Auth.Auth;
 
 import jakarta.servlet.http.HttpSession;
@@ -57,7 +58,7 @@ public class LobbyController {
     createLobby(Auth.getUsername(session));
 
     //All good
-    return ResponseEntity.ok("Created successfully");
+    return ResponseEntity.ok(Messages.lobbyCreated);
   }
 
   @PostMapping("/join")
@@ -69,7 +70,7 @@ public class LobbyController {
     joinLobby(host, Auth.getUsername(session));
 
     //All good
-    return ResponseEntity.ok("Joined successfully");
+    return ResponseEntity.ok(Messages.lobbyJoined);
   }
 
   @PostMapping("/leave")
@@ -81,14 +82,14 @@ public class LobbyController {
     leaveLobby(Auth.getUsername(session));
 
     //All good
-    return ResponseEntity.ok("Joined successfully");
+    return ResponseEntity.ok(Messages.lobbyLeft);
   }
 
 
   public static Lobby getLobby(String username) {
     //Check if host is in lobby
     if (!lobbies.containsKey(username))
-      throw new RuntimeException("User is not in a lobby");
+      throw new RuntimeException(Messages.lobbyNotInLobby);
 
     //Return lobby
     return lobbies.get(username);
@@ -145,11 +146,11 @@ public class LobbyController {
 
     //Lobby is full -> Game already started
     if (lobby.isFull())
-      throw new RuntimeException("Can't leave the lobby if the game has started");
+      throw new RuntimeException(Messages.lobbyGameStarted);
     
     //User isn't host
     if (!lobby.getHost().equals(username))
-      throw new RuntimeException("Cant leave the lobby if you are not the host");
+      throw new RuntimeException(Messages.lobbyNotHost);
 
     //Leave lobby
     lobbies.remove(username);
@@ -184,12 +185,12 @@ public class LobbyController {
 
   private void errorIfInLobby(String username) {
     if (lobbies.containsKey(username))
-      throw new RuntimeException("User already in lobby");
+      throw new RuntimeException(Messages.lobbyInLobby);
   }
   
   private void errorIfNotInLobby(String username) {
     if (!lobbies.containsKey(username))
-      throw new RuntimeException("User already in lobby");
+      throw new RuntimeException(Messages.lobbyNotInLobby);
   }
 
 

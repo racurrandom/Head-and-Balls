@@ -15,6 +15,7 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.head.balls.Messages;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -62,7 +63,7 @@ public class Auth {
       return hexString.toString();
     } catch (NoSuchAlgorithmException e) {
       //Error
-      throw new RuntimeException("Error while encoding password");
+      throw new RuntimeException(Messages.authEncodeError);
     }
   }
 
@@ -174,7 +175,7 @@ public class Auth {
   public static void errorIfNotLogged(HttpSession session) {
     //Not logged in
     if (!isLogged(session)) 
-      throw new InvalidCredentialsException("User not logged in");
+      throw new InvalidCredentialsException(Messages.authNotLoggedIn);
   }
 
   public static void login(HttpSession session, @Valid String username) {
@@ -203,13 +204,13 @@ public class Auth {
   public static void errorIfExists(String username) {
     //Check if exists
     if (userExists(username)) 
-      throw new InvalidCredentialsException("User already exists");
+      throw new InvalidCredentialsException(Messages.userExists);
   }
 
   public static void errorIfNotExists(String username) {
     //Check if exists
     if (!userExists(username)) 
-      throw new InvalidCredentialsException("User does not exist");
+      throw new InvalidCredentialsException(Messages.userNotExists);
   }
 
   public static void saveUser(@Valid User user) {
