@@ -244,6 +244,17 @@ Los **controladores** (en azul), anotados con *@RestController*, tienen una rela
 
 Además, **existen relaciones** de dependencia (líneas discontinuas con flechas) entre *App* y las configuraciones (*SecurityConfig y CustomSessionListener, anotadas con @Configuration y @WebListener*), porque son cargadas en el contexto de Spring. *ChatController* tiene una **dependencia** con *AuthController* para verificar sesiones de usuario, reflejando una colaboración entre controladores. En conjunto, estas relaciones muestran una arquitectura organizada en capas, donde los controladores gestionan la lógica HTTP, las configuraciones definen el comportamiento global de la aplicación, y el manejo de excepciones garantiza un funcionamiento robusto y consistente.
 
+La nueva funcionalidad introduce una arquitectura basada en WebSockets para soportar comunicación en tiempo real entre jugadores en partidas multijugador. Esta ampliación complementa la API REST existente para proporcionar una experiencia sincronizada y ágil en las partidas.
+
+El manejador principal de WebSockets es la clase GameWebSocketHandler, que gestiona las conexiones de los jugadores, recibe mensajes del cliente, y sincroniza el estado del juego en tiempo real. Este manejador colabora estrechamente con Lobby, que representa las salas de juego y contiene la lógica específica de las partidas. Además, se utiliza la clase PlayerConnection para rastrear las sesiones activas de los jugadores y sus asociaciones con las salas.
+
+El flujo de conexión es el siguiente:
+
+Los jugadores establecen una conexión WebSocket, que es gestionada por GameWebSocketHandler.
+Los mensajes enviados por los jugadores son procesados y delegados al Lobby correspondiente.
+El estado del juego (movimientos, interacciones) se sincroniza entre los jugadores mediante mensajes en tiempo real.
+Al desconectarse un jugador, el sistema actualiza el estado del juego y termina la conexión asociada.
+
 # 13. Protocolo WebSocket
 
 Para el protocolo de los WebSockets usamos los 2 primeros caracteres como código indicador de qué es el mensaje. Estos 2 caracteres los dividimos, siendo el primero el que indica la escena y el segundo la accion de la escena.
