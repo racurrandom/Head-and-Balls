@@ -28,12 +28,12 @@ class SceneChatLobby extends Phaser.Scene {
 
     //Create chat view & users count
     let checkUsersCounter = 0
-    const chat = new ChatView(this, chatX, 490, 1080, 380, 16)
-    const usersText = this.add.text(1200, 110, '', {
+    const chat = new ChatView(this, chatX, 590, 1080, 450, 16)
+    const usersText = this.add.text(840, 120, '', {
       fontFamily: 'poppins',
-      fontSize: '30px',
+      fontSize: '22px',
       fill: '#fff'
-    }).setOrigin(1, 1)
+    }).setOrigin(0, 1)
 
     //Create read messages function
     const onMessages = (data, error) => {
@@ -46,7 +46,7 @@ class SceneChatLobby extends Phaser.Scene {
         checkUsersCounter = 10
         Online.getUsers((users, error) => {
           if (error) return
-          usersText.text = 'Users: ' + users.length
+          usersText.text = 'Online: ' + users.length
         })
       }
 
@@ -73,8 +73,8 @@ class SceneChatLobby extends Phaser.Scene {
 
 
     //Create message input
-    const chatBox = this.add.image(chatX + 130, 520, 'textBox3')
-    const messageInput = new InputField(this.add.text(chatX, 520, '', {
+    const chatBox = this.add.image(chatX + 170, 620, 'textBox3')
+    const messageInput = new InputField(this.add.text(chatX, 620, '', {
       fontFamily: 'poppins',
       fontSize: '16px',
       fill: '#000'
@@ -99,6 +99,11 @@ class SceneChatLobby extends Phaser.Scene {
     //Add scroll to chat
     this.input.on('wheel', (pointer, gameObjects, deltaX, deltaY, deltaZ) => {
       chat.scroll(deltaY)
+    })
+
+
+    Scene.onClose(this, () => {
+      clearInterval(this.readChatLoop)
     })
   }
 

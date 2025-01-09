@@ -68,7 +68,7 @@ class SceneLobby extends Phaser.Scene {
       fill: '#000',
       align: 'center'
     }).setOrigin(0.5), {
-      placeholder: 'Usuario host',
+      placeholder: 'Usuario (para unirse)',
       max: 15
     })
     Element.onClick(this.joinBox, () => {
