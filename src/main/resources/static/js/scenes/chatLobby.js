@@ -22,19 +22,33 @@ class SceneChatLobby extends Phaser.Scene {
     this.openTime = Date.now()
     SceneChat.openTime = this.openTime
 
-
     //Chat position
     const chatX = 1280/2 + 200
 
 
     //Create chat view & users count
+    let checkUsersCounter = 0
     const chat = new ChatView(this, chatX, 490, 1080, 380, 16)
-   
+    const usersText = this.add.text(1200, 110, '', {
+      fontFamily: 'poppins',
+      fontSize: '30px',
+      fill: '#fff'
+    }).setOrigin(1, 1)
 
     //Create read messages function
     const onMessages = (data, error) => {
       //Show error message
       if (error) this.onError(error)
+        
+      //Check users
+      checkUsersCounter--
+      if (checkUsersCounter <= 0) {
+        checkUsersCounter = 10
+        Online.getUsers((users, error) => {
+          if (error) return
+          usersText.text = 'Users: ' + users.length
+        })
+      }
 
       //Get data
       if (typeof data !== 'object') return
