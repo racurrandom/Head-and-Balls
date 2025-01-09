@@ -84,6 +84,7 @@ class Player {
   scene
   data = {}
   isPlaying = true
+  isOnline = false
   
   //Points
   points = 0
@@ -114,7 +115,10 @@ class Player {
     this.data = data
 
     //Is playing (used for online games)
-    if (typeof data.isMe === 'boolean') this.isPlaying = data.isMe
+    if (typeof data.isMe === 'boolean') {
+      this.isPlaying = data.isMe
+      this.isOnline = true
+    }
 
     //Update data
     this.data.index = data.number - 1
@@ -302,7 +306,7 @@ class Player {
     if (!this.isPlaying) return
 
     //Move left
-    Scene.input(this.scene, this.data.number == 1 ? 'A' : 'LEFT', () => {
+    Scene.input(this.scene, (this.data.number == 1 || this.isOnline) ? 'A' : 'LEFT', () => {
       //Button down
       this.isMovingLeft = true
     }, () => {
@@ -311,7 +315,7 @@ class Player {
     })
 
     //Move right
-    Scene.input(this.scene, this.data.number == 1 ? 'D' : 'RIGHT', () => {
+    Scene.input(this.scene, (this.data.number == 1 || this.isOnline) ? 'D' : 'RIGHT', () => {
       //Button down
       this.isMovingRight = true
     }, () => {
@@ -320,13 +324,13 @@ class Player {
     })
 
     //Jump
-    Scene.input(this.scene, this.data.number == 1 ? 'W' : 'UP', () => {
+    Scene.input(this.scene, (this.data.number == 1 || this.isOnline) ? 'W' : 'UP', () => {
       //Button down
       if (!this.isStunned && this.isGrounded) this.player.setVelocityY(-this.jumpSpeed)
     })
 
     //Kick
-    Scene.input(this.scene, this.data.number == 1 ? 'S' : 'DOWN', () => {
+    Scene.input(this.scene, (this.data.number == 1 || this.isOnline) ? 'S' : 'DOWN', () => {
       //Button down
       if (!this.isStunned && !this.isKicking) {
         this.animateKick()
