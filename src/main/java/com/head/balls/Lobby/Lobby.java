@@ -18,10 +18,10 @@ import com.head.balls.Auth.Auth;
 public class Lobby {
 
   //Websocket protocol (types)
-  public static final String CHARACTERS_INIT = "CI";
-  public static final String CHARACTERS_SKIN = "CS";
-  public static final String CHARACTERS_READY = "CR";
-  public static final String GAME_INIT = "GI";
+  public static final String CHARACTERS_INIT = "CI";    //Init Characters
+  public static final String CHARACTERS_SKIN = "CS";    //User changed skin
+  public static final String CHARACTERS_READY = "CR";   //User changed ready
+  public static final String GAME_INIT = "GI";          //Init Game (load Game from Characters)
   public static final String GAME_PLAYER = "GP";        //Player position & velocity
   public static final String GAME_BALL = "GB";          //Ball position & velocity
   public static final String GAME_KICK = "GK";          //Player kicked ball

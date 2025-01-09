@@ -36,8 +36,9 @@ El equipo de **Head and Balls** está formado por:
 [**10. Controles**](#10-controles)  
 [**11. Audio**](#11-audio)  
 [**12. Diagrama de Clases**](#12-diagrama-de-clases)  
-[**13. Recursos**](#13-recursos)  
-[**14. Licencia**](#14-licencia)
+[**13. Protocolo WebSocket**](#13-protocolo-websocket)  
+[**14. Recursos**](#14-recursos)  
+[**15. Licencia**](#15-licencia)
 
 # 0. Instrucciones
 
@@ -243,7 +244,27 @@ Los **controladores** (en azul), anotados con *@RestController*, tienen una rela
 
 Además, **existen relaciones** de dependencia (líneas discontinuas con flechas) entre *App* y las configuraciones (*SecurityConfig y CustomSessionListener, anotadas con @Configuration y @WebListener*), porque son cargadas en el contexto de Spring. *ChatController* tiene una **dependencia** con *AuthController* para verificar sesiones de usuario, reflejando una colaboración entre controladores. En conjunto, estas relaciones muestran una arquitectura organizada en capas, donde los controladores gestionan la lógica HTTP, las configuraciones definen el comportamiento global de la aplicación, y el manejo de excepciones garantiza un funcionamiento robusto y consistente.
 
-# 13. Recursos
+# 13. Protocolo WebSocket
+
+Para el protocolo de los WebSockets usamos los 2 primeros caracteres como código indicador de qué es el mensaje. Estos 2 caracteres los dividimos, siendo el primero el que indica la escena y el segundo la accion de la escena.
+
+| Código | Escena | Acción | Qué hace |
+| -------- | -------- | ------- | ------- |
+| CI | Characters | Init | Inicia la escena de Characters |
+| CS | Characters | Skin | Indica que se cambió la skin |
+| CR | Characters | Ready | Indica que se cambió el estado de "listo" |
+| GI | Game | Init | Inicia la escena de Game desde Characters |
+| GP | Game | Player | Manda la posición y velocidad del jugador |
+| GB | Game | Ball | Manda la posición y velocidad del la bola |
+| GK | Game | Kick | Indica que la bola fue chutada |
+| GA | Game | Animate | Manda un mensaje diciendo que se reproduzca la animación de patada |
+| GG | Game | Goal | Indica que se marcó un gol en la porteria del que mando el mensaje |
+| GR | Game | Reset map | Resetea el mapa |
+| GS | Game | Spawn powerup | Indica que se spawnee un powerup |
+| GU | Game | Use powerup | Indica que un powerup se usó |
+| ED | Error | Disconnected | Indica que el otro usuario se desconectó y abre la escena de error |
+
+# 14. Recursos
 
 Recursos externos utilizados para el desarrollo del videojuego:
 
@@ -251,6 +272,6 @@ Recursos externos utilizados para el desarrollo del videojuego:
 * **Efecto de sonido pitido:** [Action Soccer](https://www.sounds-resource.com/pc_computer/actionsoccer/)  
 * **Butacas del fondo in-game:** [Butacas in-game](https://www.freepik.com/free-vector/realistic-stadium-tribune-composition-with-isolated-front-back-views-rows-with-red-plastic-seats-vector-illustration_43869155.htm)
 
-# 14. Licencia
+# 15. Licencia
  
 Producto licenciado bajo la licencia **Apache 2.0**.
